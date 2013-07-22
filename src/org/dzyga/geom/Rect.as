@@ -3,7 +3,7 @@ package org.dzyga.geom {
     import flash.geom.Rectangle;
 
     /**
-     * Такой же флешовый Rectangle, только с дополнительным функционалом для упрощения повторного использования.
+     * Rectangle, с дополнительным функционалом для упрощения повторного использования.
      */
     public class Rect extends Rectangle {
 
@@ -27,6 +27,13 @@ package org.dzyga.geom {
          */
         public function area ():Number {
             return Math.abs(width * height);
+        }
+
+        /**
+         * Периметр прямоугольника.
+         */
+        public function margin ():Number {
+            return 2 * (Math.abs(width) + Math.abs(height));
         }
 
         /**
