@@ -162,8 +162,9 @@ package org.dzyga.geom {
             return new Rect(x, y, width, height);
         }
 
-        public function clear ():void {
+        public function clear ():Rect {
             x = y = width = height = 0;
+            return this;
         }
 
         public function multiply (value:Number):void {
