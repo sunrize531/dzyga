@@ -83,10 +83,16 @@ package org.dzyga.geom {
          * @see #union()
          */
         public function add (toAdd:Rectangle):Rect {
-            left = Math.min(left, toAdd.left);
-            top = Math.min(top, toAdd.top);
-            right = Math.max(right, toAdd.right);
-            bottom = Math.max(bottom, toAdd.bottom);
+            if (toAdd.width * toAdd.height != 0) {
+                if (width * height == 0) {
+                    match(toAdd);
+                } else {
+                    left = Math.min(left, toAdd.left);
+                    top = Math.min(top, toAdd.top);
+                    right = Math.max(right, toAdd.right);
+                    bottom = Math.max(bottom, toAdd.bottom);
+                }
+            }
             return this;
         }
 
@@ -97,10 +103,16 @@ package org.dzyga.geom {
          * @see #intersect()
          */
         public function crop (toOverlap:Rectangle):Rect {
-            left = Math.max(left, toOverlap.left);
-            top = Math.max(top, toOverlap.left);
-            right = Math.min(right, toOverlap.right);
-            bottom = Math.min(bottom, toOverlap.bottom);
+            if (toOverlap.width * toOverlap.height != 0) {
+                if (width * height == 0) {
+                    clear();
+                } else {
+                    left = Math.max(left, toOverlap.left);
+                    top = Math.max(top, toOverlap.left);
+                    right = Math.min(right, toOverlap.right);
+                    bottom = Math.min(bottom, toOverlap.bottom);
+                }
+            }
             return this;
         }
 
