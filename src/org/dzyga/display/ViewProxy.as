@@ -170,9 +170,8 @@ package org.dzyga.display {
          * @param level level in target
          * @return this
          */
-        public function insertTo (
-                view:DisplayObject, target:DisplayObjectContainer, level:int = int.MAX_VALUE):ViewProxy {
-            ViewUtils.addChild(target, view, level);
+        public function insertTo (target:DisplayObjectContainer, level:int = int.MAX_VALUE):ViewProxy {
+            ViewUtils.insertTo(view, target, level);
             return this;
         }
 
