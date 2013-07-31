@@ -1,4 +1,4 @@
-package org.dzyga.utils {
+package org.dzyga.display {
     import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;
     import flash.display.InteractiveObject;
@@ -13,13 +13,13 @@ package org.dzyga.utils {
      */
     public final class ViewUtils {
         /**
-         * Move view to specified coordinates. Returns view for chaining.
+         * Move view to specified coordinates.
          *
          * @param view DisplayObject to transform
          * @param x X coordinate
          * @param y Y coordinate
          * @param truncate floor coordinates to integer value before applying
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function moveTo (
                 view:DisplayObject, x:Number, y:Number, truncate:Boolean = false):DisplayObject {
@@ -29,13 +29,13 @@ package org.dzyga.utils {
         }
 
         /**
-         * Offset view to specified coordinates. Returns view for chaining.
+         * Offset view to specified coordinates.
          *
          * @param view DisplayObject to transform
          * @param dx X coordinate offset
          * @param dy Y coordinate offset
          * @param truncate floor coordinates to integer before applying
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function offset (
                 view:DisplayObject, dx:Number, dy:Number, truncate:Boolean = false):DisplayObject {
@@ -43,12 +43,12 @@ package org.dzyga.utils {
         }
 
         /**
-         * Scale view. If scaleY not specified, will perform uniform scale. Returns view for chaining.
+         * Scale view. If scaleY not specified, will perform uniform scale.
          *
          * @param view DisplayObject to transform
          * @param scaleX
          * @param scaleY
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function scale (view:DisplayObject, scaleX:Number, scaleY:Number=NaN):DisplayObject {
             if (isNaN(scaleY)) {
@@ -60,11 +60,11 @@ package org.dzyga.utils {
         }
 
         /**
-         * Copy transform from target to view. Returns view for chaining.
+         * Copy transform from target to view.
          *
          * @param view DisplayObject to transform
          * @param target DisplayObject to copy transform
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function match (view:DisplayObject, target:DisplayObject):DisplayObject {
             view.transform.matrix = target.transform.matrix;
@@ -81,9 +81,9 @@ package org.dzyga.utils {
          * @param view DisplayObjectContainer where to place a child
          * @param child DisplayObject to add
          * @param level where to add child
-         * @return view
+         * @return org.dzyga.display.view
          */
-        public static function addChildTo (
+        public static function addChild (
                 view:DisplayObjectContainer, child:DisplayObject, level:int = int.MAX_VALUE):DisplayObjectContainer {
             if (level == int.MAX_VALUE) {
                 view.addChild(child);
@@ -98,17 +98,17 @@ package org.dzyga.utils {
         }
 
         /**
-         * Insert child into target DisplayObjectContainer. Returns child, for chained calls. level works the
+         * Insert child into target DisplayObjectContainer. level works the
          * same way as in addChildTo function (actually just calls it).
          *
          * @param view DisplayObject to insert into target
          * @param target DisplayObjectContainer where to place child.
          * @param level level in target
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function insertTo (
                 view:DisplayObject, target:DisplayObjectContainer, level:int = int.MAX_VALUE):DisplayObject {
-            addChildTo(target, view, level);
+            addChild(target, view, level);
             return view;
         }
 
@@ -119,7 +119,7 @@ package org.dzyga.utils {
          * @param child
          * @return
          */
-        public static function removeChildFrom (
+        public static function removeChild (
                 view:DisplayObjectContainer, child:DisplayObject):DisplayObjectContainer {
             if (view.contains(child)) {
                 view.removeChild(child);
@@ -128,10 +128,10 @@ package org.dzyga.utils {
         }
 
         /**
-         * Remove all children from view. Returns view for chaining.
+         * Remove all children from view.
          *
          * @param view DisplayObjectContainer to clear
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function clear (view:DisplayObjectContainer):DisplayObjectContainer {
             var numChildren:int = view.numChildren;
@@ -142,10 +142,10 @@ package org.dzyga.utils {
         }
 
         /**
-         * Remove view from it's parent. Returns view for chaining.
+         * Remove view from it's parent.
          *
          * @param view
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function detach (view:DisplayObject):DisplayObject {
             var parent:DisplayObjectContainer = view.parent;
@@ -184,13 +184,12 @@ package org.dzyga.utils {
         }
 
         // Visibility
-        // This methods just for chaining...
 
         /**
          * Make view visible and return it for chaining.
          *
          * @param view
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function show (view:DisplayObject):DisplayObject {
             view.visible = true;
@@ -201,7 +200,7 @@ package org.dzyga.utils {
          * Hide view and return it for chaining.
          *
          * @param view
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function hide (view:DisplayObject):DisplayObject {
             view.visible = false;
@@ -212,7 +211,7 @@ package org.dzyga.utils {
          * Toggle view's visibility and return it for chaining.
          *
          * @param view
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function toggle (view:DisplayObject):DisplayObject {
             view.visible = !view.visible;
@@ -224,7 +223,7 @@ package org.dzyga.utils {
          *
          * @param view
          * @param alpha
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function alpha (view:DisplayObject, alpha:Number = 1):DisplayObject {
             view.alpha = alpha;
@@ -235,7 +234,7 @@ package org.dzyga.utils {
          * Set mouseEnabled and mouseChildren properties of view to false. Returns view.
          *
          * @param view
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function mouseDisable (view:InteractiveObject):InteractiveObject {
             view.mouseEnabled = false;
@@ -249,7 +248,7 @@ package org.dzyga.utils {
          * Set mouseEnabled and mouseChildren properties of view to true. Returns view.
          *
          * @param view
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function mouseEnable (view:InteractiveObject):InteractiveObject {
             view.mouseEnabled = true;
@@ -263,7 +262,7 @@ package org.dzyga.utils {
          * Toggle mouseEnabled property and set mouseChildren property to the same value. Returns view.
          *
          * @param view
-         * @return view
+         * @return org.dzyga.display.view
          */
         public static function mouseToggle (view:InteractiveObject):InteractiveObject {
             view.mouseEnabled = !view.mouseEnabled;
