@@ -16,6 +16,8 @@ package org.dzyga.display {
      *     view(first).name('first').moveTo(20, 0);
      *
      *     // Display object tree manipulation.
+     *     // Add first and second to sprite, add sprite to parent,
+     *     // set sprite's opacity to 0.5, scale it and move.
      *     view(sprite)
      *         .addChild(first)
      *         .addChild(second)
@@ -23,6 +25,7 @@ package org.dzyga.display {
      *         .alpha(0.5).scale(2).moveTo(100, 100);
      *
      *     // Broken chain
+     *     // Hide child in sprite named 'first' and return it as Sprite.
      *     var hidden:Sprite = view(sprite)
      *         .getChild('first')
      *         .hide()
