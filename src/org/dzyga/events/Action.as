@@ -1,26 +1,26 @@
 package org.dzyga.events {
     import org.dzyga.pool.IReusable;
 
-    public class Action implements IReusable{
-        public var priority     : int;
-        public var action       : *;
-        public var thisObject   : *;
-        public var args         : Array;
-        public var name         : String;
-        public var instruct     : IInstruct;
+    public class Action implements IReusable {
+        public var priority:int;
+        public var action:*;
+        public var thisObject:*;
+        public var args:Array;
+        public var name:String;
+        public var instruct:IInstruct;
 
-        public function Action(priority : int = 0, action : Function = null, thisObject : * = null, ...args) {
-            this.priority   = priority;
-            this.action     = action;
+        public function Action (priority:int = 0, action:Function = null, thisObject:* = null, ...args) {
+            this.priority = priority;
+            this.action = action;
             this.thisObject = thisObject;
-            this.args       = args;
+            this.args = args;
         }
 
-        public function run() : * {
-            if (this.instruct) {
-                var finish : Boolean = this.instruct.execute();
+        public function run ():* {
+            if (instruct) {
+                var finish:Boolean = instruct.execute();
                 if (finish) {
-                    this.instruct.finish();
+                    instruct.finish();
                     if (this is Thread) {
                         EnterFrame.removeThread(this as Thread);
                     } else {
@@ -29,26 +29,26 @@ package org.dzyga.events {
                     instruct = null;
                 }
                 return finish;
-            } else if (this.action) {
-                return this.action.apply(this.thisObject, this.args);
+            } else if (action) {
+                return action.apply(thisObject, args);
             }
         }
 
-        public function get reflection():Class {
+        public function get reflection ():Class {
             return Action;
         }
 
-        public function reset():void {
-            this.priority   = 0;
-            this.action     = null;
-            this.thisObject = null;
-            this.args       = null;
-            this.instruct   = null;
-            this.name       = null;
+        public function reset ():void {
+            priority = 0;
+            action = null;
+            thisObject = null;
+            args = null;
+            instruct = null;
+            name = null;
         }
-        
-        public function toString():String {
-            return "<Action: " + this.priority + ">";
+
+        public function toString ():String {
+            return "[Action: " + priority + "]";
         }
     }
 }
