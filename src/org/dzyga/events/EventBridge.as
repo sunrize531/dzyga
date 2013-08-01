@@ -10,14 +10,14 @@ package org.dzyga.events {
     import flash.events.EventDispatcher;
     import flash.events.IEventDispatcher;
 
-    import org.as3commons.collections.Map;
+    import mx.utils.LinkedList;
 
-    import org.as3commons.collections.Treap;
+    import org.as3commons.collections.Map;
 
     public class EventBridge implements IEventDispatcher {
         protected var _target:EventDispatcher;
-        protected var _listeners:Map = new Map();
-        protected var _handlers:Map = new Map();
+        protected var _targetListenerMap:Map = new Map();
+        protected var _externalListenerMap:LinkedList = new Map();
 
         public function EventBridge (target:EventDispatcher) {
             _target = target;
@@ -57,28 +57,4 @@ package org.dzyga.events {
     }
 }
 
-import flash.events.Event;
-
 // TODO: Rewrite Action to something similar to promise and use here instead.
-class EventCallback {
-    public var event:String;
-    public var callback:Function;
-    public var target:*;
-    public var args:Array;
-
-
-    public function EventCallback (event:String, callback:Function, thisArg:* = null, argArray:Array = null) {
-        this.event = event;
-        this.callback = callback;
-        this.target = thisArg;
-        this.args = argArray;
-    }
-
-    public function call (event:Event):void {
-        var callbackArgs:Array = [event];
-        if (args) {
-            callbackArgs.concat(args);
-        }
-        callback.apply(target, callbackArgs);
-    }
-}
