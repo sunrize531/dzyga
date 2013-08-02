@@ -51,14 +51,17 @@ package org.dzyga.events {
 
         [Test]
         public function testListen ():void {
-            _eventBridge.listen(Event.ACTIVATE, listenerFirstCallback);
-            _eventBridge.listen(Event.ACTIVATE, listenerFirstCallback);
-            _eventBridge.listen(Event.ACTIVATE, listenerSecondCallback);
+            _eventBridge
+                .listen(Event.ACTIVATE, listenerFirstCallback)
+                .listen(Event.ACTIVATE, listenerFirstCallback)
+                .listen(Event.ACTIVATE, listenerSecondCallback);
+
             _eventBridge.dispatchEvent(new Event(Event.ACTIVATE));
             assertEquals(1, _listenerFirstCounter);
             assertEquals(1, _listenerSecondCounter);
-            _eventBridge.stopListening(Event.ACTIVATE);
-            _eventBridge.dispatchEvent(new Event(Event.ACTIVATE));
+            _eventBridge
+                .stopListening(Event.ACTIVATE)
+                .dispatchEvent(new Event(Event.ACTIVATE));
             assertEquals(1, _listenerFirstCounter);
             assertEquals(1, _listenerSecondCounter);
         }
