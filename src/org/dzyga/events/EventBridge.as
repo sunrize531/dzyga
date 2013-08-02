@@ -1,10 +1,3 @@
-/**
- * Created with IntelliJ IDEA.
- * User: sunrize
- * Date: 31.07.13
- * Time: 18:48
- * To change this template use File | Settings | File Templates.
- */
 package org.dzyga.events {
     import flash.events.Event;
     import flash.events.EventDispatcher;
@@ -17,8 +10,10 @@ package org.dzyga.events {
     import org.dzyga.utils.StringUtils;
 
     /**
-     * This class created to extend IEventDispatcher functionality with custom methods listen, listenTo and clear.
-     * - All event listeners will be removed from target(s) when call method called, including those, which added
+     * This class created to extend IEventDispatcher functionality with custom methods listen, listenTo,
+     * stopListening and stopListeningTo.
+     *
+     * - All event listeners will be removed from target(s) when clear method called, including those, which added
      *   with addEventListener methods.
      * - Event listeners added with listen and listenTo methods will be executed in insertion order.
      * - Event listeners added with listen and listenTo methods can be executed with additional arguments array
@@ -137,6 +132,11 @@ package org.dzyga.events {
             }
 
             return this;
+        }
+
+        public function clear ():EventBridge {
+            // TODO: Can do it faster. Just iterate through all targets, remove listeners and clear collections.
+            return stopListeningTo();
         }
 
         private function emptyTargetsCleanUp ():void {
