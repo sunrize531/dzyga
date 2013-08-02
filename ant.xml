@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vampires.xml -->
+<project name="dzyga" basedir="." default="clean">
+    <target name="clean">
+        <delete dir="${basedir}/out"/>
+    </target>
+</project>

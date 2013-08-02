@@ -1,36 +1,41 @@
 package org.dzyga.events {
     import flash.events.Event;
-    import flash.events.EventDispatcher;
+    import flash.events.IEventDispatcher;
     import flash.utils.Dictionary;
-    import flash.utils.getTimer;
-
-    import org.dzyga.utils.StringUtils;
 
     public class EventListener {
-        private var _target:EventDispatcher;
+        private var _target:IEventDispatcher;
         private var _event:String;
         private var _callback:Function;
         private var _thisArg:*;
         private var _args:Array;
+        private var _once:Boolean = false;
+        private var _useCapture:*;
+        private var _hash:String;
 
         private static var _hashTable:Dictionary = new Dictionary(true);
 
-        public function EventListener (target:EventDispatcher, event:String, callback:Function,
-                                       thisArg:* = null, argArray:Array = null) {
+        public function EventListener (
+                target:IEventDispatcher, event:String, callback:Function,
+                once:Boolean = false, thisArg:* = null, argArray:Array = null,
+                useCapture:* = undefined, hash:String = undefined) {
             _target = target;
             _event = event;
             _callback = callback;
             _thisArg = thisArg;
             _args = argArray;
+            _once = once;
+            _useCapture = useCapture;
+            _hash = hash || EventBridge.listenerHashGenerate(target, event, callback, useCapture);
         }
 
-        public function listen ():EventListener {
-            _target.addEventListener(_event, call, false, 0, true);
+        public function listen (priority:Number = 0, useWeakReference:Boolean = true):EventListener {
+            _target.addEventListener(_event, call, useCapture, priority, useWeakReference);
             return this;
         }
 
         public function destroy ():EventListener {
-            _target.removeEventListener(_event, call);
+            _target.removeEventListener(_event, call, useCapture);
 
             // Release links for gc...
             _target = null;
@@ -50,7 +55,7 @@ package org.dzyga.events {
             _callback.apply(_thisArg, callbackArgs);
         }
 
-        public function get target ():EventDispatcher {
+        public function get target ():IEventDispatcher {
             return _target;
         }
 
@@ -70,19 +75,16 @@ package org.dzyga.events {
             return _args;
         }
 
-        private static function getHash (object:Object):String {
-            var hash:String = _hashTable[object];
-            if (!hash) {
-                hash = StringUtils.uniqueID();
-                _hashTable[object] = hash;
-            }
-            return hash;
+        public function get useCapture ():Boolean {
+            return _useCapture;
         }
 
-        public static function listenerHash (target:EventDispatcher, callback:Function):String {
-            var targetHash:String = getHash(target);
-            var callbackHash:String = getHash(callback);
-            return StringUtils.fillleft(Number(targetHash) + Number(callbackHash).toFixed(16), 16, '0');
+        public function get hash ():String {
+            return _hash;
+        }
+
+        public function get once ():Boolean {
+            return _once;
         }
     }
 }

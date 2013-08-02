@@ -31,6 +31,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 package org.dzyga.utils {
+    import flash.utils.Dictionary;
+
     public final class ObjectUtils {
         public static function get(obj:Object, key:*, def:*=null):* {
             if (!obj.hasOwnProperty(key)) {
@@ -220,5 +222,16 @@ package org.dzyga.utils {
             }
             return object;
         }
+
+        private static var _hashTable:Dictionary = new Dictionary(true);
+        public static function hash (object:Object):String {
+            var re:String = _hashTable[object];
+            if (!re) {
+                re = StringUtils.uniqueID();
+                _hashTable[object] = re;
+            }
+            return re;
+        }
+
     }
 }
