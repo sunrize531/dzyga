@@ -164,7 +164,7 @@ package org.dzyga.events {
                 var listener:EventListener = listenerIterator.next() as EventListener;
                 listener.call(event.clone());
                 if (listener.once) {
-                    listenerRemoved = listenerIterator.remove();
+                    listenerRemoved |= listenerIterator.remove();
                 }
             }
             if (listenerRemoved) {

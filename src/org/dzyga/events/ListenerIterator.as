@@ -7,9 +7,6 @@ package org.dzyga.events {
         private var _iterator:IStripIterator;
 
         public function ListenerIterator (listenerMap:IMap, target:IEventDispatcher = null, event:String = '', callback:Function = null) {
-            var _target:IEventDispatcher = target;
-            var _event:String = event;
-            var _callback:Function = callback;
             if (target && event) {
                 var _targetHash:String = EventBridge.targetHashGenerate(target, event);
                 if (callback != null) {
