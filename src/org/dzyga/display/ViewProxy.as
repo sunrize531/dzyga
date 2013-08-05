@@ -6,7 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.dzyga.display {
-    import org.dzyga.utils.*;
+    import flash.events.Event;
+    import flash.events.IEventDispatcher;
+
+    import org.dzyga.events.IDispatcherProxy;
     import flash.display.Bitmap;
     import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;
@@ -20,13 +23,16 @@ package org.dzyga.display {
     import org.dzyga.geom.Rect;
 
 
-    public class ViewProxy {
+    public class ViewProxy implements IViewProxy {
         protected var _view:DisplayObject;
 
         public function ViewProxy (view:DisplayObject) {
             _view = view;
         }
 
+        /**
+         * Get view of this proxy.
+         */
         public function get view ():DisplayObject {
             return _view;
         }
@@ -86,12 +92,20 @@ package org.dzyga.display {
         }
 
         /**
+         * Get DispatcherProxy for current view. Note, that all instances of ViewProxy for same view will share
+         * the same DispatcherProxy. Override this getter if different behavior is needed.
+         */
+        public function get dispatcher ():IDispatcherProxy {
+            return org.dzyga.events.dispatcher(_view);
+        }
+
+        /**
          * Set name for view.
          *
          * @param name
          * @return this
          */
-        public function name (name:String):ViewProxy {
+        public function name (name:String):IViewProxy {
             view.name = name;
             return this;
         }
@@ -104,7 +118,7 @@ package org.dzyga.display {
          * @param truncate floor coordinates to integer value before applying
          * @return org.dzyga.display.view
          */
-        public function moveTo (x:Number, y:Number, truncate:Boolean = false):ViewProxy {
+        public function moveTo (x:Number, y:Number, truncate:Boolean = false):IViewProxy {
             ViewUtils.moveTo(_view, x, y, truncate);
             return this;
         }
@@ -117,7 +131,7 @@ package org.dzyga.display {
          * @param truncate floor coordinates to integer before applying
          * @return self
          */
-        public function offset (dx:Number, dy:Number, truncate:Boolean = false):ViewProxy {
+        public function offset (dx:Number, dy:Number, truncate:Boolean = false):IViewProxy {
             ViewUtils.offset(_view, dx, dy, truncate);
             return this;
         }
@@ -129,7 +143,7 @@ package org.dzyga.display {
          * @param scaleY
          * @return self
          */
-        public function scale (scaleX:Number, scaleY:Number=NaN):ViewProxy {
+        public function scale (scaleX:Number, scaleY:Number=NaN):IViewProxy {
             ViewUtils.scale(_view, scaleX, scaleY);
             return this;
         }
@@ -140,7 +154,7 @@ package org.dzyga.display {
          * @param target DisplayObject to copy transform
          * @return self
          */
-        public function match (target:DisplayObject):ViewProxy {
+        public function match (target:DisplayObject):IViewProxy {
             ViewUtils.match(_view, target);
             return this;
         }
@@ -156,7 +170,7 @@ package org.dzyga.display {
          * @param level where to add child
          * @return this
          */
-        public function addChild (child:DisplayObject, level:int = int.MAX_VALUE):ViewProxy {
+        public function addChild (child:DisplayObject, level:int = int.MAX_VALUE):IViewProxy {
             ViewUtils.addChild(container, child, level);
             return this;
         }
@@ -165,17 +179,22 @@ package org.dzyga.display {
          * Insert view into target DisplayObjectContainer. level works the
          * same way as in addChildTo function (actually just calls it).
          *
-         * @param view DisplayObject to insert into target
-         * @param target DisplayObjectContainer where to place child.
+         * @param target DisplayObjectContainer where to place view.
          * @param level level in target
          * @return this
          */
-        public function insertTo (target:DisplayObjectContainer, level:int = int.MAX_VALUE):ViewProxy {
+        public function insertTo (target:DisplayObjectContainer, level:int = int.MAX_VALUE):IViewProxy {
             ViewUtils.insertTo(view, target, level);
             return this;
         }
 
-        public function getChild (name:String):ViewProxy {
+        /**
+         * Get ViewProxy for child of view.
+         *
+         * @param name Name of child
+         * @return new ViewProxy instance
+         */
+        public function getChild (name:String):IViewProxy {
             return new ViewProxy(container.getChildByName(name));
         }
 
@@ -183,9 +202,9 @@ package org.dzyga.display {
          * Remove child from view.
          *
          * @param child
-         * @return
+         * @return this
          */
-        public function removeChildFrom (child:DisplayObject):ViewProxy {
+        public function removeChildFrom (child:DisplayObject):IViewProxy {
             ViewUtils.removeChild(container, child);
             return this;
         }
@@ -195,7 +214,7 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function clear ():ViewProxy {
+        public function clear ():IViewProxy {
             ViewUtils.clear(container);
             return this;
         }
@@ -203,9 +222,9 @@ package org.dzyga.display {
         /**
          * Remove view from it's parent.
          *
-         * @return org.dzyga.display.view
+         * @return this
          */
-        public function detach ():ViewProxy {
+        public function detach ():IViewProxy {
             ViewUtils.detach(view);
             return this;
         }
@@ -239,7 +258,7 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function show ():ViewProxy {
+        public function show ():IViewProxy {
             ViewUtils.show(view);
             return this;
         }
@@ -249,7 +268,7 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function hide ():ViewProxy {
+        public function hide ():IViewProxy {
             ViewUtils.hide(view);
             return this;
         }
@@ -259,7 +278,7 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function toggle (view:DisplayObject):ViewProxy {
+        public function toggle (view:DisplayObject):IViewProxy {
             ViewUtils.toggle(view);
             return this;
         }
@@ -270,7 +289,7 @@ package org.dzyga.display {
          * @param alpha
          * @return this
          */
-        public function alpha (alpha:Number = 1):ViewProxy {
+        public function alpha (alpha:Number = 1):IViewProxy {
             ViewUtils.alpha(view, alpha);
             return this;
         }
@@ -280,7 +299,7 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function mouseDisable ():ViewProxy {
+        public function mouseDisable ():IViewProxy {
             ViewUtils.mouseDisable(interactive);
             return this;
         }
@@ -290,7 +309,7 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function mouseEnable ():ViewProxy {
+        public function mouseEnable ():IViewProxy {
             ViewUtils.mouseEnable(interactive);
             return this;
         }
@@ -300,9 +319,76 @@ package org.dzyga.display {
          *
          * @return org.dzyga.display.view
          */
-        public function mouseToggle ():ViewProxy {
+        public function mouseToggle ():IViewProxy {
             ViewUtils.mouseToggle(interactive);
             return this;
+        }
+
+        // IDispatcherProxy implementation
+        public function listen (
+                eventType:String, callback:Function, once:Boolean = false,
+                thisArg:* = null, argArray:Array = null):IDispatcherProxy {
+            dispatcher.listen(eventType, callback, once, thisArg, argArray);
+            return this;
+        }
+
+        public function listenTo (
+                target:IEventDispatcher, eventType:String, callback:Function, once:Boolean = false,
+                thisArg:* = null, argArray:Array = null):IDispatcherProxy {
+            dispatcher.listenTo(target, eventType, callback, once, thisArg, argArray);
+            return this;
+        }
+
+        public function isListening (eventType:String = null, callback:Function = null):Boolean {
+            return dispatcher.isListening(eventType, callback);
+        }
+
+        public function isListeningTo (
+                target:IEventDispatcher = null, eventType:String = '', callback:Function = null):Boolean {
+            return dispatcher.isListeningTo(target, eventType, callback);
+        }
+
+        public function stopListening (eventType:String = '', callback:Function = null):IDispatcherProxy {
+            dispatcher.stopListening(eventType, callback);
+            return this;
+        }
+
+        public function stopListeningTo (
+                target:IEventDispatcher = null, eventType:String = '', callback:Function = null):IDispatcherProxy {
+            dispatcher.stopListeningTo(target, eventType, callback);
+            return this;
+        }
+
+        public function trigger (eventType:String):IDispatcherProxy {
+            dispatcher.trigger(eventType);
+            return this;
+        }
+
+        public function triggerTo (target:IEventDispatcher, eventType:String):IDispatcherProxy {
+            dispatcher.triggerTo(target, eventType);
+            return this;
+        }
+
+        public function addEventListener (
+                type:String, listener:Function, useCapture:Boolean = false,
+                priority:int = 0, useWeakReference:Boolean = false):void {
+            dispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);
+        }
+
+        public function removeEventListener (type:String, listener:Function, useCapture:Boolean = false):void {
+            dispatcher.removeEventListener(type, listener, useCapture);
+        }
+
+        public function dispatchEvent (event:Event):Boolean {
+            return dispatcher.dispatchEvent(event);
+        }
+
+        public function hasEventListener (type:String):Boolean {
+            return dispatcher.hasEventListener(type);
+        }
+
+        public function willTrigger (type:String):Boolean {
+            return dispatcher.willTrigger(type);
         }
     }
 }

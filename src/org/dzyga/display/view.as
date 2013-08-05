@@ -1,5 +1,4 @@
 package org.dzyga.display {
-    import org.dzyga.utils.*;
     import flash.display.DisplayObject;
 
     /**
@@ -37,7 +36,7 @@ package org.dzyga.display {
      * @param view
      * @return
      */
-    public function view (view:DisplayObject):ViewProxy {
+    public function view (view:DisplayObject):IViewProxy {
         return new ViewProxy(view);
     }
 }
