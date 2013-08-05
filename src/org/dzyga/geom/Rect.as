@@ -173,8 +173,8 @@ package org.dzyga.geom {
          * @see #BOTTOM_LEFT
          */
         public function setAnchor (x:Number, y:Number, pos:uint):void {
-            x = x - width * ((pos & 2) >> 1);
-            y = y - height * (pos & 1);
+            this.x = x - width * ((pos & 2) >> 1);
+            this.y = y - height * (pos & 1);
         }
 
         override public function clone ():Rectangle {
