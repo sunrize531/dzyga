@@ -3,7 +3,7 @@ package org.dzyga.display {
     import flash.display.DisplayObject;
 
     /**
-     * Helper to easily chain ViewUtils operations on some view.
+     * Helper to easily chain view operations on some DisplayObject.
      *
      * @example Chained calls example:
      *

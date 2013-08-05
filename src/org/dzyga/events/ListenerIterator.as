@@ -8,9 +8,9 @@ package org.dzyga.events {
 
         public function ListenerIterator (listenerMap:IMap, target:IEventDispatcher = null, event:String = '', callback:Function = null) {
             if (target && event) {
-                var _targetHash:String = EventBridge.targetHashGenerate(target, event);
+                var _targetHash:String = DispatcherProxy.targetHashGenerate(target, event);
                 if (callback != null) {
-                    var _listenerHash:String = EventBridge.listenerHashGenerate(target, event, callback);
+                    var _listenerHash:String = DispatcherProxy.listenerHashGenerate(target, event, callback);
                     _iterator = new DistinctListenerIterator(listenerMap, _targetHash, _listenerHash);
                 } else {
                     _iterator = new EventListenerIterator(listenerMap, _targetHash);
@@ -66,7 +66,7 @@ class DistinctListenerIterator implements IStripIterator {
             return false;
         }
         _targetListenerMap = _listenerMap.itemFor(_targetHash) as TargetListenerMap;
-        if (_targetListenerMap == undefined) {
+        if (!_targetListenerMap) {
             return false;
         } else {
             _next = _targetListenerMap.itemFor(_listenerHash);
@@ -127,7 +127,7 @@ class EventListenerIterator implements IStripIterator {
     }
 
     public function remove ():Boolean {
-        if (_targetListenerIterator !== undefined) {
+        if (_targetListenerIterator) {
             return _targetListenerIterator.remove();
         }
         return false;

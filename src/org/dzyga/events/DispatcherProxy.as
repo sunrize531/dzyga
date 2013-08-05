@@ -2,6 +2,8 @@ package org.dzyga.events {
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.events.IEventDispatcher;
+    import flash.events.MouseEvent;
+    import flash.utils.Dictionary;
 
     import org.as3commons.collections.LinkedList;
     import org.as3commons.collections.Map;
@@ -22,12 +24,12 @@ package org.dzyga.events {
      * - Each event will be cloned for each callback (in native EventDispatcher the first Event object will be passed
      *   to the first listener as is, for following dispatchers it will be cloned).
      */
-    public class EventBridge implements IEventDispatcher {
-        protected var _target:EventDispatcher;
+    public class DispatcherProxy implements IEventDispatcher {
+        protected var _target:IEventDispatcher;
         protected var _listenerMap:Map = new Map();
         protected var _directListenerList:LinkedList = new LinkedList();
 
-        public function EventBridge (target:EventDispatcher) {
+        public function DispatcherProxy (target:IEventDispatcher) {
             _target = target;
         }
 
@@ -44,7 +46,7 @@ package org.dzyga.events {
          */
         public function listen (
                 eventType:String, callback:Function, once:Boolean = false,
-                thisArg:* = null, argArray:Array = null):EventBridge {
+                thisArg:* = null, argArray:Array = null):DispatcherProxy {
             return listenTo(_target, eventType, callback, once, thisArg, argArray);
         }
 
@@ -60,7 +62,7 @@ package org.dzyga.events {
          */
         public function listenTo (
                 target:IEventDispatcher, eventType:String, callback:Function, once:Boolean = false,
-                thisArg:* = null, argArray:Array = null):EventBridge {
+                thisArg:* = null, argArray:Array = null):DispatcherProxy {
             var targetHash:String = targetHashGenerate(target, eventType);
             var listenerHash:String = listenerHashGenerate(target, eventType, callback);
             var targetListenerMap:TargetListenerMap;
@@ -88,7 +90,7 @@ package org.dzyga.events {
                 target:IEventDispatcher = null, eventType:String = '',
                 callback:Function = null):Boolean {
             var re:Boolean = true;
-            if (callback == null) {
+            if (target && eventType && callback == null) {
                 re = target.hasEventListener(eventType);
             } else {
                 var listenerIterator:ListenerIterator = new ListenerIterator(_listenerMap, target, eventType, callback);
@@ -104,13 +106,13 @@ package org.dzyga.events {
             return re;
         }
 
-        public function stopListening (eventType:String = '', callback:Function = null):EventBridge {
+        public function stopListening (eventType:String = '', callback:Function = null):DispatcherProxy {
             return stopListeningTo(_target, eventType, callback);
         }
 
         public function stopListeningTo (
                 target:IEventDispatcher = null, eventType:String = '',
-                callback:Function = null):EventBridge {
+                callback:Function = null):DispatcherProxy {
 
             // First remove matching listeners.
             var listenerIterator:ListenerIterator = new ListenerIterator(_listenerMap, target, eventType, callback);
@@ -130,11 +132,24 @@ package org.dzyga.events {
                 eventListener.destroy();
                 directListenerIterator.remove();
             }
-
             return this;
         }
 
-        public function clear ():EventBridge {
+        /**
+         * Trigger Event with specified type.
+         * @param eventType
+         * @return this
+         */
+        public function trigger (eventType:String):DispatcherProxy {
+            return triggerTo(_target, eventType);
+        }
+
+        public function triggerTo (target:IEventDispatcher, eventType:String):DispatcherProxy {
+            target.dispatchEvent(new Event(eventType));
+            return this;
+        }
+
+        public function clear ():DispatcherProxy {
             // TODO: Can do it faster. Just iterate through all targets, remove listeners and clear collections.
             return stopListeningTo();
         }
@@ -164,7 +179,7 @@ package org.dzyga.events {
                 var listener:EventListener = listenerIterator.next() as EventListener;
                 listener.call(event.clone());
                 if (listener.once) {
-                    listenerRemoved |= listenerIterator.remove();
+                    listenerRemoved = listenerRemoved || listenerIterator.remove();
                 }
             }
             if (listenerRemoved) {
@@ -213,6 +228,11 @@ package org.dzyga.events {
 
         public static function targetHashGenerate (target:IEventDispatcher, event:String):String {
             return event + ObjectUtils.hash(target);
+        }
+
+        private static var _dispatcherProxyHash:Dictionary = new Dictionary(true);
+        internal static function get dispatcherProxyHash ():Dictionary {
+            return _dispatcherProxyHash;
         }
     }
 }

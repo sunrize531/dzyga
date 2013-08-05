@@ -11,7 +11,7 @@ package org.dzyga.events {
         public function TargetListenerMap (target:IEventDispatcher, event:String, targetHash:String = null) {
             _target = target;
             _event = event;
-            _targetHash = targetHash || EventBridge.targetHashGenerate(target, event);
+            _targetHash = targetHash || DispatcherProxy.targetHashGenerate(target, event);
         }
 
         public function get target ():IEventDispatcher {

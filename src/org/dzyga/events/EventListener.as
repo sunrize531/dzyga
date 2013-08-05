@@ -26,7 +26,7 @@ package org.dzyga.events {
             _args = argArray;
             _once = once;
             _useCapture = useCapture;
-            _hash = hash || EventBridge.listenerHashGenerate(target, event, callback, useCapture);
+            _hash = hash || DispatcherProxy.listenerHashGenerate(target, event, callback, useCapture);
         }
 
         public function listen (priority:Number = 0, useWeakReference:Boolean = true):EventListener {
@@ -49,8 +49,8 @@ package org.dzyga.events {
 
         public function call (event:Event):void {
             var callbackArgs:Array = [event];
-            if (_args) {
-                callbackArgs.concat(_args);
+            for each (var a:* in _args) {
+                callbackArgs.push(a);
             }
             _callback.apply(_thisArg, callbackArgs);
         }

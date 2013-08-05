@@ -4,13 +4,13 @@ package org.dzyga.events {
 
     import org.flexunit.asserts.assertEquals;
 
-    public class EventBridgeTest {
+    public class DispatcherProxyTest {
         private var _listenerFirstCounter:int = 0;
         private var _listenerSecondCounter:int = 0;
-        private var _eventBridge:EventBridge;
+        private var _eventBridge:DispatcherProxy;
 
-        public function EventBridgeTest () {
-            _eventBridge = new EventBridge(new EventDispatcher());
+        public function DispatcherProxyTest () {
+            _eventBridge = new DispatcherProxy(new EventDispatcher());
         }
 
         [Before]
@@ -19,9 +19,10 @@ package org.dzyga.events {
             _listenerSecondCounter = 0;
         }
 
-        private function listenerFirstCallback (e:Event):void {
+        private function listenerFirstCallback (e:Event, inc:int=0):void {
             trace('listenerFirstCallback: ' + e);
             _listenerFirstCounter++;
+            _listenerFirstCounter += inc;
         }
 
         private function listenerSecondCallback (e:Event):void {
@@ -78,6 +79,22 @@ package org.dzyga.events {
             _eventBridge.dispatchEvent(new Event(Event.ACTIVATE));
             assertEquals(1, _listenerFirstCounter);
             assertEquals(1, _listenerSecondCounter);
+        }
+
+        [Test]
+        public function testListenOnce ():void {
+            _eventBridge.listen(Event.ACTIVATE, listenerFirstCallback, true);
+            _eventBridge.dispatchEvent(new Event(Event.ACTIVATE));
+            _eventBridge.dispatchEvent(new Event(Event.ACTIVATE));
+            assertEquals(1, _listenerFirstCounter);
+        }
+
+        [Test]
+        public function testArgsArray ():void {
+            _eventBridge
+                .listen(Event.ACTIVATE, listenerFirstCallback, false, null, [2])
+                .trigger(Event.ACTIVATE);
+            assertEquals(3, _listenerFirstCounter);
         }
     }
 }
