@@ -98,5 +98,8 @@ package org.dzyga.events {
         public function get name() : String {
             return "";
         }
+
+        public function init():void {
+        }
     }
 }

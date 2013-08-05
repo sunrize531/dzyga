@@ -7,7 +7,7 @@ package org.dzyga.events {
         
         public function addAction(priority:int, func:*, thisObject:*=null, ...args):Action {
             
-            var action:Action = new Action()//Pool.get(Action) as Action;
+            var action:Action = new Action(); //Pool.get(Action) as Action;
             action.priority = priority;
             action.action = func;
             action.thisObject = thisObject;
@@ -40,9 +40,9 @@ package org.dzyga.events {
         }
         
         public function clear():void {
-            /*for each (var action:Action in this.queue) {
+            for each (var action:Action in this.queue) {
                 Pool.put(action);
-            }*/
+            }
             this.queue.length = 0;
         }
         

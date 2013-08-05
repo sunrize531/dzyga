@@ -10,5 +10,7 @@ package org.dzyga.events {
         function finish() : void
 
         function get name ():String
+
+        function init():void
     }
 }
