@@ -80,7 +80,7 @@ package org.dzyga.events {
      * @param ProxyClass
      * @return
      */
-    public function dispatcher (target:IEventDispatcher, ProxyClass:Class = null):DispatcherProxy {
+    public function dispatcher (target:IEventDispatcher, ProxyClass:Class = null):IDispatcherProxy {
         var proxy:DispatcherProxy = DispatcherProxy.dispatcherProxyHash[target];
         if (!proxy) {
             if (ProxyClass) {
