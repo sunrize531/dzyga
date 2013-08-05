@@ -42,7 +42,7 @@ package org.dzyga.events {
             var onOut:Function = mouseEventListener;
 
             var d:Sprite = new Sprite();
-            // Note! DispatcherProxies cached with weak reference.
+            // Note! DispatcherProxies cached with weak reference on target.
             assertEquals(dispatcher(d), dispatcher(d)); // true
 
             // Assign multiple listeners to dispatcher.
