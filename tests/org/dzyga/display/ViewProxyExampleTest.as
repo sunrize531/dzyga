@@ -17,10 +17,10 @@ package org.dzyga.display {
             var second:Sprite = new Sprite();
 
             // Each view call creates new instance of ViewProxy for view.
-            assertTrue(view(sprite) != view(sprite));
-            assertEquals(view(sprite).view == view(sprite).view);
+            assertTrue(display(sprite) != display(sprite));
+            assertEquals(display(sprite).view == display(sprite).view);
 
-            view(first).name('first').moveTo(20, 0);
+            display(first).name('first').moveTo(20, 0);
 
             assertEquals(first.x, 20);
             assertEquals(first.y, 0);
@@ -28,7 +28,7 @@ package org.dzyga.display {
             // Display object tree manipulation.
             // Add first and second to sprite, add sprite to parent,
             // set sprite's opacity to 0.5, scale it and move.
-            view(sprite)
+            display(sprite)
                 .addChild(first)
                 .addChild(second)
                 .insertTo(parent)
@@ -43,7 +43,7 @@ package org.dzyga.display {
 
             // Broken chain
             // Hide child in sprite named 'first' and return it as Sprite.
-            var hidden:Sprite = view(sprite)
+            var hidden:Sprite = display(sprite)
                 .getChild('first')
                 .hide()
                 .sprite;
@@ -53,25 +53,25 @@ package org.dzyga.display {
 
             // DispatcherProxy...
             // All ViewProxy instances shares same DispatcherProxy. Also ViewProxy is not a DispatcherProxy.
-            assertTrue(view(sprite) != dispatcher(sprite));
-            assertEquals(view(sprite).dispatcher, dispatcher(sprite));
+            assertTrue(display(sprite) != dispatcher(sprite));
+            assertEquals(display(sprite).dispatcher, dispatcher(sprite));
 
             // Chains, just like in DispatcherProxy
             function mouseEventListener (e:Event):void {
                 trace(e.type);
             }
-            view(sprite)
+            display(sprite)
                 .listen(MouseEvent.CLICK, mouseEventListener)
                 .listen(MouseEvent.MOUSE_DOWN, mouseEventListener, true)
                 .trigger(MouseEvent.CLICK) // 'click' traced
                 .trigger(MouseEvent.MOUSE_DOWN) // 'mouseDown' traced
                 .trigger(MouseEvent.MOUSE_DOWN); // nothing traced, cause MOUSE_DOWN listener added with once argument set to true.
 
-            assertTrue(view(sprite).isListening(MouseEvent.CLICK));
-            assertFalse(view(sprite).isListening(MouseEvent.MOUSE_DOWN));
+            assertTrue(display(sprite).isListening(MouseEvent.CLICK));
+            assertFalse(display(sprite).isListening(MouseEvent.MOUSE_DOWN));
 
             // Same for dispatcher
-            assertTrue(view(sprite).dispatcher.isListening(MouseEvent.CLICK));
+            assertTrue(display(sprite).dispatcher.isListening(MouseEvent.CLICK));
             assertTrue(dispatcher(sprite).isListening(MouseEvent.CLICK));
         }
     }

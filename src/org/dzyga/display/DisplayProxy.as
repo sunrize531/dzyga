@@ -23,10 +23,10 @@ package org.dzyga.display {
     import org.dzyga.geom.Rect;
 
 
-    public class ViewProxy implements IViewProxy {
+    public class DisplayProxy implements IDisplayProxy {
         protected var _view:DisplayObject;
 
-        public function ViewProxy (view:DisplayObject) {
+        public function DisplayProxy (view:DisplayObject) {
             _view = view;
         }
 
@@ -105,7 +105,7 @@ package org.dzyga.display {
          * @param name
          * @return this
          */
-        public function name (name:String):IViewProxy {
+        public function name (name:String):IDisplayProxy {
             view.name = name;
             return this;
         }
@@ -116,10 +116,10 @@ package org.dzyga.display {
          * @param x X coordinate
          * @param y Y coordinate
          * @param truncate floor coordinates to integer value before applying
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
-        public function moveTo (x:Number, y:Number, truncate:Boolean = false):IViewProxy {
-            ViewUtils.moveTo(_view, x, y, truncate);
+        public function moveTo (x:Number, y:Number, truncate:Boolean = false):IDisplayProxy {
+            DisplayUtils.moveTo(_view, x, y, truncate);
             return this;
         }
 
@@ -131,8 +131,8 @@ package org.dzyga.display {
          * @param truncate floor coordinates to integer before applying
          * @return self
          */
-        public function offset (dx:Number, dy:Number, truncate:Boolean = false):IViewProxy {
-            ViewUtils.offset(_view, dx, dy, truncate);
+        public function offset (dx:Number, dy:Number, truncate:Boolean = false):IDisplayProxy {
+            DisplayUtils.offset(_view, dx, dy, truncate);
             return this;
         }
 
@@ -143,8 +143,8 @@ package org.dzyga.display {
          * @param scaleY
          * @return self
          */
-        public function scale (scaleX:Number, scaleY:Number=NaN):IViewProxy {
-            ViewUtils.scale(_view, scaleX, scaleY);
+        public function scale (scaleX:Number, scaleY:Number=NaN):IDisplayProxy {
+            DisplayUtils.scale(_view, scaleX, scaleY);
             return this;
         }
 
@@ -154,8 +154,8 @@ package org.dzyga.display {
          * @param target DisplayObject to copy transform
          * @return self
          */
-        public function match (target:DisplayObject):IViewProxy {
-            ViewUtils.match(_view, target);
+        public function match (target:DisplayObject):IDisplayProxy {
+            DisplayUtils.match(_view, target);
             return this;
         }
 
@@ -170,8 +170,8 @@ package org.dzyga.display {
          * @param level where to add child
          * @return this
          */
-        public function addChild (child:DisplayObject, level:int = int.MAX_VALUE):IViewProxy {
-            ViewUtils.addChild(container, child, level);
+        public function addChild (child:DisplayObject, level:int = int.MAX_VALUE):IDisplayProxy {
+            DisplayUtils.addChild(container, child, level);
             return this;
         }
 
@@ -183,8 +183,8 @@ package org.dzyga.display {
          * @param level level in target
          * @return this
          */
-        public function insertTo (target:DisplayObjectContainer, level:int = int.MAX_VALUE):IViewProxy {
-            ViewUtils.insertTo(view, target, level);
+        public function insertTo (target:DisplayObjectContainer, level:int = int.MAX_VALUE):IDisplayProxy {
+            DisplayUtils.insertTo(view, target, level);
             return this;
         }
 
@@ -194,8 +194,8 @@ package org.dzyga.display {
          * @param name Name of child
          * @return new ViewProxy instance
          */
-        public function getChild (name:String):IViewProxy {
-            return new ViewProxy(container.getChildByName(name));
+        public function getChild (name:String):IDisplayProxy {
+            return new DisplayProxy(container.getChildByName(name));
         }
 
         /**
@@ -204,8 +204,8 @@ package org.dzyga.display {
          * @param child
          * @return this
          */
-        public function removeChildFrom (child:DisplayObject):IViewProxy {
-            ViewUtils.removeChild(container, child);
+        public function removeChildFrom (child:DisplayObject):IDisplayProxy {
+            DisplayUtils.removeChild(container, child);
             return this;
         }
 
@@ -214,8 +214,8 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function clear ():IViewProxy {
-            ViewUtils.clear(container);
+        public function clear ():IDisplayProxy {
+            DisplayUtils.clear(container);
             return this;
         }
 
@@ -224,8 +224,8 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function detach ():IViewProxy {
-            ViewUtils.detach(view);
+        public function detach ():IDisplayProxy {
+            DisplayUtils.detach(view);
             return this;
         }
 
@@ -237,7 +237,7 @@ package org.dzyga.display {
          * @return view's bounds or null
          */
         public function getBounds ():Rect {
-            return ViewUtils.getBounds(view);
+            return DisplayUtils.getBounds(view);
         }
 
         /**
@@ -248,7 +248,7 @@ package org.dzyga.display {
          * @return
          */
         public function hitTest (point:Point):Boolean {
-            return ViewUtils.hitTest(view, point);
+            return DisplayUtils.hitTest(view, point);
         }
 
         // Visibility
@@ -258,8 +258,8 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function show ():IViewProxy {
-            ViewUtils.show(view);
+        public function show ():IDisplayProxy {
+            DisplayUtils.show(view);
             return this;
         }
 
@@ -268,8 +268,8 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function hide ():IViewProxy {
-            ViewUtils.hide(view);
+        public function hide ():IDisplayProxy {
+            DisplayUtils.hide(view);
             return this;
         }
 
@@ -278,8 +278,8 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function toggle (view:DisplayObject):IViewProxy {
-            ViewUtils.toggle(view);
+        public function toggle (view:DisplayObject):IDisplayProxy {
+            DisplayUtils.toggle(view);
             return this;
         }
 
@@ -289,8 +289,8 @@ package org.dzyga.display {
          * @param alpha
          * @return this
          */
-        public function alpha (alpha:Number = 1):IViewProxy {
-            ViewUtils.alpha(view, alpha);
+        public function alpha (alpha:Number = 1):IDisplayProxy {
+            DisplayUtils.alpha(view, alpha);
             return this;
         }
 
@@ -299,8 +299,8 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function mouseDisable ():IViewProxy {
-            ViewUtils.mouseDisable(interactive);
+        public function mouseDisable ():IDisplayProxy {
+            DisplayUtils.mouseDisable(interactive);
             return this;
         }
 
@@ -309,18 +309,18 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function mouseEnable ():IViewProxy {
-            ViewUtils.mouseEnable(interactive);
+        public function mouseEnable ():IDisplayProxy {
+            DisplayUtils.mouseEnable(interactive);
             return this;
         }
 
         /**
          * Toggle mouseEnabled property and set mouseChildren property to the same value. Returns view.
          *
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
-        public function mouseToggle ():IViewProxy {
-            ViewUtils.mouseToggle(interactive);
+        public function mouseToggle ():IDisplayProxy {
+            DisplayUtils.mouseToggle(interactive);
             return this;
         }
 

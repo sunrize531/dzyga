@@ -36,7 +36,7 @@ package org.dzyga.display {
      * @param view
      * @return
      */
-    public function view (view:DisplayObject):IViewProxy {
-        return new ViewProxy(view);
+    public function display (view:DisplayObject):IDisplayProxy {
+        return new DisplayProxy(view);
     }
 }

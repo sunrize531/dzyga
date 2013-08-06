@@ -11,7 +11,7 @@ package org.dzyga.display {
      * Mostly for simplify DO manipulation and enable some chained calls.
      * This class inspired by work of Ivan Shaban.
      */
-    public final class ViewUtils {
+    public final class DisplayUtils {
         /**
          * Move view to specified coordinates.
          *
@@ -19,7 +19,7 @@ package org.dzyga.display {
          * @param x X coordinate
          * @param y Y coordinate
          * @param truncate floor coordinates to integer value before applying
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function moveTo (
                 view:DisplayObject, x:Number, y:Number, truncate:Boolean = false):DisplayObject {
@@ -35,7 +35,7 @@ package org.dzyga.display {
          * @param dx X coordinate offset
          * @param dy Y coordinate offset
          * @param truncate floor coordinates to integer before applying
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function offset (
                 view:DisplayObject, dx:Number, dy:Number, truncate:Boolean = false):DisplayObject {
@@ -48,7 +48,7 @@ package org.dzyga.display {
          * @param view DisplayObject to transform
          * @param scaleX
          * @param scaleY
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function scale (view:DisplayObject, scaleX:Number, scaleY:Number=NaN):DisplayObject {
             if (isNaN(scaleY)) {
@@ -64,7 +64,7 @@ package org.dzyga.display {
          *
          * @param view DisplayObject to transform
          * @param target DisplayObject to copy transform
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function match (view:DisplayObject, target:DisplayObject):DisplayObject {
             view.transform.matrix = target.transform.matrix;
@@ -81,7 +81,7 @@ package org.dzyga.display {
          * @param view DisplayObjectContainer where to place a child
          * @param child DisplayObject to add
          * @param level where to add child
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function addChild (
                 view:DisplayObjectContainer, child:DisplayObject, level:int = int.MAX_VALUE):DisplayObjectContainer {
@@ -104,7 +104,7 @@ package org.dzyga.display {
          * @param view DisplayObject to insert into target
          * @param target DisplayObjectContainer where to place child.
          * @param level level in target
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function insertTo (
                 view:DisplayObject, target:DisplayObjectContainer, level:int = int.MAX_VALUE):DisplayObject {
@@ -131,7 +131,7 @@ package org.dzyga.display {
          * Remove all children from view.
          *
          * @param view DisplayObjectContainer to clear
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function clear (view:DisplayObjectContainer):DisplayObjectContainer {
             var numChildren:int = view.numChildren;
@@ -145,7 +145,7 @@ package org.dzyga.display {
          * Remove view from it's parent.
          *
          * @param view
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function detach (view:DisplayObject):DisplayObject {
             var parent:DisplayObjectContainer = view.parent;
@@ -189,7 +189,7 @@ package org.dzyga.display {
          * Make view visible and return it for chaining.
          *
          * @param view
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function show (view:DisplayObject):DisplayObject {
             view.visible = true;
@@ -200,7 +200,7 @@ package org.dzyga.display {
          * Hide view and return it for chaining.
          *
          * @param view
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function hide (view:DisplayObject):DisplayObject {
             view.visible = false;
@@ -211,7 +211,7 @@ package org.dzyga.display {
          * Toggle view's visibility and return it for chaining.
          *
          * @param view
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function toggle (view:DisplayObject):DisplayObject {
             view.visible = !view.visible;
@@ -223,7 +223,7 @@ package org.dzyga.display {
          *
          * @param view
          * @param alpha
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function alpha (view:DisplayObject, alpha:Number = 1):DisplayObject {
             view.alpha = alpha;
@@ -234,7 +234,7 @@ package org.dzyga.display {
          * Set mouseEnabled and mouseChildren properties of view to false. Returns view.
          *
          * @param view
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function mouseDisable (view:InteractiveObject):InteractiveObject {
             view.mouseEnabled = false;
@@ -248,7 +248,7 @@ package org.dzyga.display {
          * Set mouseEnabled and mouseChildren properties of view to true. Returns view.
          *
          * @param view
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function mouseEnable (view:InteractiveObject):InteractiveObject {
             view.mouseEnabled = true;
@@ -262,7 +262,7 @@ package org.dzyga.display {
          * Toggle mouseEnabled property and set mouseChildren property to the same value. Returns view.
          *
          * @param view
-         * @return org.dzyga.display.view
+         * @return org.dzyga.display.display
          */
         public static function mouseToggle (view:InteractiveObject):InteractiveObject {
             view.mouseEnabled = !view.mouseEnabled;
