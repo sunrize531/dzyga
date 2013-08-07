@@ -1,5 +1,4 @@
 package org.dzyga.events {
-    import org.dzyga.pool.Pool;
     import org.dzyga.utils.ArrayUtils;
 
     public class Queue {

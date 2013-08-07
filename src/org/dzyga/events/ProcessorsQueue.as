@@ -1,8 +1,8 @@
 package org.dzyga.events {
-    import org.dzyga.utils.ObjectUtils;
-
     import flash.errors.IllegalOperationError;
     import flash.utils.Dictionary;
+
+    import org.dzyga.utils.ObjectUtils;
 
     public class ProcessorsQueue extends Processor {
         public static const SUBSEQUENT : int = 0;

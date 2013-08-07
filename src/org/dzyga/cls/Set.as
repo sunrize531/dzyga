@@ -1,10 +1,10 @@
 package org.dzyga.cls {
 
-    import org.dzyga.utils.ObjectUtils;
-
     import flash.utils.Dictionary;
     import flash.utils.Proxy;
     import flash.utils.flash_proxy;
+
+    import org.dzyga.utils.ObjectUtils;
 
     /**
      * mathematic set (many) methods
