@@ -193,7 +193,8 @@
                 while (action && !timeIsOut) {
                     if (action is Thread) {
                         var thread:Thread = action as Thread;
-                        if ((!thread.threads || thread.threads > threadCount) && !thread.run()) {
+                        //if ((!thread.threads || thread.threads > threadCount) && !thread.run()) {
+                        if ((!thread.threads || thread.threads > threadCount) && thread.run()) {
                             threadCount++;
                             //CONFIG::debug{ KLog.log("EnterFrame : exec  thread "+ thread.name, KLog.ENTER_FRAME); }
                         }
