@@ -143,6 +143,12 @@ package org.dzyga.events {
             return triggerTo(_target, eventType);
         }
 
+        /**
+         * Trigger Event with specified type on target.
+         * @param target
+         * @param eventType
+         * @return this
+         */
         public function triggerTo (target:IEventDispatcher, eventType:String):IDispatcherProxy {
             target.dispatchEvent(new Event(eventType));
             return this;
@@ -227,11 +233,6 @@ package org.dzyga.events {
 
         public static function targetHashGenerate (target:IEventDispatcher, event:String):String {
             return event + ObjectUtils.hash(target);
-        }
-
-        private static var _dispatcherProxyHash:Dictionary = new Dictionary(true);
-        internal static function get dispatcherProxyHash ():Dictionary {
-            return _dispatcherProxyHash;
         }
     }
 }
