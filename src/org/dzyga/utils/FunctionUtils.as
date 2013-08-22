@@ -16,8 +16,6 @@ package org.dzyga.utils {
             }
         }
 
-        private static var _onceMap:Dictionary = new Dictionary(true);
-
         /**
          * Create version of f which is runs only once. For subsequent calls first run result returned.
          *
@@ -25,16 +23,18 @@ package org.dzyga.utils {
          * @return
          */
         public static function once (f:Function):Function {
-            var onceFunction:Function = function (... arguments):* {
-                if (onceFunction in _onceMap) {
-                    return _onceMap[onceFunction];
+            var ran:Boolean = false;
+            var memo:*;
+            return function ():* {
+                if (ran) {
+                    return memo;
                 } else {
-                    var re:* = onceFunction.apply(this, arguments);
-                    _onceMap[onceFunction] = re;
-                    return re;
+                    ran = true;
+                    memo = f.apply(this, arguments);
+                    f = null;
+                    return memo;
                 }
             };
-            return onceFunction;
         }
 
         /**
@@ -44,13 +44,28 @@ package org.dzyga.utils {
          * @return composition
          */
         public static function compose (... args):Function {
-            var functions:Array = args;
+            var functions:Array = args.reverse();
             return function (... args):* {
                 for (var i:int = functions.length - 1; i >= 0; i--) {
                     args = [functions[i].apply(this, args)];
                 }
                 return args[0];
             };
+        }
+
+        /**
+         * Create function which is calls function with some predefined arguments.
+         *
+         * @param f
+         * @param thisArg bind f to this
+         * @param args args to define
+         * @return new function
+         */
+        public static function partial (f:Function, thisArg:* = null, ... args):Function {
+            return function (... partialArgs):* {
+                args = args.concat(partialArgs);
+                return f.apply(thisArg, args);
+            }
         }
     }
 }
