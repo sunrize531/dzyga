@@ -67,5 +67,26 @@ package org.dzyga.utils {
             assertEquals('1', obj.id);
             assertTrue(obj.valid);
         }
+
+        [Test]
+        public function testWrap ():void {
+            var obj:Object = {};
+
+            var setID:Function = function (obj:Object, id:String, prefix:String = ''):Object {
+                obj.id = prefix + id;
+                obj.name = obj.id;
+                return obj;
+            };
+
+            var wrapper:Function = function (setter:Function, obj:Object, value:String):Object {
+                setter(obj, value, 'prefix_');
+                assertEquals(obj.id, obj.name);
+                return obj;
+            };
+
+            var wrappedSetter:Function = FunctionUtils.wrap(setID, wrapper);
+            wrappedSetter(obj, '001');
+            assertEquals('prefix_001', obj.id);
+        }
     }
 }

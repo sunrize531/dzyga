@@ -67,5 +67,20 @@ package org.dzyga.utils {
                 return f.apply(thisArg, args);
             }
         }
+
+
+        /**
+         * Create function which wraps f with wrapper.
+         *
+         * @param f function to wrap
+         * @param wrapper wrapper function
+         * @return new function
+         */
+        public static function wrap (f:Function, wrapper:Function):Function {
+            return function (... args):* {
+                var wrapperArgs:Array = [f].concat(args);
+                wrapper.apply(this, wrapperArgs);
+            };
+        }
     }
 }
