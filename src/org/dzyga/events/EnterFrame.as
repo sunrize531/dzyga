@@ -6,8 +6,6 @@
     import flash.utils.Timer;
     import flash.utils.getTimer;
 
-    import log.logServer.KLog;
-
     public class EnterFrame {
         public static const DEFAULT_FPS:int = 24;
         public static var dispatcher:Stage;
@@ -31,9 +29,6 @@
         private static var FRAME_RATIO:Number = 0.7;
 
         public static function addAction(priority:int, method:*, thisObject:Object = null, ...args):Action {
-
-            CONFIG::debug{ KLog.log("addAction", KLog.ENTER_FRAME); }
-
             var action:Action = EnterFrame.queue.addAction(priority, method, thisObject);
             action.args = args;
 
@@ -92,8 +87,6 @@
         }
 
         public static function scheduleAction(timeOut:Number, method:*, thisObject:* = null, ...args):Action {
-            CONFIG::debug{ KLog.log("scheduleAction  ", KLog.ENTER_FRAME); }
-
             EnterFrame.start();
             var delay:Number = getTimer() + timeOut;
             var action:Action = EnterFrame.schedule.addAction(delay, method, thisObject);
@@ -173,8 +166,6 @@
             var i:int = 0;
             var threadCount:int = 0;
 
-            CONFIG::debug{ KLog.log("EnterFrame : exec ---", KLog.ENTER_FRAME); }
-
             while (EnterFrame.schedule.length && !timeIsOut) {
                 action = EnterFrame.schedule.queue[0];
                 if (action.priority < startTime) {
@@ -182,7 +173,6 @@
                     EnterFrame.removeScheduledAction(action);
                     timePassed = getTimer() - startTime;
                     timeIsOut = timePassed > EnterFrame._calculatedInterval;
-                    CONFIG::debug{ KLog.log("EnterFrame : exec  schedule "+action.name , KLog.ENTER_FRAME); }
                 }
                 else {
                     break;
@@ -196,7 +186,6 @@
                         if ((!thread.threads || thread.threads > threadCount) && !thread.run()) {
                         //if ((!thread.threads || thread.threads > threadCount) && thread.run()) {
                             threadCount++;
-                            CONFIG::debug{ KLog.log("EnterFrame : exec thread "+ thread.name, KLog.ENTER_FRAME); }
                         }
                         else {
                             action = null;
@@ -204,7 +193,6 @@
                         }
                     }
                     else {
-                        CONFIG::debug{ KLog.log("EnterFrame : exec  action " + action.name, KLog.ENTER_FRAME); }
                         action.run();
                         action = null;
                         threadCount = 0;

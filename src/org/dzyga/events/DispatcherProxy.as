@@ -224,11 +224,12 @@ package org.dzyga.events {
             return _target.willTrigger(type);
         }
 
-        public static function listenerHashGenerate (target:IEventDispatcher, event:String, callback:Function, useCapture:Boolean = false):String {
-            var targetHash:String = ObjectUtils.hash(target);
-            var callbackHash:String = ObjectUtils.hash(callback);
-            return event + StringUtils.fillleft(
-                (Number(targetHash) + Number(callbackHash) + Number(useCapture)).toFixed(0), 16, '0');
+        public static function listenerHashGenerate (
+                target:IEventDispatcher, event:String,
+                callback:Function, useCapture:Boolean = false):String {
+
+            return StringUtils.fillleft(StringUtils.checksum(
+                event + ObjectUtils.hash(target) + ObjectUtils.hash(callback)).toFixed(0), 16, '0');
         }
 
         public static function targetHashGenerate (target:IEventDispatcher, event:String):String {

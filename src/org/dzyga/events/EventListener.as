@@ -3,34 +3,28 @@ package org.dzyga.events {
     import flash.events.IEventDispatcher;
     import flash.utils.Dictionary;
 
-    public class EventListener {
-        private var _target:IEventDispatcher;
-        private var _event:String;
-        private var _callback:Function;
-        private var _thisArg:*;
-        private var _args:Array;
-        private var _once:Boolean = false;
-        private var _useCapture:*;
-        private var _hash:String;
-
-        private static var _hashTable:Dictionary = new Dictionary(true);
+    public class EventListener extends Handle {
+        protected var _target:IEventDispatcher;
+        protected var _event:String;
+        protected var _useCapture:*;
 
         public function EventListener (
                 target:IEventDispatcher, event:String, callback:Function,
                 once:Boolean = false, thisArg:* = null, argArray:Array = null,
                 useCapture:* = undefined, hash:String = undefined) {
+            super(callback, once, thisArg, argArray, hash);
             _target = target;
             _event = event;
-            _callback = callback;
-            _thisArg = thisArg;
-            _args = argArray;
-            _once = once;
             _useCapture = useCapture;
             _hash = hash || DispatcherProxy.listenerHashGenerate(target, event, callback, useCapture);
         }
 
+        override public function hashGenerate ():String {
+            return DispatcherProxy.listenerHashGenerate(_target, _event, _callback, _useCapture);
+        }
+
         public function listen (priority:Number = 0, useWeakReference:Boolean = true):EventListener {
-            _target.addEventListener(_event, call, useCapture, priority, useWeakReference);
+            _target.addEventListener(_event, onEvent, useCapture, priority, useWeakReference);
             return this;
         }
 
@@ -47,12 +41,8 @@ package org.dzyga.events {
             return this;
         }
 
-        public function call (event:Event):void {
-            var callbackArgs:Array = [event];
-            for each (var a:* in _args) {
-                callbackArgs.push(a);
-            }
-            _callback.apply(_thisArg, callbackArgs);
+        private function onEvent(e:Event):void {
+            call(e);
         }
 
         public function get target ():IEventDispatcher {
@@ -63,28 +53,9 @@ package org.dzyga.events {
             return _event;
         }
 
-        public function get callback ():Function {
-            return _callback;
-        }
-
-        public function get thisArg ():* {
-            return _thisArg;
-        }
-
-        public function get args ():Array {
-            return _args;
-        }
 
         public function get useCapture ():Boolean {
             return _useCapture;
-        }
-
-        public function get hash ():String {
-            return _hash;
-        }
-
-        public function get once ():Boolean {
-            return _once;
         }
     }
 }

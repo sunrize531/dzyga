@@ -32,6 +32,7 @@
 
 
 package org.dzyga.utils {
+    import flash.utils.ByteArray;
     import flash.utils.getTimer;
 
     public final class StringUtils {
@@ -208,12 +209,60 @@ package org.dzyga.utils {
             return ret.substr(2, length);
         }
 
+        public static function hex (s:String):String {
+            var l:int = s.length;
+            var i:int = 0;
+            var h:String = '';
+            while (i < l) {
+                h += fillleft(s.charCodeAt(i++).toString(16), 2, '0');
+            }
+            return h;
+        }
+
+        private static const ADLER_NMAX:int = 5552;
+        private static const ADLER_BASE:int = 65521;
+
+        /**
+         * Calculate checksum for String with Adler32 algorithm.
+         *
+         * @param buffer String to process
+         * @return checksum
+         */
+        public static function checksum (buffer:String):uint {
+            var length:int = buffer.length;
+            var l:int;
+            var i:int = 0;
+            var a:int = 1;
+            var b:int = 0;
+            while (length) {
+                l = ( length > ADLER_NMAX ) ? ADLER_NMAX : length;
+                length -= l;
+                do {
+                    a += buffer.charCodeAt(i++);
+                    b += a;
+                } while (--l);
+                a = (a & 0xFFFF) + (a >> 16) * 15;
+                b = (b & 0xFFFF) + (b >> 16) * 15;
+            }
+            if (a >= ADLER_BASE) {
+                a -= ADLER_BASE;
+            }
+            b = (b & 0xFFFF) + (b >> 16) * 15;
+            if (b >= ADLER_BASE) {
+                b -= ADLER_BASE;
+            }
+            return (b << 16) | a;
+        }
+
         private static var _counter:int = 0;
+        private static var _bytes:ByteArray = new ByteArray();
         public static function uniqueID ():String {
-            var ret:String = fillleft(getTimer().toString(), 16, '0')
-                + fillleft(_counter.toString(), 3, '0') + random(3);
-            _counter = (_counter + 1) % 1000;
-            return ret;
+            _bytes.writeUnsignedInt(getTimer());
+            _bytes.writeInt(_counter++);
+            _bytes.writeByte(Math.random() * 256);
+            var re:String = hex(_bytes.toString());
+            _bytes.clear();
+            return re;
         }
 
         private static const TEMPLATE_INTERPOLATE:RegExp = /\{\{\s*(.+?)\s*\}\}/g;
