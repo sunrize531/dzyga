@@ -57,6 +57,7 @@ package org.dzyga.utils {
 
             var validate:Function = function (obj:Object):Object {
                 assertEquals(obj.id, obj.name);
+                obj.valid = true;
                 return obj;
             };
 
@@ -64,6 +65,7 @@ package org.dzyga.utils {
             var obj:Object = {id: 1};
             composition(obj);
             assertEquals('1', obj.id);
+            assertTrue(obj.valid);
         }
     }
 }
