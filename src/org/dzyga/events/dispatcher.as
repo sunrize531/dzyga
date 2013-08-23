@@ -1,5 +1,6 @@
 package org.dzyga.events {
     import flash.events.IEventDispatcher;
+    import flash.utils.Dictionary;
 
     /**
      * Helper to easily chain events operations on dispatcher.

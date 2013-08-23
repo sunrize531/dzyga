@@ -234,5 +234,10 @@ package org.dzyga.events {
         public static function targetHashGenerate (target:IEventDispatcher, event:String):String {
             return event + ObjectUtils.hash(target);
         }
+
+        private static var _dispatcherProxyHash:Dictionary = new Dictionary(true);
+        internal static function get dispatcherProxyHash ():Dictionary {
+            return _dispatcherProxyHash;
+        }
     }
 }
