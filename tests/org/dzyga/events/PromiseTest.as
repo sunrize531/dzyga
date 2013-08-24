@@ -43,6 +43,32 @@ package org.dzyga.events {
             assertEquals(1, _secondCounter);
         }
 
+        [Test]
+        public function testCallbackRemoveUniq ():void {
+            var promise:Promise = new Promise();
+            promise
+                .callbackRegister(firstCallback)
+                .callbackRegister(secondCallback)
+                .callbackRemove(firstCallback)
+                .resolve();
+            assertEquals(0, _firstCounter);
+            assertEquals(1, _secondCounter);
+        }
+
+        [Test]
+        public function testCallbackRemove ():void {
+            var promise:Promise = new Promise();
+            promise
+                .callbackRegister(firstCallback)
+                .callbackRegister(firstCallback)
+                .resolve();
+            assertEquals(2, _firstCounter);
+            promise
+                .callbackRemove(firstCallback)
+                .resolve();
+            assertEquals(2, _firstCounter);
+        }
+
 
         [Test]
         public function testCallbackRegisterOnce ():void {
