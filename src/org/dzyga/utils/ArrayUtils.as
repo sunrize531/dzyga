@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 package org.dzyga.utils {
+    import org.dzyga.utils.ArrayUtils;
 
 
     public final class ArrayUtils {
@@ -139,11 +140,9 @@ package org.dzyga.utils {
             return re;
         }
 
-
         public static function isExists(array:Array, value:*):Boolean {
             return array.indexOf(value) != -1;
         }
-
 
         /**
          * Checks, if there is element, or element with defined property in array.

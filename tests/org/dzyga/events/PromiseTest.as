@@ -1,0 +1,76 @@
+/**
+ * Created with IntelliJ IDEA.
+ * User: sunrize
+ * Date: 25.08.13
+ * Time: 0:52
+ * To change this template use File | Settings | File Templates.
+ */
+package org.dzyga.events {
+    import org.flexunit.asserts.assertEquals;
+
+    public class PromiseTest {
+        private var _firstCounter:int = 0;
+        private var _secondCounter:int = 0;
+
+
+        [Before]
+        public function before ():void {
+            _firstCounter = 0;
+            _secondCounter = 0;
+        }
+
+        [Test]
+        public function testCallbackRegisterUniq ():void {
+            var promise:Promise = new Promise();
+            promise
+                .callbackRegister(firstCallback, false, null, [2])
+                .callbackRegister(firstCallback)
+                .callbackRegister(secondCallback)
+                .resolve();
+            assertEquals(2, _firstCounter); // 3, if first callback added twice...
+            assertEquals(1, _secondCounter);
+        }
+
+        [Test]
+        public function testCallbackRegister ():void {
+            var promise:Promise = new Promise(false);
+            promise
+                .callbackRegister(firstCallback, false, null, [2])
+                .callbackRegister(firstCallback)
+                .callbackRegister(secondCallback)
+                .resolve();
+            assertEquals(3, _firstCounter); // 3, if first callback added twice...
+            assertEquals(1, _secondCounter);
+        }
+
+
+        [Test]
+        public function testCallbackRegisterOnce ():void {
+            var promise:Promise = new Promise();
+            promise
+                .callbackRegister(firstCallback, true, null, [2])
+                .resolve()
+                .resolve();
+            assertEquals(2, _firstCounter); // 4, if first callback hits twice...
+        }
+
+        [Test]
+        public function testResolveArgs ():void {
+            var promise:Promise = new Promise();
+            promise
+                .callbackRegister(firstCallback)
+                .resolve(2)
+                .resolve();
+            assertEquals(3, _firstCounter);
+        }
+
+
+        private function firstCallback (inc:int = 1):void {
+            _firstCounter += inc;
+        }
+
+        private function secondCallback (inc:int = 1):void {
+            _secondCounter += inc;
+        }
+    }
+}

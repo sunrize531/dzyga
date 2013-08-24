@@ -15,7 +15,7 @@ package org.dzyga.events {
             _once = once;
             _callback = callback;
             _thisArg = thisArg;
-            _args = args;
+            _args = args || [];
             _hash = hash || hashGenerate();
         }
 

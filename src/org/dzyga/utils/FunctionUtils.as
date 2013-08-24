@@ -1,6 +1,4 @@
 package org.dzyga.utils {
-    import flash.utils.Dictionary;
-
     public final class FunctionUtils {
         /**
          * If f is Function run it, otherwise return it.
@@ -81,6 +79,17 @@ package org.dzyga.utils {
                 var wrapperArgs:Array = [f].concat(args);
                 wrapper.apply(this, wrapperArgs);
             };
+        }
+
+        /**
+         * This is very useful function for maps and filters. Just returns it's first argument. :)
+         *
+         * @param value value to return
+         * @param args
+         * @return value
+         */
+        public static function identity (value:*, ... args):* {
+            return value;
         }
     }
 }
