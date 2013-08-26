@@ -29,7 +29,7 @@ package org.dzyga.events {
         }
 
         public function destroy ():EventListener {
-            _target.removeEventListener(_event, call, useCapture);
+            _target.removeEventListener(_event, onEvent, useCapture);
 
             // Release links for gc...
             _target = null;
