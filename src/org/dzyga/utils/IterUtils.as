@@ -1,12 +1,13 @@
 package org.dzyga.utils {
     import org.as3commons.collections.framework.IIterable;
     import org.as3commons.collections.framework.IIterator;
+    import org.as3commons.collections.iterators.ArrayIterator;
 
     public final class IterUtils {
         /**
          * object can be primitive, IIterable or IIterator. If object is primitive, create iterator with
-         * one value for this object. If object is IIterable - returns its iterator. If object is IIterator -
-         * returns object itself.
+         * one value for this object. If object is Array - returns new ArrayIterator.
+         * If object is IIterable - returns its iterator. If object is IIterator - returns object itself.
          *
          * @param object
          * @return
@@ -16,6 +17,8 @@ package org.dzyga.utils {
                 return object;
             } else if (object is IIterable) {
                 return object.iterator();
+            } else if (object is Array) {
+                return new ArrayIterator(object);
             } else {
                 return new PrimitiveIterator(object);
             }
@@ -23,7 +26,7 @@ package org.dzyga.utils {
 
         /**
          * Return iterator which applies f to each value for object. object will be passed to iterator() first, so
-         * primitive, iterables and iterators allowed.
+         * primitive, arrays, iterables and iterators allowed.
          *
          * @param object primitive or iterable or iterator
          * @param f function to apply
@@ -36,7 +39,7 @@ package org.dzyga.utils {
 
         /**
          * Return iterator which filters object with f function. object will be passed to iterator() first, so
-         * primitive, iterables and iterators allowed.
+         * primitive, arrays, iterables and iterators allowed.
          *
          * @param object
          * @param f
@@ -44,6 +47,21 @@ package org.dzyga.utils {
          */
         public static function filter (object:*, f:Function):IIterator {
             return new FilterIterator(iterator(object), f);
+        }
+
+        /**
+         * Create array from object. object will be passed to iterator() method first.
+         *
+         * @param object
+         * @return
+         */
+        public static function array (object:*):Array {
+            var i:IIterator = iterator(object);
+            var re:Array = [];
+            while (i.hasNext()) {
+                re.push(i.next());
+            }
+            return re;
         }
     }
 }

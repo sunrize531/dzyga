@@ -172,12 +172,19 @@ package org.dzyga.utils {
         }
 
 
-        public static function shuffle(value:Array, returnCopy:Boolean = false):Array {
-            if (!value) {
+        /**
+         * Fisher–Yates shuffle.
+         *
+         * @param array array to shuffle
+         * @param returnCopy if false will shuffle input array, otherwise will shuffle copy.
+         * @return
+         */
+        public static function shuffle(array:Array, returnCopy:Boolean = false):Array {
+            if (!array) {
                 return null;
             }
-            var res:Array = returnCopy ? value.concat() : value;
-            var len:int = value.length - 1;
+            var res:Array = returnCopy ? array.concat() : array;
+            var len:int = array.length - 1;
             var index:int;
             var temp:Object;
 
@@ -265,6 +272,7 @@ package org.dzyga.utils {
 
         /**
          *
+         *
          * @param array Target Array or Vector.
          * @param value Value to remove.
          * @return Is value was removed or not.
@@ -279,5 +287,27 @@ package org.dzyga.utils {
             }
             return false;
         }
+
+        /**
+         * Return true if all values in both arrays are equal.
+         *
+         * @param first
+         * @param second
+         * @return
+         */
+        public static function equals (first:Array, second:Array):Boolean {
+            if (first == second) {
+                return true;
+            } else {
+                var len:int = first.length;
+                for (var i:int = 0; i < len; i++) {
+                    if (first[i] !== second[i]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
     }
 }
