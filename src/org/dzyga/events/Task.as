@@ -97,7 +97,7 @@ package org.dzyga.events {
          */
         public function start (...args):ITask {
             if (_state !== TaskState.IDLE) {
-                throw new IllegalOperationError('Reject and resolve the task first. Current state - ' + _state);
+                throw new IllegalOperationError('Reject or resolve the task first. Current state - ' + _state);
             }
             _state = TaskState.STARTED;
             resolvePromise(_started, args);
