@@ -15,8 +15,9 @@ package org.dzyga.events {
         public static function init (stage:Stage):void {
             _stage = stage;
             _dispatcher = new DispatcherProxy(stage);
-            _dispatcher.listen(Event.ENTER_FRAME, enterFrameHandler);
-            _dispatcher.listen(Event.EXIT_FRAME, exitFrameHandler);
+            _dispatcher
+                .listen(Event.ENTER_FRAME, enterFrameHandler)
+                .listen(Event.EXIT_FRAME, exitFrameHandler);
         }
 
         public static function get fps ():Number {
