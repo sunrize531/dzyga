@@ -36,8 +36,10 @@ package org.dzyga.events {
         protected static const ENTER_FRAME_THRESHOLD:Number = 0.7;
         protected static const EXIT_FRAME_THRESHOLD:Number = 0.3;
 
+        protected static var _frameTime:Number = 0;
+
         protected static function callbackCollectionListProcess (callbackCollectionList:Array, frameTime:Number):void {
-            var startTime:Number = getTimer();
+            _frameTime = getTimer();
             var elapsedTime:Number = 0;
 
             for each (var collection:SortedSet in callbackCollectionList) {
@@ -47,13 +49,13 @@ package org.dzyga.events {
                         var callback:ILoopCallback = iterator.next();
                         if (callback.canceled) {
                             iterator.remove();
-                        } else if (callback.timeout <= startTime && (!callback.priority || elapsedTime < frameTime)) {
-                            callback.call();
+                        } else if (callback.timeout <= _frameTime && (!callback.priority || elapsedTime < frameTime)) {
                             if (callback.once) {
                                 iterator.remove();
                             }
+                            callback.call();
                         }
-                        elapsedTime = getTimer() - startTime;
+                        elapsedTime = getTimer() - _frameTime;
                     }
                 }
             }
@@ -130,9 +132,9 @@ package org.dzyga.events {
          * @param argsArray Execute callback with provided args.
          * @return new ILoopCallback instance
          */
-        public function nextFrameCall (callback:Function, priority:uint = 0,
+        public function call (callback:Function, priority:uint = 0,
                                        thisArg:* = null, argsArray:Array = null):ILoopCallback {
-            return delayedCall(callback, 0, priority, thisArg, argsArray);
+            return delayedCall(callback, _frameTime, priority, thisArg, argsArray);
         }
 
         /**
@@ -147,7 +149,9 @@ package org.dzyga.events {
          */
         public function delayedCall (callback:Function, delay:Number = 0, priority:uint = 0,
                                      thisArg:* = null, argsArray:Array = null):ILoopCallback {
-            var loopCallback:ILoopCallback = callbackInit(callback, delay, priority, true, thisArg, argsArray);
+            var loopCallback:ILoopCallback = callbackInit(
+                callback, _frameTime + delay, priority, true,
+                thisArg, argsArray);
             _delayedCallbackCollection.add(loopCallback);
             _callbackHash.add(_callbackHash, _delayedCallbackCollection);
             return null;

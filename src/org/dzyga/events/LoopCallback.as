@@ -10,12 +10,12 @@ package org.dzyga.events {
 
         public function LoopCallback (
                 loop:Loop, callback:Function,
-                delay:Number, priority:Number, once:Boolean,
+                timeout:Number, priority:Number, once:Boolean,
                 thisArg:* = null, argsArray:Array = null) {
             super(callback, once, thisArg, argsArray, ObjectUtils.hash(callback));
             _loop = loop;
             _priority = priority;
-            _timeout = getTimer() + delay;
+            _timeout = timeout;
         }
 
         public function get loop ():Loop {
