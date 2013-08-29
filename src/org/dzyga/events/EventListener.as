@@ -3,7 +3,7 @@ package org.dzyga.events {
     import flash.events.IEventDispatcher;
     import flash.utils.Dictionary;
 
-    public class EventListener extends Handle {
+    public class EventListener extends Callback {
         protected var _target:IEventDispatcher;
         protected var _event:String;
         protected var _useCapture:*;
@@ -36,7 +36,7 @@ package org.dzyga.events {
             _event = null;
             _callback = null;
             _thisArg = null;
-            _args = null;
+            _argsArray = null;
 
             return this;
         }

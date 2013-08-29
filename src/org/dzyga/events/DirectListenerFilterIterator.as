@@ -14,7 +14,9 @@ package org.dzyga.events {
         private var _iterator:CollectionFilterIterator;
         private var _useCapture:*;
 
-        public function DirectListenerFilterIterator (listenerMap:ICollection, target:IEventDispatcher = null, event:String = '', callback:Function = null, useCapture:* = undefined) {
+        public function DirectListenerFilterIterator (
+                listenerMap:ICollection, target:IEventDispatcher = null,
+                event:String = '', callback:Function = null, useCapture:* = undefined) {
             _target = target;
             _event = event;
             _callback = callback;

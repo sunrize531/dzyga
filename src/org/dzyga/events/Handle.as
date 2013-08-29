@@ -1,21 +1,21 @@
 package org.dzyga.events {
+    import flash.errors.IllegalOperationError;
+
     import org.dzyga.utils.ObjectUtils;
 
     public class Handle implements IHandle {
-        protected var _once:Boolean;
+        protected var _canceled:Boolean = false;
         protected var _thisArg:*;
-        protected var _args:Array;
+        protected var _argsArray:Array;
         protected var _callback:Function;
         protected var _hash:String;
         protected var _result:*;
 
         public function Handle (
-                callback:Function, once:Boolean = false,
-                thisArg:* = null, args:Array = null, hash:String = '') {
-            _once = once;
+                callback:Function, thisArg:* = null, argsArray:Array = null, hash:String = '') {
             _callback = callback;
             _thisArg = thisArg;
-            _args = args || [];
+            _argsArray = argsArray || [];
             _hash = hash || hashGenerate();
         }
 
@@ -23,33 +23,69 @@ package org.dzyga.events {
             return ObjectUtils.hash(this);
         }
 
+        /**
+         * @inheritDoc
+         */
         public function get callback ():Function {
             return _callback;
         }
 
-        public function get once ():Boolean {
-            return _once;
-        }
-
+        /**
+         * @inheritDoc
+         */
         public function get thisArg ():* {
             return _thisArg;
         }
 
-        public function get args ():Array {
-            return _args;
+        /**
+         * @inheritDoc
+         */
+        public function get argsArray ():Array {
+            return _argsArray;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function get hash ():String {
             return _hash;
         }
 
+        /**
+         * @inheritDoc
+         */
+        public function get canceled ():Boolean {
+            return _canceled;
+        }
+
+        /**
+         * @inheritDoc
+         */
         public function get result ():* {
             return _result;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function call (... args):* {
-            _result = _callback.apply(_thisArg, args.concat(_args));
+            if (_canceled) {
+                throw new IllegalOperationError('Handle is canceled');
+            }
+            _result = _callback.apply(_thisArg, args.concat(_argsArray));
             return result;
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public function cancel ():Boolean {
+            if (!_canceled) {
+                _canceled = true;
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

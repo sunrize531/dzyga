@@ -9,47 +9,51 @@ package org.dzyga.events {
 
     public class Promise implements IPromise {
 
-        protected var _handleList:LinkedList = new LinkedList();
-        protected var _handleMap:Dictionary = new Dictionary(true);
-        private var _uniq:Boolean;
+        protected var _callbackList:LinkedList = new LinkedList();
+        protected var _callbackMap:Dictionary = new Dictionary(true);
+        protected var _unique:Boolean;
 
-        public function Promise (uniq:Boolean = true) {
-            _uniq = uniq;
+        public function Promise (unique:Boolean = true) {
+            _unique = unique;
         }
 
         public function resolve (... args):IPromise {
-            var iterator:ICollectionIterator = handleIterator();
+            var iterator:ICollectionIterator = callbackIterator();
             while (iterator.hasNext()) {
-                var handle:IHandle = iterator.next();
-                handle.call.apply(null, args);
-                if (handle.once) {
+                var callback:ICallback = iterator.next();
+                callback.call.apply(null, args);
+                if (callback.once) {
                     iterator.remove();
                 }
             }
             return this;
         }
 
+        protected function callbackInit (callback:Function, once:Boolean, thisArg:*, argsArray:Array):ICallback {
+            return new Callback(callback, once, thisArg, argsArray);
+        }
+
         public function callbackRegister (
                 callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):IPromise {
-            var handle:Handle;
-            if (_uniq) {
-                handle = _handleMap[callback];
+            var handle:ICallback;
+            if (_unique) {
+                handle = _callbackMap[callback];
                 if (handle) {
                     return this;
                 } else {
-                    handle = new Handle(callback, once, thisArg, argsArray);
-                    _handleMap[callback] = handle;
-                    _handleList.add(handle);
+                    handle = callbackInit(callback, once, thisArg, argsArray);
+                    _callbackMap[callback] = handle;
+                    _callbackList.add(handle);
                 }
             } else {
-                handle = new Handle(callback, once, thisArg, argsArray);
-                _handleList.add(handle);
+                handle = callbackInit(callback, once, thisArg, argsArray);
+                _callbackList.add(handle);
             }
             return this;
         }
 
         public function callbackRemove (callback:Function = null):IPromise {
-            var iterator:ICollectionIterator = handleIterator(callback);
+            var iterator:ICollectionIterator = callbackIterator(callback);
             while (iterator.hasNext()) {
                 iterator.next();
                 iterator.remove();
@@ -57,29 +61,29 @@ package org.dzyga.events {
             return this;
         }
 
-        public function handleIterator (callback:Function = null):ICollectionIterator {
+        public function callbackIterator (callback:Function = null):ICollectionIterator {
             if (callback == null) {
-                return _handleList.iterator() as ICollectionIterator;
+                return _callbackList.iterator() as ICollectionIterator;
             } else {
                 var filter:Function = function (handle:IHandle):Boolean {
                     return handle.callback === callback;
                 };
-                return new CollectionFilterIterator(_handleList, filter);
+                return new CollectionFilterIterator(_callbackList, filter);
             }
         }
 
         public function iterator (cursor:* = null):IIterator {
-            return handleIterator();
+            return callbackIterator();
         }
 
-        public function get uniq ():Boolean {
-            return _uniq;
+        public function get unique ():Boolean {
+            return _unique;
         }
 
         public function clear ():IPromise {
-            _handleList.clear();
-            if (_uniq) {
-                _handleMap = new Dictionary(true);
+            _callbackList.clear();
+            if (_unique) {
+                _callbackMap = new Dictionary(true);
             }
             return null;
         }
