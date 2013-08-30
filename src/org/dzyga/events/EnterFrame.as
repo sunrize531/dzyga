@@ -149,7 +149,7 @@
             _calculatedFps = _calculatedFpsCounter;
             _calculatedFpsCounter = 0;
             if (!_isStageActive) {
-                _calculatedInterval = 1000;
+                _calculatedInterval = 500;
             } else if (_calculatedFps < _fps * 0.8 && _isStageActive) {
                 _calculatedInterval = (_interval * (_calculatedFps / _fps)) * 0.5; // искусственно занижаем ниже пропорции
             } else {
