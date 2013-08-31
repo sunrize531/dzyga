@@ -99,7 +99,7 @@ package org.dzyga.events {
             assertEquals(1, _fuckingSlowCounter);
             assertEquals(1, slowCallback.result);
 
-            // Now cancel FSC, and re-add it with priority 3. Both registered callbacks should be executed.
+            // Now cancel FSC, and re-add it with priority 3. Both registered callbacks should be executed now.
             slowCallback.cancel();
             slowCallback = _loop.frameEnterCall(fuckingSlowCallback, 3);
             frameEnterTrigger();
@@ -109,7 +109,7 @@ package org.dzyga.events {
 
         [Test]
         public function testFrameExitCall ():void {
-            // Should work absolutely the same as EnterFrame. So, only the first part here,
+            // Should work absolutely the same as frameEnterCall. So, only the first part here,
             // just verify that event is processed by loop correctly.
 
             var firstCallback:ILoopCallback = _loop.frameExitCall(frameExitCallback, 1);
@@ -164,7 +164,7 @@ package org.dzyga.events {
             frameEnterTrigger();
             assertEquals(6, _callCounter);
 
-            // Test call with FLC.
+            // Test call with FSC.
             firstCallback = _loop.call(callCallback, 2);
             secondCallback = _loop.call(fuckingSlowCallback, 1);
             frameEnterTrigger();
