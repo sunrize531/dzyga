@@ -239,6 +239,11 @@ package org.dzyga.events {
             return false;
         }
 
+        /**
+         * Cancel all callbacks registered in current loop.
+         *
+         * @return this
+         */
         public function clear ():Loop {
             var iterator:ICollectionIterator = _callbackHash.keyIterator() as ICollectionIterator;
             while (iterator.hasNext()) {
