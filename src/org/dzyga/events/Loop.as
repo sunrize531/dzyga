@@ -1,23 +1,37 @@
 package org.dzyga.events {
     import flash.display.Stage;
+    import flash.errors.IllegalOperationError;
     import flash.events.Event;
     import flash.utils.getTimer;
 
+    import org.as3commons.collections.LinkedList;
     import org.as3commons.collections.Map;
     import org.as3commons.collections.SortedSet;
-    import org.as3commons.collections.Treap;
     import org.as3commons.collections.framework.ICollection;
     import org.as3commons.collections.framework.ICollectionIterator;
+    import org.as3commons.collections.framework.IIterator;
 
     public class Loop {
+        public static const FRAME_ENTER_STATE:String = 'frame:enter';
+        public static const FRAME_EXIT_STATE:String = 'frame:exit';
+        public static const IDLE_STATE:String = 'idle';
+
         protected static var _stage:Stage;
-        protected static var _dispatcher:DispatcherProxy;
+        protected static var _dispatcher:IDispatcherProxy;
+        protected static var _state:String;
+
+        public function Loop () {
+        }
+
         public static function init (stage:Stage):void {
+            if (_stage) {
+                throw new IllegalOperationError('Loop already initialized.');
+            }
             _stage = stage;
             _dispatcher = new DispatcherProxy(stage);
             _dispatcher
-                .listen(Event.ENTER_FRAME, enterFrameHandler)
-                .listen(Event.EXIT_FRAME, exitFrameHandler);
+                .listen(Event.ENTER_FRAME, frameEnterHandler)
+                .listen(Event.EXIT_FRAME, frameExitHandler);
         }
 
         public static function get fps ():Number {
@@ -25,50 +39,64 @@ package org.dzyga.events {
         }
 
         // Callback lists
-        protected static var _enterFrameCallbackCollection:Treap = new Treap(new CallbackComparator());
-        protected static var _delayedCallbackCollection:Treap = new Treap(new CallbackDelayedComparator());
-        protected static var _exitFrameCallbackCollection:Treap = new Treap(new CallbackComparator());
 
-        protected static const _enterFrameCallbackCollectionList:Array = [
-            _enterFrameCallbackCollection, _delayedCallbackCollection];
-        protected static const _exitFrameCallbackCollectionList:Array = [
-            _exitFrameCallbackCollection];
+        protected static var _frameEnterCallbackCollection:SortedSet = new SortedSet(new LoopCallbackComparator());
+        protected static var _delayedCallbackCollection:SortedSet = new SortedSet(new LoopCallbackDelayedComparator());
+        protected static var _immediateCallbackCollection:LinkedList = new LinkedList();
 
-        protected static const ENTER_FRAME_THRESHOLD:Number = 0.7;
-        protected static const EXIT_FRAME_THRESHOLD:Number = 0.3;
+        protected static var _frameExitCallbackCollection:SortedSet = new SortedSet(new LoopCallbackComparator());
+
+        protected static var _callbackIterator:LoopCallbackIterator = new LoopCallbackIterator();
+
+        protected static const FRAME_ENTER_THRESHOLD:Number = 0.7;
+        protected static const FRAME_EXIT_THRESHOLD:Number = 0.3;
 
         protected static var _frameTime:Number = 0;
 
-        protected static function callbackCollectionListProcess (callbackCollectionList:Array, frameTime:Number):void {
+        protected static function callbackCollectionListProcess (
+                callbackIterator:LoopCallbackIterator, frameTime:Number):void {
             _frameTime = getTimer();
             var elapsedTime:Number = 0;
-
-            for each (var collection:SortedSet in callbackCollectionList) {
-                if (collection.size) {
-                    var iterator:ICollectionIterator = collection.iterator() as ICollectionIterator;
-                    while (iterator.hasNext()) {
-                        var callback:ILoopCallback = iterator.next();
-                        if (callback.canceled) {
-                            iterator.remove();
-                        } else if (callback.timeout <= _frameTime && (!callback.priority || elapsedTime < frameTime)) {
-                            if (callback.once) {
-                                iterator.remove();
-                            }
-                            callback.call();
-                        }
-                        elapsedTime = getTimer() - _frameTime;
+            while (callbackIterator.hasNext()) {
+                var callback:ILoopCallback = callbackIterator.next();
+                if (callback.canceled) {
+                    callbackIterator.remove();
+                } else if (callback.timeout <= _frameTime && (!callback.priority || elapsedTime < frameTime)) {
+                    callback.call();
+                    if (callback.once) {
+                        callback.cancel();
+                        callbackIterator.remove();
                     }
                 }
+                elapsedTime = getTimer() - _frameTime;
             }
         }
 
-        protected static function enterFrameHandler (e:Event):void {
-            callbackCollectionListProcess(_enterFrameCallbackCollectionList, 1 / fps * ENTER_FRAME_THRESHOLD);
+        protected static function frameEnterProcess (frameTime:Number):void {
+            _state = FRAME_ENTER_STATE;
+            _callbackIterator.setCallbackCollection(
+                _frameEnterCallbackCollection, _delayedCallbackCollection, _immediateCallbackCollection);
+            callbackCollectionListProcess(_callbackIterator, frameTime);
+            _immediateCallbackCollection.clear();
+            _state = IDLE_STATE;
         }
 
-        protected static function exitFrameHandler (e:Event):void {
-            callbackCollectionListProcess(_exitFrameCallbackCollectionList, 1 / fps * EXIT_FRAME_THRESHOLD);
+        protected static function frameExitProcess (frameTime:Number):void {
+            _state = FRAME_EXIT_STATE;
+            _callbackIterator.setCallbackCollection(_frameExitCallbackCollection);
+            callbackCollectionListProcess(_callbackIterator, frameTime);
+            _state = IDLE_STATE;
         }
+
+        protected static function frameEnterHandler (e:Event):void {
+            frameEnterProcess(1000 / fps * FRAME_ENTER_THRESHOLD);
+        }
+
+        protected static function frameExitHandler (e:Event):void {
+            frameExitProcess(1000 / fps * FRAME_EXIT_THRESHOLD);
+        }
+
+        // Instance methods.
 
         /**
          * Override this method to init callbacks with overwritten class.
@@ -99,11 +127,11 @@ package org.dzyga.events {
          * @param argsArray Execute callback with provided args.
          * @return new ILoopCallback instance
          */
-        public function enterFrameCall (callback:Function, priority:uint = 0,
+        public function frameEnterCall (callback:Function, priority:uint = 1,
                                         thisArg:* = null, argsArray:Array = null):ILoopCallback {
             var loopCallback:ILoopCallback = callbackInit(callback, 0, priority, false, thisArg, argsArray);
-            _enterFrameCallbackCollection.add(loopCallback);
-            _callbackHash.add(_callbackHash, _enterFrameCallbackCollection);
+            _frameEnterCallbackCollection.add(loopCallback);
+            _callbackHash.add(loopCallback, _frameEnterCallbackCollection);
             return loopCallback;
         }
 
@@ -116,16 +144,19 @@ package org.dzyga.events {
          * @param argsArray Execute callback with provided args.
          * @return new ILoopCallback instance
          */
-        public function exitFrameCall (callback:Function, priority:uint = 0,
+        public function frameExitCall (callback:Function, priority:uint = 1,
                                        thisArg:* = null, argsArray:Array = null):ILoopCallback {
             var loopCallback:ILoopCallback = callbackInit(callback, 0, priority, false, thisArg, argsArray);
-            _exitFrameCallbackCollection.add(loopCallback);
-            _callbackHash.add(_callbackHash, _exitFrameCallbackCollection);
+            _frameExitCallbackCollection.add(loopCallback);
+            _callbackHash.add(loopCallback, _frameExitCallbackCollection);
             return loopCallback;
         }
 
         /**
-         * Execute callback once on next frame enter.
+         * Execute callback as soon as possible. If Loop is in FRAME_ENTER_STATE, callback will be pushed to
+         * the end of current execution query. If there is no time remaining in this frame,
+         * or Loop is not in FRAME_ENTER_STATE, callback will be executed along with delayed calls
+         * in the next Loop iteration.
          *
          * @param callback Function to call.
          * @param priority Callbacks with priority == 0 will be executed regardless of frame time.
@@ -133,9 +164,17 @@ package org.dzyga.events {
          * @param argsArray Execute callback with provided args.
          * @return new ILoopCallback instance
          */
-        public function call (callback:Function, priority:uint = 0,
-                                       thisArg:* = null, argsArray:Array = null):ILoopCallback {
-            return delayedCall(callback, _frameTime, priority, thisArg, argsArray);
+        public function call (callback:Function, priority:uint = 1,
+                              thisArg:* = null, argsArray:Array = null):ILoopCallback {
+            var loopCallback:ILoopCallback = callbackInit(
+                callback, _frameTime, priority, true,
+                thisArg, argsArray);
+            _delayedCallbackCollection.add(loopCallback);
+            _callbackHash.add(loopCallback, _delayedCallbackCollection);
+            if (_state == FRAME_ENTER_STATE) {
+                _immediateCallbackCollection.add(loopCallback);
+            }
+            return loopCallback;
         }
 
         /**
@@ -148,27 +187,28 @@ package org.dzyga.events {
          * @param argsArray Execute callback with provided args.
          * @return new ILoopCallback instance
          */
-        public function delayedCall (callback:Function, delay:Number = 0, priority:uint = 0,
+        public function delayedCall (callback:Function, delay:Number = 0, priority:uint = 1,
                                      thisArg:* = null, argsArray:Array = null):ILoopCallback {
             var loopCallback:ILoopCallback = callbackInit(
-                callback, _frameTime + delay, priority, true,
+                callback, getTimer() + delay, priority, true,
                 thisArg, argsArray);
             _delayedCallbackCollection.add(loopCallback);
-            _callbackHash.add(_callbackHash, _delayedCallbackCollection);
-            return null;
+            _callbackHash.add(loopCallback, _delayedCallbackCollection);
+            return loopCallback;
         }
 
         /**
          * Remove callback from loop. Also you can just cancel it.
          *
-         * @param callback Callback to remove
+         * @param loopCallback Callback to remove
          * @return this
          */
-        public function callbackRemove (callback:ILoopCallback):Loop {
-            var collection:ICollection = _callbackHash.itemFor(callback);
+        public function callbackRemove (loopCallback:ILoopCallback):Loop {
+            var collection:ICollection = _callbackHash.itemFor(loopCallback);
             if (collection) {
-                collection.remove(callback);
-                _callbackHash.removeKey(callback);
+                loopCallback.cancel();
+                collection.remove(loopCallback);
+                _callbackHash.removeKey(loopCallback);
             }
             return this;
         }
@@ -176,15 +216,31 @@ package org.dzyga.events {
         /**
          * Check if callback registered in loop.
          *
-         * @param callback Callback to check
+         * @param loopCallback Callback to check
          * @return this
          */
-        public function hasCallback (callback:ILoopCallback):Boolean {
-            return _callbackHash.hasKey(callback);
+        public function hasCallback (loopCallback:ILoopCallback):Boolean {
+            return _callbackHash.hasKey(loopCallback);
+        }
+
+        /**
+         * Return true if loop instance will call specified function.
+         *
+         * @return true if specified function was added to the loop somehow.
+         */
+        public function willCall (callback:Function):Boolean {
+            var iterator:IIterator = _callbackHash.keyIterator();
+            while (iterator.hasNext()) {
+                var loopCallback:ILoopCallback = iterator.next();
+                if (loopCallback.callback == callback && !loopCallback.canceled) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public function clear ():Loop {
-            var iterator:ICollectionIterator = _callbackHash.iterator() as ICollectionIterator;
+            var iterator:ICollectionIterator = _callbackHash.keyIterator() as ICollectionIterator;
             while (iterator.hasNext()) {
                 var callback:ILoopCallback = iterator.next();
                 callback.cancel();
@@ -195,32 +251,11 @@ package org.dzyga.events {
     }
 }
 
-import org.as3commons.collections.framework.IComparator;
-import org.as3commons.collections.utils.NumericComparator;
-import org.as3commons.collections.utils.StringComparator;
-import org.dzyga.events.ILoopCallback;
 
-class CallbackComparator implements IComparator {
-    protected var _numeric:NumericComparator = new NumericComparator();
-    protected var _string:StringComparator = new StringComparator();
 
-    public function compare (item1:*, item2:*):int {
-        var c1:ILoopCallback = ILoopCallback(item1);
-        var c2:ILoopCallback = ILoopCallback(item2);
-        return _numeric.compare(c1.priority, c2.priority) ||
-            _string.compare(c1.hash, c2.hash);
-    }
-}
 
-class CallbackDelayedComparator implements IComparator {
-    protected var _numeric:NumericComparator = new NumericComparator();
-    protected var _string:StringComparator = new StringComparator();
 
-    public function compare (item1:*, item2:*):int {
-        var c1:ILoopCallback = ILoopCallback(item1);
-        var c2:ILoopCallback = ILoopCallback(item2);
-        return _numeric.compare(c1.timeout, c2.timeout) ||
-            _numeric.compare(c1.priority, c2.priority) ||
-            _string.compare(c1.hash, c2.hash);
-    }
-}
+
+
+
+
