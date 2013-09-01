@@ -1,6 +1,7 @@
 package org.dzyga.events {
     import org.as3commons.collections.framework.ICollectionIterator;
     import org.as3commons.collections.framework.IMap;
+    import org.dzyga.utils.IStripIterator;
 
     /**
      * Iterate through all events for specified targetHash

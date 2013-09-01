@@ -1,4 +1,4 @@
-package org.dzyga.events {
+package org.dzyga.callback {
     import flash.errors.IllegalOperationError;
 
     import org.dzyga.utils.ObjectUtils;

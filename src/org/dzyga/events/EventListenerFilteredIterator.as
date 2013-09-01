@@ -4,6 +4,7 @@ package org.dzyga.events {
     import org.as3commons.collections.framework.IMap;
     import org.as3commons.collections.iterators.CollectionFilterIterator;
     import org.as3commons.collections.iterators.FilterIterator;
+    import org.dzyga.utils.IStripIterator;
 
     /**
      * Filter matched event listeners

@@ -5,7 +5,8 @@
  * Time: 0:52
  * To change this template use File | Settings | File Templates.
  */
-package org.dzyga.events {
+package org.dzyga.callback {
+    import org.dzyga.callback.Promise;
     import org.flexunit.asserts.assertEquals;
 
     public class PromiseTest {
@@ -57,7 +58,7 @@ package org.dzyga.events {
 
         [Test]
         public function testCallbackRemove ():void {
-            var promise:Promise = new Promise();
+            var promise:Promise = new Promise(false);
             promise
                 .callbackRegister(firstCallback)
                 .callbackRegister(firstCallback)

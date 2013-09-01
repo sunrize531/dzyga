@@ -1,4 +1,4 @@
-package org.dzyga.events {
+package org.dzyga.callback {
     public interface ITask {
         // Promises
         /**
@@ -33,7 +33,7 @@ package org.dzyga.events {
 
         // State switches
         /**
-         * Set state to TaskState.STARTED, resolve start promise with args prepended with task instance.
+         * Set state to TaskState.STARTED, resolve start callback with args prepended with task instance.
          *
          * @param args
          * @return
@@ -51,7 +51,7 @@ package org.dzyga.events {
         function notify (... args):ITask;
 
         /**
-         * Set state to TaskState.RESOLVED, resolve done and finished promise with args, prepended with task instance,
+         * Set state to TaskState.RESOLVED, resolve done and finished callback with args, prepended with task instance,
          * than set state to TaskState.IDLE.
          *
          * @param args
@@ -60,7 +60,7 @@ package org.dzyga.events {
         function resolve (... args):ITask;
 
         /**
-         * Set state to TaskState.REJECTED, resolve failed and finished promise with args, prepended with task instance,
+         * Set state to TaskState.REJECTED, resolve failed and finished callback with args, prepended with task instance,
          * than set state to TaskState.IDLE.
          *
          * @param args

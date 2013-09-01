@@ -1,4 +1,5 @@
-package org.dzyga.events {
+package org.dzyga.callback {
+
     public class Callback extends Handle implements ICallback {
         protected var _once:Boolean;
 

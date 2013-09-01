@@ -1,4 +1,7 @@
-package org.dzyga.events {
+package org.dzyga.callback {
+    import org.dzyga.callback.ITask;
+    import org.dzyga.callback.Task;
+    import org.dzyga.callback.TaskState;
     import org.flexunit.asserts.assertEquals;
     import org.flexunit.asserts.assertTrue;
 

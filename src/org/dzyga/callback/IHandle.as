@@ -1,4 +1,4 @@
-package org.dzyga.events {
+package org.dzyga.callback {
     public interface IHandle {
         /**
          * Registered callback.

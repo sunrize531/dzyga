@@ -1,8 +1,9 @@
-package org.dzyga.events {
+package org.dzyga.loop {
     import org.as3commons.collections.LinkedList;
     import org.as3commons.collections.framework.ICollection;
     import org.as3commons.collections.framework.ICollectionIterator;
     import org.as3commons.collections.framework.IIterator;
+    import org.dzyga.utils.IStripIterator;
 
     internal class LoopCallbackIterator implements IStripIterator {
         private var callbackCollectionList:LinkedList = new LinkedList();
@@ -43,15 +44,6 @@ package org.dzyga.events {
                 }
                 return false;
             }
-
-            if (!callbackIterator || !callbackIterator.hasNext()) {
-                if (callbackCollectionIterator.hasNext()) {
-                    callbackIterator = ICollection(callbackCollectionIterator.next()).iterator() as ICollectionIterator;
-                } else {
-                    return false;
-                }
-            }
-            return callbackIterator.hasNext();
         }
 
         public function next ():* {

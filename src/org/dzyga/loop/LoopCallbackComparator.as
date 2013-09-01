@@ -1,7 +1,5 @@
-package org.dzyga.events {
-    import org.as3commons.collections.framework.IComparator;
+package org.dzyga.loop {
     import org.as3commons.collections.utils.NumericComparator;
-    import org.as3commons.collections.utils.StringComparator;
 
     internal class LoopCallbackComparator extends NumericComparator {
         override public function compare (item1:*, item2:*):int {

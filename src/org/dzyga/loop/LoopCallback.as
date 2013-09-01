@@ -1,5 +1,5 @@
-package org.dzyga.events {
-    import flash.utils.getTimer;
+package org.dzyga.loop {
+    import org.dzyga.callback.Callback;
 
     import org.dzyga.utils.ObjectUtils;
 

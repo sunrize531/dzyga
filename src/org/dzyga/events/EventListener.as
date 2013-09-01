@@ -1,7 +1,8 @@
 package org.dzyga.events {
     import flash.events.Event;
     import flash.events.IEventDispatcher;
-    import flash.utils.Dictionary;
+
+    import org.dzyga.callback.Callback;
 
     public class EventListener extends Callback {
         protected var _target:IEventDispatcher;

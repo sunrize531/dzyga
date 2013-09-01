@@ -1,5 +1,8 @@
-package org.dzyga.events {
+package org.dzyga.callback {
+    import org.dzyga.events.*;
     import flash.errors.IllegalOperationError;
+
+    import org.dzyga.callback.TaskState;
 
     import org.dzyga.utils.ArrayUtils;
 
@@ -8,7 +11,7 @@ package org.dzyga.events {
         }
 
         /**
-         * Override this function to replace promise with subclass.
+         * Override this function to replace callback with subclass.
          *
          * @param promise
          * @return
@@ -79,7 +82,7 @@ package org.dzyga.events {
 
 
         /**
-         * Override this function to pass additional arguments to promise.
+         * Override this function to pass additional arguments to callback.
          *
          * @param promise
          * @param argsArray
