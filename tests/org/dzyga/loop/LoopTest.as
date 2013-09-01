@@ -3,10 +3,6 @@ package org.dzyga.loop {
     import flash.events.EventDispatcher;
     import flash.utils.getTimer;
 
-    import org.dzyga.loop.ILoopCallback;
-
-    import org.dzyga.loop.Loop;
-
     import org.flexunit.asserts.assertEquals;
     import org.flexunit.asserts.assertFalse;
     import org.flexunit.asserts.assertTrue;

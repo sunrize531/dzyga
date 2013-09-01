@@ -3,8 +3,6 @@ package org.dzyga.loop {
     import flash.events.Event;
     import flash.events.IEventDispatcher;
 
-    import org.dzyga.loop.Loop;
-
     public class LoopSubclass extends Loop {
         protected static var _fps:Number;
 

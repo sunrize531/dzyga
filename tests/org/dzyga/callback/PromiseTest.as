@@ -1,10 +1,3 @@
-/**
- * Created with IntelliJ IDEA.
- * User: sunrize
- * Date: 25.08.13
- * Time: 0:52
- * To change this template use File | Settings | File Templates.
- */
 package org.dzyga.callback {
     import org.dzyga.callback.Promise;
     import org.flexunit.asserts.assertEquals;
