@@ -160,5 +160,45 @@ package org.dzyga.callback {
             _state = TaskState.IDLE;
             return this;
         }
+
+        public function startedCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask {
+            started.callbackRegister(callback, once, thisArg, argsArray);
+            return this;
+        }
+
+        public function startedCallbackRemove (callback:Function):ITask {
+            started.callbackRemove(callback);
+            return this;
+        }
+
+        public function progressCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask {
+            progress.callbackRegister(callback, once, thisArg, argsArray);
+            return this;
+        }
+
+        public function progressCallbackRemove (callback:Function):ITask {
+            progress.callbackRemove(callback);
+            return this;
+        }
+
+        public function doneCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask {
+            done.callbackRegister(callback, once, thisArg, argsArray);
+            return this;
+        }
+
+        public function doneCallbackRemove (callback:Function):ITask {
+            done.callbackRemove(callback);
+            return this;
+        }
+
+        public function failedCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask {
+            failed.callbackRegister(callback, once, thisArg, argsArray);
+            return this;
+        }
+
+        public function failedCallbackRemove (callback:Function):ITask {
+            failed.callbackRemove(callback);
+            return this;
+        }
     }
 }

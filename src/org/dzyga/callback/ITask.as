@@ -74,5 +74,81 @@ package org.dzyga.callback {
          * @return this
          */
         function clear ():ITask;
+
+        /**
+         * Register callback in started promise. Shortcut for chaining.
+         *
+         * @param callback
+         * @param once
+         * @param thisArg
+         * @param argsArray
+         * @return this
+         */
+        function startedCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask;
+
+        /**
+         * Remove callback from started promise. Shortcut for chaining.
+         *
+         * @param callback
+         * @return this
+         */
+        function startedCallbackRemove (callback:Function):ITask;
+
+        /**
+         * Register callback in process promise. Shortcut for chaining.
+         *
+         * @param callback
+         * @param once
+         * @param thisArg
+         * @param argsArray
+         * @return this
+         */
+        function progressCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask;
+
+        /**
+         * Remove callback from process promise. Shortcut for chaining.
+         *
+         * @param callback
+         * @return this
+         */
+        function progressCallbackRemove (callback:Function):ITask;
+
+        /**
+         * Register callback in done promise. Shortcut for chaining.
+         *
+         * @param callback
+         * @param once
+         * @param thisArg
+         * @param argsArray
+         * @return this
+         */
+        function doneCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask;
+
+        /**
+         * Remove callback from done promise. Shortcut for chaining.
+         *
+         * @param callback
+         * @return this
+         */
+        function doneCallbackRemove (callback:Function):ITask;
+
+        /**
+         * Register callback in failed promise. Shortcut for chaining.
+         *
+         * @param callback
+         * @param once
+         * @param thisArg
+         * @param argsArray
+         * @return this
+         */
+        function failedCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask;
+
+        /**
+         * Remove callback from failed promise. Shortcut for chaining.
+         *
+         * @param callback
+         * @return this
+         */
+        function failedCallbackRemove (callback:Function):ITask;
     }
 }
