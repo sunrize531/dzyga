@@ -88,7 +88,7 @@ package org.dzyga.utils {
          * @param args
          * @return value
          */
-        public static function identity (value:*, ... args):* {
+        public static function identity (value:* = null, ... args):* {
             return value;
         }
     }

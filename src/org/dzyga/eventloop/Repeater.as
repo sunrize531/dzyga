@@ -1,4 +1,4 @@
-package org.dzyga.loop {
+package org.dzyga.eventloop {
     public class Repeater extends LoopTask {
         protected var _callback:Function;
         protected var _priority:Number;

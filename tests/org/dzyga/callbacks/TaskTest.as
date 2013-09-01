@@ -1,4 +1,4 @@
-package org.dzyga.callback {
+package org.dzyga.callbacks {
     import org.flexunit.asserts.assertEquals;
     import org.flexunit.asserts.assertTrue;
 
@@ -17,7 +17,7 @@ package org.dzyga.callback {
             _task.started.callbackRegister(function (task:ITask):void {
                 assertEquals(TaskState.STARTED, task.state);
                 _flag = true;
-            });
+            }, false, null, [_task]);
             _task.start();
             assertTrue(_flag);
 
@@ -30,7 +30,7 @@ package org.dzyga.callback {
             _task.progress.callbackRegister(function (task:ITask):void {
                 assertEquals(TaskState.STARTED, task.state);
                 _flag = true;
-            });
+            }, false, null, [_task]);
             _task.start();
             _task.notify();
             assertTrue(_flag);
@@ -46,7 +46,7 @@ package org.dzyga.callback {
             _task.done.callbackRegister(function (task:ITask):void {
                 assertEquals(TaskState.RESOLVED, task.state);
                 _flag = true;
-            });
+            }, true, null, [_task]);
             _task.resolve();
             assertTrue(_flag);
             assertEquals(TaskState.IDLE, _task.state);
@@ -57,7 +57,7 @@ package org.dzyga.callback {
             _task.failed.callbackRegister(function (task:ITask):void {
                 assertEquals(TaskState.REJECTED, task.state);
                 _flag = true;
-            });
+            }, true, null, [_task]);
             _task.reject();
             assertTrue(_flag);
             assertEquals(TaskState.IDLE, _task.state);
@@ -67,7 +67,7 @@ package org.dzyga.callback {
         public function testFinished ():void {
             _task.finished.callbackRegister(function (task:ITask):void {
                 _flag = true;
-            });
+            }, false, null, [_task]);
             _task.reject();
             assertTrue(_flag);
 

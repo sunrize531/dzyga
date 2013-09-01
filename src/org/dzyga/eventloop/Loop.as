@@ -1,4 +1,4 @@
-package org.dzyga.loop {
+package org.dzyga.eventloop {
     import org.dzyga.events.*;
     import flash.display.Stage;
     import flash.errors.IllegalOperationError;

@@ -1,5 +1,5 @@
-package org.dzyga.loop {
-    import org.dzyga.callback.Callback;
+package org.dzyga.eventloop {
+    import org.dzyga.callbacks.Callback;
 
     import org.dzyga.utils.ObjectUtils;
 

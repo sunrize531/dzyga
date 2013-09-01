@@ -1,4 +1,4 @@
-package org.dzyga.callback {
+package org.dzyga.callbacks {
     public class TaskState {
         public static const STARTED:String = 'task:started';
         public static const RESOLVED:String = 'task:resolved';

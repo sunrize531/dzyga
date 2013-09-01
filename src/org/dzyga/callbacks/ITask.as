@@ -1,4 +1,4 @@
-package org.dzyga.callback {
+package org.dzyga.callbacks {
     public interface ITask {
         // Promises
         /**

@@ -1,4 +1,4 @@
-package org.dzyga.loop {
+package org.dzyga.eventloop {
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.utils.getTimer;
@@ -16,8 +16,8 @@ package org.dzyga.loop {
         [BeforeClass]
         public static function initLoop ():void {
             _dispatcher = new EventDispatcher();
-            _loop = new LoopSubclass();
             LoopSubclass.initLoop(_dispatcher, 25);
+            _loop = new LoopSubclass();
         }
 
 
@@ -53,14 +53,6 @@ package org.dzyga.loop {
             return i;
         }
 
-        private static function wait (time:Number):void {
-            var ts:Number = getTimer();
-            while (true) {
-                if (getTimer() - ts > time) {
-                    break;
-                }
-            }
-        }
 
         private static const FUCKING_SLOW_TIMEOUT:Number = 1000;
         private function fuckingSlowCallback (i:Number = 1):Number {

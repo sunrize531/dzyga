@@ -1,8 +1,8 @@
-package org.dzyga.callback {
+package org.dzyga.callbacks {
     import org.dzyga.events.*;
     import flash.errors.IllegalOperationError;
 
-    import org.dzyga.callback.TaskState;
+    import org.dzyga.callbacks.TaskState;
 
     import org.dzyga.utils.ArrayUtils;
 
@@ -90,7 +90,7 @@ package org.dzyga.callback {
          */
         protected function resolvePromise (promise:IPromise, argsArray:Array):IPromise {
             if (promise) {
-                promise.resolve.apply(null, ArrayUtils.add([this], argsArray));
+                promise.resolve.apply(null, argsArray);
             }
             return promise;
         }
@@ -111,7 +111,7 @@ package org.dzyga.callback {
          * @inheritDoc
          */
         public function notify (...args):ITask {
-            if (_state !== TaskState.IDLE) {
+            if (_state != TaskState.STARTED) {
                 throw new IllegalOperationError('Start the task first. Current state - ' + _state);
             }
             resolvePromise(_progress, args);

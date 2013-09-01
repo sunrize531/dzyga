@@ -1,4 +1,4 @@
-package org.dzyga.loop {
+package org.dzyga.eventloop {
     import org.as3commons.collections.LinkedList;
     import org.as3commons.collections.framework.ICollection;
     import org.as3commons.collections.framework.ICollectionIterator;

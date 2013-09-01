@@ -1,4 +1,4 @@
-package org.dzyga.callback {
+package org.dzyga.callbacks {
     import flash.utils.Dictionary;
 
     import org.as3commons.collections.LinkedList;

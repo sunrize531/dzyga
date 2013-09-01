@@ -1,22 +1,23 @@
-/**
- * Created with IntelliJ IDEA.
- * User: sunrize
- * Date: 01.09.13
- * Time: 13:31
- * To change this template use File | Settings | File Templates.
- */
-package org.dzyga.loop {
-    import flash.errors.IllegalOperationError;
+package org.dzyga.eventloop {
+    import org.dzyga.callbacks.ITask;
 
-    import org.dzyga.callback.ITask;
-
-    import org.dzyga.callback.Task;
-    import org.dzyga.callback.TaskState;
+    import org.dzyga.callbacks.Task;
+    import org.dzyga.callbacks.TaskState;
     import org.dzyga.utils.FunctionUtils;
 
     public class LoopTask extends Task {
-        protected var _loop:Loop = new Loop();
+        protected var _loop:Loop;
         protected var _result:*;
+
+
+        public function LoopTask () {
+            loopInit();
+        }
+
+        protected function loopInit ():Loop {
+            _loop = new Loop();
+            return _loop;
+        }
 
         public function get callback ():Function {
             if (hasOwnProperty('run')) {
@@ -38,13 +39,17 @@ package org.dzyga.loop {
             return 1;
         }
 
+        protected function deferRunner ():void {
+            _loopCallback = _loop.call(runner, priority);
+        }
+
         protected var _loopCallback:ILoopCallback;
         protected function runner ():void {
             if (state == TaskState.STARTED) {
                 _result = callback.apply(thisArg, argsArray);
             }
             if (state == TaskState.STARTED) {
-                _loopCallback = _loop.call(runner);
+                deferRunner();
             }
         }
 
@@ -54,7 +59,7 @@ package org.dzyga.loop {
 
         override public function start (...args):ITask {
             super.start.apply(this, args);
-            runner();
+            deferRunner();
             return this;
         }
 
@@ -62,14 +67,14 @@ package org.dzyga.loop {
             if (_loopCallback) {
                 _loopCallback.cancel();
             }
-            return super.resolve(args);
+            return super.resolve.apply(this, args);
         }
 
         override public function reject (...args):ITask {
             if (_loopCallback) {
                 _loopCallback.cancel();
             }
-            return super.reject(args);
+            return super.reject.apply(this, args);
         }
 
         override public function clear ():ITask {
