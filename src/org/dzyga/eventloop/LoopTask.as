@@ -10,8 +10,12 @@ package org.dzyga.eventloop {
         protected var _result:*;
 
 
-        public function LoopTask () {
-            loopInit();
+        public function LoopTask (loop:Loop = null) {
+            if (loop) {
+                _loop = loop;
+            } else {
+                loopInit();
+            }
         }
 
         protected function loopInit ():Loop {
@@ -78,7 +82,9 @@ package org.dzyga.eventloop {
         }
 
         override public function clear ():ITask {
-            _loop.clear();
+            if (_loopCallback) {
+                _loop.callbackRemove(_loopCallback);
+            }
             return super.clear();
         }
     }

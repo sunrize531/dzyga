@@ -7,7 +7,9 @@ package org.dzyga.eventloop {
 
     public class LoopTaskTest {
         private var _loopTask:LoopTask;
+
         private static var _dispatcher:IEventDispatcher = new EventDispatcher();
+        private static var _loop:Loop;
 
         private static function frameEnterTrigger (count:int = 1):void {
             for (var i:int = 0; i < count; i++) {
@@ -19,11 +21,12 @@ package org.dzyga.eventloop {
         public static function loopInit ():void {
             _dispatcher = new EventDispatcher();
             LoopSubclass.initLoop(_dispatcher, 25);
+            _loop = new LoopSubclass();
         }
 
         [Before]
         public function loopTaskInit ():void {
-            _loopTask = new LoopTaskSubclass();
+            _loopTask = new LoopTaskSubclass(_loop);
         }
 
         [After]
@@ -48,7 +51,6 @@ package org.dzyga.eventloop {
 }
 
 import org.dzyga.eventloop.Loop;
-import org.dzyga.eventloop.LoopSubclass;
 import org.dzyga.eventloop.LoopTask;
 import org.dzyga.eventloop.wait;
 
@@ -56,16 +58,11 @@ class LoopTaskSubclass extends LoopTask {
     private var _counter:int = 0;
     private var _iterations:int = 0;
 
-    public function LoopTaskSubclass(iterations:int = 10) {
+    public function LoopTaskSubclass(loop:Loop = null, iterations:int = 10) {
+        super(loop);
         _iterations = iterations;
-        super();
     }
 
-
-    override protected function loopInit ():Loop {
-        _loop = new LoopSubclass();
-        return _loop;
-    }
 
     public function run ():void {
         wait(100);

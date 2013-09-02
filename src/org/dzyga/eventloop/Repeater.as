@@ -6,7 +6,10 @@ package org.dzyga.eventloop {
         protected var _argsArray:Array;
 
 
-        public function Repeater (callback:Function, priority:Number = 1, thisArg:* = null, argsArray:Array = []) {
+        public function Repeater (
+                callback:Function, priority:Number = 1, thisArg:* = null, argsArray:Array = [],
+                loop:Loop = null) {
+            super(loop);
             _callback = callback;
             _priority = priority;
             _thisArg = thisArg;
