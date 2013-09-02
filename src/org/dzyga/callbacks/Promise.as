@@ -61,6 +61,10 @@ package org.dzyga.callbacks {
             return this;
         }
 
+        public function get callbackList ():LinkedList {
+            return _callbackList;
+        }
+
         public function callbackIterator (callback:Function = null):ICollectionIterator {
             if (callback == null) {
                 return _callbackList.iterator() as ICollectionIterator;

@@ -11,12 +11,12 @@ package org.dzyga.callbacks {
         }
 
         /**
-         * Override this function to replace callback with subclass.
+         * Override this function to replace promise with subclass.
          *
          * @param promise
          * @return
          */
-        protected static function getPromise (promise:IPromise):IPromise {
+        protected function getPromise (promise:IPromise):IPromise {
             return promise || new Promise();
         }
 
@@ -99,7 +99,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         public function start (...args):ITask {
-            if (_state !== TaskState.IDLE) {
+            if (_state == TaskState.STARTED) {
                 throw new IllegalOperationError('Reject or resolve the task first. Current state - ' + _state);
             }
             _state = TaskState.STARTED;
@@ -125,7 +125,6 @@ package org.dzyga.callbacks {
             _state = TaskState.RESOLVED;
             resolvePromise(_done, args);
             resolvePromise(_finished, args);
-            _state = TaskState.IDLE;
             return this;
         }
 
@@ -136,7 +135,6 @@ package org.dzyga.callbacks {
             _state = TaskState.REJECTED;
             resolvePromise(_failed, args);
             resolvePromise(_finished, args);
-            _state = TaskState.IDLE;
             return this;
         }
 

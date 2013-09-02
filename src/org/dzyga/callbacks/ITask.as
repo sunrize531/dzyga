@@ -1,4 +1,6 @@
 package org.dzyga.callbacks {
+    import flash.errors.IllegalOperationError
+
     public interface ITask {
         // Promises
         /**
@@ -37,7 +39,7 @@ package org.dzyga.callbacks {
          *
          * @param args
          * @return
-         * @throw IllegalOperationError if task is not in TaskState.IDLE state.
+         * @throws IllegalOperationError if task is not in TaskState.IDLE state.
          */
         function start (... args):ITask;
 
@@ -46,7 +48,7 @@ package org.dzyga.callbacks {
          *
          * @param args
          * @return
-         * @throw IllegalOperationError if task is not in TaskState.STARTED state.
+         * @throws IllegalOperationError if task is not in TaskState.STARTED state.
          */
         function notify (... args):ITask;
 
