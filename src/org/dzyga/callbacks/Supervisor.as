@@ -1,180 +1,154 @@
 package org.dzyga.callbacks {
     import flash.errors.IllegalOperationError;
 
-    import org.as3commons.collections.LinkedSet;
+    import org.as3commons.collections.LinkedMap;
     import org.as3commons.collections.Map;
+    import org.as3commons.collections.framework.ICollectionIterator;
+    import org.as3commons.collections.framework.ICollectionIterator;
     import org.as3commons.collections.framework.IIterator;
+    import org.as3commons.collections.framework.IMapIterator;
 
-    public class Supervisor extends Task {
+    public class Supervisor extends Promise {
         public function Supervisor (... args) {
-            for each (var i:* in args) {
-                add(i);
+            for each (var i:IPromise in args) {
+                promiseAdd(i);
             }
         }
 
-        protected var _operativeList:LinkedSet = new LinkedSet();
-        protected var _callbackList:LinkedSet = new LinkedSet();
+        protected var _resolved:Boolean = false;
+        public function get resolved ():Boolean {
+            return _resolved;
+        }
 
-        protected function supervisorCallbackRegister (
-                promise:IPromise, subject:*, callback:Function):SupervisorCallback {
-            var supervisorCallback:SupervisorCallback = new SupervisorCallback(subject, callback);
-            promise.callbackList.add(supervisorCallback);
-            _callbackList.add(supervisorCallback);
+        protected var _supervisorCallbackMap:Map = new Map();
+        protected function supervisorCallbackRegister (promise:IPromise):SupervisorCallback {
+            var supervisorCallback:SupervisorCallback = new SupervisorCallback(promiseResolveCallback, promise);
+            promise.callbackCollection.add(supervisorCallback);
+            _supervisorCallbackMap.add(promise, supervisorCallback);
             return supervisorCallback;
         }
 
-        protected var _taskStateMap:Map = new Map();
+        protected function supervisorCallbackRemove (promise:IPromise):void {
+            promise.callbackCollection.remove(_supervisorCallbackMap.itemFor(promise));
+            _supervisorCallbackMap.removeKey(promise);
+        }
+
+        protected var _promiseStateMap:LinkedMap = new LinkedMap();
 
         /**
-         * Add task to Supervisor. Supervisor will wait till task is resolved or rejected.
-         * When all tasks and promises resolved at least once - Supervisor will be resolved.
-         * If one of the tasks rejected - Supervisor will rejected.
-         * If there are
+         * Add promise to Supervisor. If Supervisor is resolved, IllegalOperationError will be thrown.
          *
-         * @param task
-         * @return
+         * @param promise
+         * @return this
+         * @throws IllegalOperationError is Supervisor is resolved
          */
-        public function taskAdd (task:ITask):Supervisor {
-            if (_state == TaskState.RESOLVED || _state == TaskState.REJECTED) {
-                throw IllegalOperationError('Could not add Task. Invalid Supervisor state: ' + state);
-            }
-
-            _operativeList.add(task);
-
-            supervisorCallbackRegister(task.started, task, taskStartedCallback);
-            supervisorCallbackRegister(task.done, task, taskDoneCallback);
-            supervisorCallbackRegister(task.failed, task, taskFailedCallback);
-            supervisorCallbackRegister(task.progress, task, taskProgressCallback);
-
-            check();
-            return this;
-        }
-
-        protected var _promiseStateMap:Map = new Map();
-
         public function promiseAdd (promise:IPromise):Supervisor {
-            _promiseStateMap.add(promise, false);
-            _operativeList.add(promise);
-            supervisorCallbackRegister(promise, promise, promiseResolveCallback);
-            if (state == TaskState.IDLE) {
-                super.start();
+            if (_resolved) {
+                throw new IllegalOperationError('Cannot add more promises. Supervisor is resolved. ' +
+                    'Reset it to add more promises')
+            }
+            if (_promiseStateMap.add(promise, false)) {
+                supervisorCallbackRegister(promise);
             }
             return this;
         }
 
         /**
-         * Add Task or Promise to the Supervisor.
-         * If you are adding Promise and Supervisor is not started yet - Supervisor will start.
-         * If you are adding Task in started state, and Supervisor is not started - Supervisor will start.
-         * Otherwise Supervisor will start after the first of added Tasks started.
-         * Supervisor will notify when each of the registered Tasks resolves it's progress promise.
-         * Supervisor will be rejected when one of registered Tasks rejected.
-         * Supervisor will be resolved when all registered Tasks and Promises was resolved.
-         * If you are adding Task in resolved state, and
+         * Remove promise from Supervisor. If all other promises are resolved, Supervisor will be resolved immediately.
          *
-         * @param object Task or Promise instance.
+         * @param promise
          * @return this
          */
-        public function add (object:*):Supervisor {
-            if (object is IPromise) {
-                promiseAdd(object);
-            } else if (object is ITask) {
-                taskAdd(object);
+        public function promiseRemove (promise:IPromise):Supervisor {
+            if (_promiseStateMap.removeKey(promise) !== undefined) {
+                if (!_resolved) {
+                    supervisorCallbackRemove(promise);
+                    check();
+                }
             }
             return this;
         }
 
-        /**
-         * Check supervisor state. If all tasks was resolved at least once - resolve supervisor instance.
-         *
-         * @param args
-         * @return
-         */
-        public function check (... args):Supervisor {
-            var resolved:Boolean = true;
-            var operativeIterator:IIterator = _operativeList.iterator();
-            while (operativeIterator.hasNext()) {
-                var operative:* = operativeIterator.hasNext();
-                if (operative is ITask) {
-                    resolved &= _taskStateMap.itemFor(operative);
-                } else if (operative is IPromise) {
-                    resolved &= _promiseStateMap.itemFor(operative);
-                }
-                if (!resolved) {
-                    return this;
-                }
-            }
-            return super.resolve.apply(this, args);
-        }
-
-        protected function taskDoneCallback (task:ITask):void {
-            var currentTaskState:String = _taskStateMap.itemFor(task);
-            if (currentTaskState != TaskState.REJECTED) {
-                _taskStateMap.replaceFor(task, TaskState.RESOLVED);
-                check();
-            }
-        }
-
-        protected function taskFailedCallback (task:ITask):void {
-            _taskStateMap.replaceFor(task, TaskState.REJECTED);
-            super.reject();
-        }
-
-        protected function taskStartedCallback (task:ITask):void {
-            if (state == TaskState.IDLE) {
-                super.start();
-            }
-        }
-
-        protected function taskProgressCallback (... args):void {
-            check();
+        public function promiseIterator ():ICollectionIterator {
+            return _promiseStateMap.keyIterator() as ICollectionIterator;
         }
 
         protected function promiseResolveCallback (promise:IPromise):void {
             _promiseStateMap.replaceFor(promise, true);
+            supervisorCallbackRemove(promise);
             check();
         }
 
-        /**
-         * Start Supervisor, if applicable. Also call start on all registered tasks which are in IDLE state.
-         *
-         * @param args
-         * @return
-         */
-        override public function start (...args):ITask {
-            super.start.apply(this, args);
-            return this;
-        }
 
-        /**
-         * Resolve all registered promises and tasks, which can be resolved.
-         * If not all of registered tasks can be resolved, or resolved already,
-         * will throw IllegalOperationError.
-         *
-         * @param args
-         * @return this
-         * @throws IllegalOperationError Not all tasks can be resolved, or resolved already.
-         */
-        override public function resolve (...args):ITask {
-            super.resolve.apply(this, args);
-            // Resolve operatives
-            var operativeIterator:IIterator = _operativeList.iterator();
-            while (operativeIterator.hasNext()) {
-                var operative:* = operativeIterator.next();
+        protected function check (... args):IPromise {
+            if (!_resolved) {
+                var promiseIterator:IIterator = _promiseStateMap.iterator() as IIterator;
+                while (promiseIterator.hasNext()) {
+                    var promiseState:Boolean = promiseIterator.next();
+                    if (!promiseState) {
+                        return this;
+                    }
+                }
 
+                // All promises are resolved
+                super.resolve.apply(this, args);
+                _resolved = true;
             }
             return this;
         }
 
         /**
-         * Reject Supervisor. Also attempt to reject all registered tasks.
+         * Resolve all registered promises, with args, than resolve Supervisor.
          *
-         * @param args
-         * @return
+         * @param args Args to apply to callbacks.
+         * @return this
          */
-        override public function reject (...args):ITask {
-            super.reject.apply(this, args);
-            return null;
+        override public function resolve (...args):IPromise {
+            var promiseIterator:IIterator = _promiseStateMap.keyIterator();
+            while (promiseIterator.hasNext()) {
+                var promise:IPromise = promiseIterator.next();
+                supervisorCallbackRemove(promise);
+                promise.resolve.apply(null, args);
+            }
+            super.resolve.apply(this, args);
+            _resolved = true;
+            return this;
         }
+
+        /**
+         * Reset supervisor for reusing.
+         *
+         * @return this
+         */
+        public function reset ():Supervisor {
+            var promiseIterator:IIterator = _promiseStateMap.keyIterator() as IIterator;
+            while (promiseIterator.hasNext()) {
+                var promise:IPromise = promiseIterator.next();
+                var promiseState:Boolean = _promiseStateMap.itemFor(promise);
+                if (_promiseStateMap.itemFor(promise)) {
+                    _promiseStateMap.replaceFor(promise, false);
+                    supervisorCallbackRegister(promise);
+                }
+            }
+            _resolved = false;
+            return this;
+        }
+
+        /**
+         * Remove all registered promises.
+         *
+         * @return this
+         */
+        override public function clear ():IPromise {
+            var promiseIterator:IMapIterator = _promiseStateMap.iterator() as IMapIterator;
+            while (promiseIterator.hasNext()) {
+                promiseIterator.next();
+                var promise:IPromise = promiseIterator.key;
+                supervisorCallbackRemove(promise);
+                promiseIterator.remove();
+            }
+            return super.clear();
+        }
+
     }
 }

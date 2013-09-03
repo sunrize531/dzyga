@@ -1,15 +1,14 @@
 package org.dzyga.callbacks {
     import flash.utils.Dictionary;
 
-    import org.as3commons.collections.LinkedList;
-
+    import org.as3commons.collections.LinkedSet;
     import org.as3commons.collections.framework.ICollectionIterator;
     import org.as3commons.collections.framework.IIterator;
     import org.as3commons.collections.iterators.CollectionFilterIterator;
 
     public class Promise implements IPromise {
 
-        protected var _callbackList:LinkedList = new LinkedList();
+        protected var _callbackCollection:LinkedSet = new LinkedSet();
         protected var _callbackMap:Dictionary = new Dictionary(true);
         protected var _unique:Boolean;
 
@@ -43,11 +42,11 @@ package org.dzyga.callbacks {
                 } else {
                     handle = callbackInit(callback, once, thisArg, argsArray);
                     _callbackMap[callback] = handle;
-                    _callbackList.add(handle);
+                    _callbackCollection.add(handle);
                 }
             } else {
                 handle = callbackInit(callback, once, thisArg, argsArray);
-                _callbackList.add(handle);
+                _callbackCollection.add(handle);
             }
             return this;
         }
@@ -61,18 +60,18 @@ package org.dzyga.callbacks {
             return this;
         }
 
-        public function get callbackList ():LinkedList {
-            return _callbackList;
+        public function get callbackCollection ():LinkedSet {
+            return _callbackCollection;
         }
 
         public function callbackIterator (callback:Function = null):ICollectionIterator {
             if (callback == null) {
-                return _callbackList.iterator() as ICollectionIterator;
+                return _callbackCollection.iterator() as ICollectionIterator;
             } else {
                 var filter:Function = function (handle:IHandle):Boolean {
                     return handle.callback === callback;
                 };
-                return new CollectionFilterIterator(_callbackList, filter);
+                return new CollectionFilterIterator(_callbackCollection, filter);
             }
         }
 
@@ -85,7 +84,7 @@ package org.dzyga.callbacks {
         }
 
         public function clear ():IPromise {
-            _callbackList.clear();
+            _callbackCollection.clear();
             if (_unique) {
                 _callbackMap = new Dictionary(true);
             }
