@@ -49,7 +49,7 @@ package org.dzyga.callbacks {
             }, true, null, [_task]);
             _task.resolve();
             assertTrue(_flag);
-            assertEquals(TaskState.IDLE, _task.state);
+            assertEquals(TaskState.RESOLVED, _task.state);
         }
 
         [Test]
@@ -60,7 +60,7 @@ package org.dzyga.callbacks {
             }, true, null, [_task]);
             _task.reject();
             assertTrue(_flag);
-            assertEquals(TaskState.IDLE, _task.state);
+            assertEquals(TaskState.REJECTED, _task.state);
         }
 
         [Test]
@@ -75,7 +75,7 @@ package org.dzyga.callbacks {
             _task.resolve();
             assertTrue(_flag);
 
-            assertEquals(TaskState.IDLE, _task.state);
+            assertEquals(TaskState.RESOLVED, _task.state);
         }
     }
 }
