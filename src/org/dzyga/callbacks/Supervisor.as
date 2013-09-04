@@ -4,7 +4,6 @@ package org.dzyga.callbacks {
     import org.as3commons.collections.LinkedMap;
     import org.as3commons.collections.Map;
     import org.as3commons.collections.framework.ICollectionIterator;
-    import org.as3commons.collections.framework.ICollectionIterator;
     import org.as3commons.collections.framework.IIterator;
     import org.as3commons.collections.framework.IMapIterator;
 
@@ -124,7 +123,6 @@ package org.dzyga.callbacks {
             var promiseIterator:IIterator = _promiseStateMap.keyIterator() as IIterator;
             while (promiseIterator.hasNext()) {
                 var promise:IPromise = promiseIterator.next();
-                var promiseState:Boolean = _promiseStateMap.itemFor(promise);
                 if (_promiseStateMap.itemFor(promise)) {
                     _promiseStateMap.replaceFor(promise, false);
                     supervisorCallbackRegister(promise);
@@ -147,6 +145,7 @@ package org.dzyga.callbacks {
                 supervisorCallbackRemove(promise);
                 promiseIterator.remove();
             }
+            _resolved = false;
             return super.clear();
         }
 
