@@ -1,9 +1,6 @@
 package org.dzyga.eventloop {
     import org.dzyga.callbacks.ITask;
-
-    import org.dzyga.callbacks.Task;
     import org.dzyga.callbacks.TaskState;
-    import org.dzyga.utils.FunctionUtils;
 
     public class LoopTask extends LoopTaskBasic {
         public function LoopTask (loop:Loop = null) {
@@ -28,6 +25,5 @@ package org.dzyga.eventloop {
             deferRunner();
             return this;
         }
-
     }
 }
