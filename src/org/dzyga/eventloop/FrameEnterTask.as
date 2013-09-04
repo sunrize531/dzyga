@@ -8,7 +8,7 @@ package org.dzyga.eventloop {
 
         override public function start (...args):ITask {
             super.start(args);
-            _loop.frameEnterCall(callback, priority, thisArg, argsArray);
+            _loopCallback = _loop.frameEnterCall(callback, priority, thisArg, argsArray);
             return this;
         }
     }
