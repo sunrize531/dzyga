@@ -134,13 +134,13 @@
         }
 
         private static function deactivate(event:Event):void {
-            trace('deactivate')
+            //trace('deactivate')
             _isStageActive = false;
             checklFps(null);
         }
 
         private static function activate(event:Event):void {
-            trace('activate')
+            //trace('activate')
             _isStageActive = true;
             checklFps(null);
         }
