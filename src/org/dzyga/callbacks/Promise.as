@@ -54,9 +54,10 @@ package org.dzyga.callbacks {
         public function callbackRemove (callback:Function = null):IPromise {
             var iterator:ICollectionIterator = callbackIterator(callback);
             while (iterator.hasNext()) {
-                iterator.next();
+                var promiseCallback:* = iterator.next();
                 iterator.remove();
             }
+            delete _callbackMap[callback];
             return this;
         }
 

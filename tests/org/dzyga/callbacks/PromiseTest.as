@@ -23,6 +23,8 @@ package org.dzyga.callbacks {
                 .resolve();
             assertEquals(2, _firstCounter); // 3, if first callback added twice...
             assertEquals(1, _secondCounter);
+
+            promise.clear();
         }
 
         [Test]
@@ -59,6 +61,17 @@ package org.dzyga.callbacks {
             assertEquals(2, _firstCounter);
             promise
                 .callbackRemove(firstCallback)
+                .resolve();
+            assertEquals(2, _firstCounter);
+        }
+
+        [Test]
+        public function testCallbackReRegister ():void {
+            var promise:Promise = new Promise();
+            promise.callbackRegister(firstCallback)
+                .resolve()
+                .callbackRemove(firstCallback)
+                .callbackRegister(firstCallback)
                 .resolve();
             assertEquals(2, _firstCounter);
         }
