@@ -80,6 +80,9 @@ package org.dzyga.callbacks {
             return _state;
         }
 
+        public function get running ():Boolean {
+            return _state == TaskState.STARTED;
+        }
 
         /**
          * Override this function to pass additional arguments to callback.

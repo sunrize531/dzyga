@@ -33,6 +33,11 @@ package org.dzyga.callbacks {
          */
         function get state ():String;
 
+        /**
+         * Return true if Task's state is TaskState.STARTED, false otherwise.
+         */
+        function get running ():Boolean;
+
         // State switches
         /**
          * Set state to TaskState.STARTED, resolve start callback with args prepended with task instance.

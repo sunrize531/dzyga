@@ -3,12 +3,14 @@ package org.dzyga.utils {
         /**
          * If f is Function run it, otherwise return it.
          *
-         * @param f
+         * @param f Some value or function
+         * @param thisArg The object to which the function is applied.
+         * @param args Arguments
          * @return
          */
-        public static function result (f:*):* {
+        public static function result (f:*, thisArg:* = null, ...args):* {
             if (f is Function) {
-                return f();
+                return f.apply(thisArg, args);
             } else {
                 return f;
             }
