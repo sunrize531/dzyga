@@ -8,7 +8,7 @@ package org.dzyga.display {
     import org.flexunit.asserts.assertFalse;
     import org.flexunit.asserts.assertTrue;
 
-    public class ViewProxyExampleTest {
+    public class DisplayProxyExampleTest {
         [Test]
         public function exampleTest ():void {
             var sprite:Sprite = new Sprite();

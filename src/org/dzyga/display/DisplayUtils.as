@@ -80,19 +80,23 @@ package org.dzyga.display {
          *
          * @param view DisplayObjectContainer where to place a child
          * @param child DisplayObject to add
-         * @param level where to add child
+         * @param index where to add child
          * @return org.dzyga.display.display
          */
         public static function addChild (
-                view:DisplayObjectContainer, child:DisplayObject, level:int = int.MAX_VALUE):DisplayObjectContainer {
-            if (level == int.MAX_VALUE) {
+                view:DisplayObjectContainer, child:DisplayObject, index:int = int.MAX_VALUE):DisplayObjectContainer {
+            if (index == int.MAX_VALUE) {
                 view.addChild(child);
             } else {
-                if (level >= 0) {
-                    view.addChildAt(child, Math.min(view.numChildren, level));
+                var numChildren:int = view.numChildren;
+                if (!numChildren) {
+                    index = 0;
+                } else if (index >= 0) {
+                    index = Math.min(numChildren, index);
                 } else {
-                    view.addChildAt(child, Math.max(0, view.numChildren - level));
+                    index = Math.max(0, numChildren + index + 1);
                 }
+                view.addChildAt(child, index);
             }
             return view;
         }
