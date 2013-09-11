@@ -34,19 +34,21 @@ package org.dzyga.callbacks {
 
         public function callbackRegister (
                 callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):IPromise {
-            var handle:ICallback;
-            if (_unique) {
-                handle = _callbackMap[callback];
-                if (handle) {
-                    return this;
+            if (callback != null) {
+                var handle:ICallback;
+                if (_unique) {
+                    handle = _callbackMap[callback];
+                    if (handle) {
+                        return this;
+                    } else {
+                        handle = callbackInit(callback, once, thisArg, argsArray);
+                        _callbackMap[callback] = handle;
+                        _callbackCollection.add(handle);
+                    }
                 } else {
                     handle = callbackInit(callback, once, thisArg, argsArray);
-                    _callbackMap[callback] = handle;
                     _callbackCollection.add(handle);
                 }
-            } else {
-                handle = callbackInit(callback, once, thisArg, argsArray);
-                _callbackCollection.add(handle);
             }
             return this;
         }
