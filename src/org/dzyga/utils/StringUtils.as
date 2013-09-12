@@ -283,5 +283,15 @@ package org.dzyga.utils {
                 return UNDEFINED_CONTEXT;
             }
         }
+
+        /**
+         * Convert object to string. Useful for mapping.
+         *
+         * @param object
+         * @return string representation of the object
+         */
+        public static function repr (object:*):String {
+            return String(object);
+        }
     }
 }
