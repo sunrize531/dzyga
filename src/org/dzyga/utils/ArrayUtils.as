@@ -32,9 +32,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 package org.dzyga.utils {
-    import org.dzyga.utils.ArrayUtils;
-
-
     public final class ArrayUtils {
         private static function _convertToString(obj:Object, deep:Boolean):String {
             return obj.toString();
