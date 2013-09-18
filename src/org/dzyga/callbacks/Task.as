@@ -80,6 +80,9 @@ package org.dzyga.callbacks {
             return _state;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function get running ():Boolean {
             return _state == TaskState.STARTED;
         }
@@ -162,41 +165,65 @@ package org.dzyga.callbacks {
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function startedCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask {
             started.callbackRegister(callback, once, thisArg, argsArray);
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function startedCallbackRemove (callback:Function):ITask {
             started.callbackRemove(callback);
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function progressCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask {
             progress.callbackRegister(callback, once, thisArg, argsArray);
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function progressCallbackRemove (callback:Function):ITask {
             progress.callbackRemove(callback);
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function doneCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask {
             done.callbackRegister(callback, once, thisArg, argsArray);
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function doneCallbackRemove (callback:Function):ITask {
             done.callbackRemove(callback);
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function failedCallbackRegister (callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):ITask {
             failed.callbackRegister(callback, once, thisArg, argsArray);
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function failedCallbackRemove (callback:Function):ITask {
             failed.callbackRemove(callback);
             return this;
