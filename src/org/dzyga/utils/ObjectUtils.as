@@ -88,7 +88,7 @@ package org.dzyga.utils {
 
         public static function values(obj:Object):Array {
             var re:Array = [];
-            for (var i:* in obj) {
+            for each (var i:* in obj) {
                 re.push(i);
             }
             return re;
