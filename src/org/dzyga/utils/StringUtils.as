@@ -41,6 +41,10 @@ package org.dzyga.utils {
         private static const SF_INT:RegExp = /^:(\+?)(\d*)d$/;
         private static const SF_STRING:RegExp = /^:(\-?)(\d*)s$/;
         private static const SF_CHECK_INT:RegExp = /^\d+$/;
+        private static const HOURS_PATTERN:RegExp = /\d+h/;
+        private static const MINUTES_PATTERN:RegExp = /\d+m/;
+        private static const SECONDS_PATTERN:RegExp = /\d+s/;
+        private static const CHECK_LETTER_PATTERN:RegExp = /[h|m|s]/;
 
         private static var sf_index:int;
         private static var sf_args:Array;
@@ -292,6 +296,47 @@ package org.dzyga.utils {
          */
         public static function repr (object:*):String {
             return String(object);
+        }
+
+        /** parse string to convert time formatted like "4m20s", "5m", "2h1s", etc. to seconds.
+         * */
+        public static function parseTime(value:String):int {
+        	value = value.replace(" ", "");
+        	if (value.search(CHECK_LETTER_PATTERN) != -1) {
+        		var h:int = 0;
+        		var m:int = 0;
+        		var s:int = 0;
+        		var str:String = HOURS_PATTERN.exec(value);
+        		if (str) {
+        			h = int(str.substr(0, str.length - 1));
+        		}
+        		str = MINUTES_PATTERN.exec(value);
+        		if (str) {
+        			m = int(str.substr(0, str.length - 1));
+        			//calc hours
+        			h += int(m / 60);
+        			m = m % 60;
+        		}
+        		str = SECONDS_PATTERN.exec(value);
+        		if (str) {
+        			s = int(str.substr(0, str.length - 1));
+        			//calc minutes
+        			m += int(s / 60);
+        			s = s % 60;
+
+        			//calc hours
+        			h += int(m / 60);
+        			m = m % 60;
+        		}
+        		return s + m * 60 + h * 3600;
+        	}
+        	return int(value);
+        }
+        public static function formatTime(value:int):String {
+            var h:int = value / 3600;
+            var m:int = (value / 60) % 60;
+            var s:int = value % 60;
+            return format("{0}h{1}m{2}s", h, m, s);
         }
     }
 }
