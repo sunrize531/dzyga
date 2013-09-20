@@ -298,40 +298,43 @@ package org.dzyga.utils {
             return String(object);
         }
 
-        /** parse string to convert time formatted like "4m20s", "5m", "2h1s", etc. to seconds.
-         * */
+        /**
+         * Parse string to convert time formatted like "4m20s", "5m", "2h1s", etc. to seconds.
+         *
+         */
         public static function parseTime(value:String):int {
-        	value = value.replace(" ", "");
-        	if (value.search(CHECK_LETTER_PATTERN) != -1) {
-        		var h:int = 0;
-        		var m:int = 0;
-        		var s:int = 0;
-        		var str:String = HOURS_PATTERN.exec(value);
-        		if (str) {
-        			h = int(str.substr(0, str.length - 1));
-        		}
-        		str = MINUTES_PATTERN.exec(value);
-        		if (str) {
-        			m = int(str.substr(0, str.length - 1));
-        			//calc hours
-        			h += int(m / 60);
-        			m = m % 60;
-        		}
-        		str = SECONDS_PATTERN.exec(value);
-        		if (str) {
-        			s = int(str.substr(0, str.length - 1));
-        			//calc minutes
-        			m += int(s / 60);
-        			s = s % 60;
+            value = value.replace(" ", "");
+            if (value.search(CHECK_LETTER_PATTERN) != -1) {
+                var h:int = 0;
+                var m:int = 0;
+                var s:int = 0;
+                var str:String = HOURS_PATTERN.exec(value);
+                if (str) {
+                    h = int(str.substr(0, str.length - 1));
+                }
+                str = MINUTES_PATTERN.exec(value);
+                if (str) {
+                    m = int(str.substr(0, str.length - 1));
+                    //calc hours
+                    h += int(m / 60);
+                    m = m % 60;
+                }
+                str = SECONDS_PATTERN.exec(value);
+                if (str) {
+                    s = int(str.substr(0, str.length - 1));
+                    //calc minutes
+                    m += int(s / 60);
+                    s = s % 60;
 
-        			//calc hours
-        			h += int(m / 60);
-        			m = m % 60;
-        		}
-        		return s + m * 60 + h * 3600;
-        	}
-        	return int(value);
+                    //calc hours
+                    h += int(m / 60);
+                    m = m % 60;
+                }
+                return s + m * 60 + h * 3600;
+            }
+            return int(value);
         }
+
         public static function formatTime(value:int):String {
             var h:int = value / 3600;
             var m:int = (value / 60) % 60;

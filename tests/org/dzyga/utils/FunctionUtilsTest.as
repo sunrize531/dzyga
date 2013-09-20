@@ -88,5 +88,15 @@ package org.dzyga.utils {
             wrappedSetter(obj, '001');
             assertEquals('prefix_001', obj.id);
         }
+
+        [Test]
+        public function testField ():void {
+            var obj:Object = {
+                'genericField': 'field',
+                'methodField': FunctionUtils.identity
+            };
+            assertEquals('field', FunctionUtils.field(obj, 'genericField'));
+            assertEquals(1, FunctionUtils.field(obj, 'methodField', null, 1));
+        }
     }
 }

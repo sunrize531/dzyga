@@ -5,9 +5,6 @@ package org.dzyga.utils {
     internal class MapperIterator implements IIterator {
         private var _sourceIterator:IIterator;
         private var _handle:Handle;
-        private var _function:Function;
-        private var _thisArg:*;
-        private var _argsArray:Array;
 
         public function MapperIterator (
                 sourceIterator:IIterator, f:Function, thisArg:* = null, argsArray:Array = null) {
@@ -16,7 +13,7 @@ package org.dzyga.utils {
         }
 
         public function next ():* {
-            return _function.apply(_thisArg, [_sourceIterator.next()].concat(_argsArray));
+            return _handle.call(_sourceIterator.next());
         }
 
         public function hasNext ():Boolean {
