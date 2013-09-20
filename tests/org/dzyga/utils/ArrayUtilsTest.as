@@ -26,5 +26,15 @@ package org.dzyga.utils {
             second.shift();
             assertFalse(ArrayUtils.equals(first, second));
         }
+
+        [Test]
+        public function testPluck ():void {
+            assertTrue(ArrayUtils.equals(
+                    ['one', 'two', 'three'],
+                    ArrayUtils.pluck([
+                        {'id': 'one'},
+                        {'id': 'two'},
+                        {'id': function ():String { return 'three'; }}], 'id')))
+        }
     }
 }

@@ -311,6 +311,16 @@ package org.dzyga.utils {
             return array;
         }
 
-
+        /**
+         * Map FunctionUtils.field function to all values in the array.
+         * @param array
+         * @param field Field name
+         * @return new Array with field value.
+         */
+        public static function pluck (array:Array, field:String):Array {
+            return map(array, function (value:*):* {
+                return FunctionUtils.field(value, field);
+            });
+        }
     }
 }
