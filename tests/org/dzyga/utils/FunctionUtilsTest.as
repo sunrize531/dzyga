@@ -15,10 +15,25 @@ package org.dzyga.utils {
                 k = a;
                 j = b;
                 return a + b;
-            }, null, 1);
+            }, 1);
             var value:int = f(5);
             assertEquals(5, k);
             assertEquals(1, j);
+            assertEquals(6, value);
+        }
+
+        [Test]
+        public function testBind ():void {
+            var obj:Object = {
+                'a': 5
+            };
+
+            var f:Function = FunctionUtils.bind(function (a:int, b:int):int {
+                this.a += b;
+                return a + b;
+            }, obj, 1);
+            var value:int = f(5);
+            assertEquals(6, obj.a);
             assertEquals(6, value);
         }
 

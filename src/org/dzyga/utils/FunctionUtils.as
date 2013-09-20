@@ -59,15 +59,32 @@ package org.dzyga.utils {
          * Very useful for mapping.
          *
          * @param f
+         * @param args args to define
+         * @return new function
+         */
+        public static function partial (f:Function, ... args):Function {
+            return function (... partialArgs):* {
+                return f.apply(null, ArrayUtils.add(partialArgs, args));
+            }
+        }
+
+        /**
+         * Create function which is calls function with some predefined arguments.
+         * Arguments will be appended to function argument list when calling.
+         * Also you can provide thisArg for the function.
+         * Very useful for mapping.
+         *
+         * @param f
          * @param thisArg bind f to this
          * @param args args to define
          * @return new function
          */
-        public static function partial (f:Function, thisArg:* = null, ... args):Function {
+        public static function bind (f:Function, thisArg:* = null, ... args):Function {
             return function (... partialArgs):* {
                 return f.apply(thisArg, ArrayUtils.add(partialArgs, args));
             }
         }
+
 
 
         /**

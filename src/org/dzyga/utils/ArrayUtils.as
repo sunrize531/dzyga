@@ -318,7 +318,7 @@ package org.dzyga.utils {
          * @return new Array with field value.
          */
         public static function pluck (array:Array, field:String):Array {
-            return map(array, FunctionUtils.partial(FunctionUtils.field, null, field));
+            return map(array, FunctionUtils.partial(FunctionUtils.field, field));
         }
     }
 }
