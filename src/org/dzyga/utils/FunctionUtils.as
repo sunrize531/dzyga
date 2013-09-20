@@ -93,5 +93,19 @@ package org.dzyga.utils {
         public static function identity (value:* = null, ... args):* {
             return value;
         }
+
+
+        /**
+         * Get the property in the object named field. If it's function - run it, otherwise return it.
+         *
+         * @param object
+         * @param field
+         * @param thisArg
+         * @param args
+         * @return
+         */
+        public static function field (object:Object, field:String, thisArg:* = null, ... args):* {
+            return result.apply(null, [object[field], thisArg].concat(args));
+        }
     }
 }

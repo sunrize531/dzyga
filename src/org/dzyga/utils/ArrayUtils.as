@@ -88,8 +88,7 @@ package org.dzyga.utils {
                 if (callback is String) {
                     re.push((v[callback] as Function).apply(thisArg, args));
                 } else {
-                    var argsArray:Array = [v].concat(args);
-                    re.push(callback.apply(thisArg, argsArray));
+                    re.push(callback.apply(thisArg, [v].concat(args)));
                 }
             }
             return re;
