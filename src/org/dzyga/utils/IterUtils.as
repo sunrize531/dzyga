@@ -103,7 +103,7 @@ package org.dzyga.utils {
         public static function toList (collection:IList, object:*):IList {
             var i:IIterator = iterator(object);
             while (i.hasNext()) {
-                collection.add(i);
+                collection.add(i.next());
             }
             return collection;
         }
@@ -118,7 +118,7 @@ package org.dzyga.utils {
         public static function toSet (collection:ISet, object:*):ISet {
             var i:IIterator = iterator(object);
             while (i.hasNext()) {
-                collection.add(i);
+                collection.add(i.next());
             }
             return collection;
         }
