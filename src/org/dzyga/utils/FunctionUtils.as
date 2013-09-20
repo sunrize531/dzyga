@@ -55,6 +55,8 @@ package org.dzyga.utils {
 
         /**
          * Create function which is calls function with some predefined arguments.
+         * Arguments will be appended to function argument list when calling.
+         * Very useful for mapping.
          *
          * @param f
          * @param thisArg bind f to this
@@ -63,8 +65,7 @@ package org.dzyga.utils {
          */
         public static function partial (f:Function, thisArg:* = null, ... args):Function {
             return function (... partialArgs):* {
-                args = args.concat(partialArgs);
-                return f.apply(thisArg, args);
+                return f.apply(thisArg, ArrayUtils.add(partialArgs, args));
             }
         }
 
@@ -105,7 +106,7 @@ package org.dzyga.utils {
          * @return
          */
         public static function field (object:Object, field:String, thisArg:* = null, ... args):* {
-            return result.apply(null, [object[field], thisArg].concat(args));
+            return result.apply(null, ArrayUtils.add([object[field], thisArg], args));
         }
     }
 }

@@ -1,6 +1,8 @@
 package org.dzyga.callbacks {
     import flash.errors.IllegalOperationError;
 
+    import org.dzyga.utils.ArrayUtils;
+
     import org.dzyga.utils.ObjectUtils;
 
     public class Handle implements IHandle {
@@ -72,7 +74,7 @@ package org.dzyga.callbacks {
             if (_canceled) {
                 throw new IllegalOperationError('Handle is canceled');
             }
-            _result = _callback.apply(_thisArg, args.concat(_argsArray));
+            _result = _callback.apply(_thisArg, ArrayUtils.add(args, _argsArray));
             return result;
         }
 

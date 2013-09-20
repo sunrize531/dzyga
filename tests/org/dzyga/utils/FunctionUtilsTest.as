@@ -17,8 +17,8 @@ package org.dzyga.utils {
                 return a + b;
             }, null, 1);
             var value:int = f(5);
-            assertEquals(1, k);
-            assertEquals(5, j);
+            assertEquals(5, k);
+            assertEquals(1, j);
             assertEquals(6, value);
         }
 
