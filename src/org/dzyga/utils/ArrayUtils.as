@@ -1,21 +1,5 @@
 package org.dzyga.utils {
     public final class ArrayUtils {
-        private static function _convertToString(obj:Object, deep:Boolean):String {
-            return obj.toString();
-        }
-
-
-        public static function repr(arr:Array, deep:Boolean = false):String {
-            var mapper:*;
-            var mapped:Array;
-            if (deep) {
-                mapped = ArrayUtils.map(arr, ObjectUtils.repr, null, true);
-            } else {
-                mapped = ArrayUtils.map(arr, 'toString');
-            }
-            return '[' + mapped.join(', ') + ']';
-        }
-
 
         /**
          * Add one array to another. Like Array.concat, but without generating new array instances.
@@ -31,6 +15,16 @@ package org.dzyga.utils {
             return arr1;
         }
 
+        /**
+         * Append something to arr and return arr. Similar to Array.push, but returns array. Useful for chaining.
+         *
+         * @param arr
+         * @param args Values to append to arr.
+         * @return arr
+         */
+        public static function append(arr:Array, ...args):Array {
+            return add(arr, args);
+        }
 
         /**
          * Finds the place for the new element in sorted array using binary
@@ -319,6 +313,22 @@ package org.dzyga.utils {
          */
         public static function pluck (array:Array, field:String):Array {
             return map(array, FunctionUtils.partial(FunctionUtils.field, field));
+        }
+
+        private static function _convertToString(obj:Object, deep:Boolean):String {
+            return obj.toString();
+        }
+
+
+        public static function repr(arr:Array, deep:Boolean = false):String {
+            var mapper:*;
+            var mapped:Array;
+            if (deep) {
+                mapped = ArrayUtils.map(arr, ObjectUtils.repr, null, true);
+            } else {
+                mapped = ArrayUtils.map(arr, 'toString');
+            }
+            return '[' + mapped.join(', ') + ']';
         }
     }
 }
