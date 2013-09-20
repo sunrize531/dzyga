@@ -1,36 +1,3 @@
-/**
- * ArrayUtils
- * A small set of array utilites
- *
- * @author        Ivan Filimonov
- * @version        0.2
- */
-
-
-/*
-Licensed under the MIT License
-
-Copyright (c) 2009-2010 Ivan Filimonov
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-
 package org.dzyga.utils {
     public final class ArrayUtils {
         private static function _convertToString(obj:Object, deep:Boolean):String {
@@ -51,12 +18,11 @@ package org.dzyga.utils {
 
 
         /**
-         * Addes one array to another. Like Array.concat, but without generating
-         * new array instances.
+         * Add one array to another. Like Array.concat, but without generating new array instances.
+         *
          * @param arr1
          * @param arr2
-         * @return
-         *
+         * @return arr1
          */
         public static function add(arr1:Array, arr2:Array):Array {
             for each (var i:* in arr2) {
@@ -68,20 +34,20 @@ package org.dzyga.utils {
 
         /**
          * Finds the place for the new element in sorted array using binary
-         * search algorithm
-         * @param arr
-         * @param func
-         * @param args
-         * @return
+         * search algorithm.
          *
+         * @param array - Array or vector where to find.
+         * @param func - Sort function
+         * @param el - element to find a place for.
+         * @return index where el should be placed.
          */
-        public static function search(arr:*, func:Function, el:*):int {
-            var length:int = arr.length;
+        public static function search(array:*, func:Function, el:*):int {
+            var length:int = array.length;
             if (length == 0) {
                 return 0;
             }
 
-            var cmp:int = func.call(null, el, arr[length - 1]);
+            var cmp:int = func.call(null, el, array[length - 1]);
             if (cmp > 0) {
                 return length;
             }
@@ -90,7 +56,7 @@ package org.dzyga.utils {
             var j:int = length;
             while (i + 1 < j) {
                 var middle:int = int(i + (j - i) / 2);
-                cmp = func.call(null, el, arr[middle]);
+                cmp = func.call(null, el, array[middle]);
                 if (cmp < 0) {
                     j = middle;
                 }
@@ -98,17 +64,27 @@ package org.dzyga.utils {
                     i = middle;
                 }
             }
-            if (func.call(null, el, arr[i]) < 0) {
+            if (func.call(null, el, array[i]) < 0) {
                 return i;
             }
             return j;
         }
 
 
-        public static function map(arr:Array, callback:*, thisArg:* = null, ...args):Array {
+        /**
+         * Apply callback to each element in the array. Callback can be Function or String. If callback is String, then
+         * method will try to find field in the array element and call it.
+         *
+         * @param array
+         * @param callback Function or method name.
+         * @param thisArg
+         * @param args
+         * @return new Array instance.
+         */
+        public static function map(array:Array, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
             var m:Function;
-            for each (var v:* in arr) {
+            for each (var v:* in array) {
                 if (callback is String) {
                     re.push((v[callback] as Function).apply(thisArg, args));
                 } else {
@@ -120,9 +96,18 @@ package org.dzyga.utils {
         }
 
 
-        public static function filter(arr:Array, callback:*, thisArg:* = null, ...args):Array {
+        /**
+         * Filter array elements with callback. Callback can be Function or String.
+         *
+         * @param array
+         * @param callback
+         * @param thisArg
+         * @param args
+         * @return
+         */
+        public static function filter(array:Array, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
-            for each (var v:* in arr) {
+            for each (var v:* in array) {
                 var filtered:*;
                 if (callback is String) {
                     filtered = (v[callback] as Function).apply(thisArg || v, args);
@@ -137,12 +122,20 @@ package org.dzyga.utils {
             return re;
         }
 
+        /**
+         * Check if value exists in array.
+         *
+         * @param array
+         * @param value
+         * @return true if value is found.
+         */
         public static function isExists(array:Array, value:*):Boolean {
             return array.indexOf(value) != -1;
         }
 
         /**
          * Checks, if there is element, or element with defined property in array.
+         *
          * @param array Array or Vector
          * @param value
          * @param propName
@@ -305,6 +298,20 @@ package org.dzyga.utils {
                 return true;
             }
         }
+
+        /**
+         * Sort array on entry, with function or just sort and return it.
+         */
+        public static function sort (array:Array, ... args):Array {
+            var firstArg:* = args[0];
+            if (firstArg is String || firstArg is Array) {
+                array.sortOn.apply(null, args);
+            } else {
+                array.sort.apply(null, args);
+            }
+            return array;
+        }
+
 
     }
 }
