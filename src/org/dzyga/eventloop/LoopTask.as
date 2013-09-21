@@ -7,7 +7,7 @@ package org.dzyga.eventloop {
             super(loop);
         }
 
-        protected function deferRunner ():void {
+        override protected function loopCallbackRegister ():void {
             _loopCallback = _loop.call(runner, priority);
         }
 
@@ -16,14 +16,8 @@ package org.dzyga.eventloop {
                 _result = callback.apply(thisArg, argsArray);
             }
             if (state == TaskState.STARTED) {
-                deferRunner();
+                loopCallbackRegister();
             }
-        }
-
-        override public function start (...args):ITask {
-            super.start.apply(this, args);
-            deferRunner();
-            return this;
         }
     }
 }

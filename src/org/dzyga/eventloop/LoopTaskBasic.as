@@ -45,24 +45,37 @@ package org.dzyga.eventloop {
             }
         }
 
-        override public function resolve (...args):ITask {
+        protected function loopCallbackRegister ():void {
+        }
+
+        protected function loopCallbackCancel ():void {
             if (_loopCallback) {
                 _loopCallback.cancel();
             }
+        }
+
+        protected function loopCallbackRemove ():void {
+            if (_loopCallback) {
+                _loop.callbackRemove(_loopCallback);
+            }
+        }
+
+        override public function start (...args):ITask {
+            return super.start.apply(this, args);
+        }
+
+        override public function resolve (...args):ITask {
+            loopCallbackCancel();
             return super.resolve.apply(this, args);
         }
 
         override public function reject (...args):ITask {
-            if (_loopCallback) {
-                _loopCallback.cancel();
-            }
+            loopCallbackCancel();
             return super.reject.apply(this, args);
         }
 
         override public function clear ():ITask {
-            if (_loopCallback) {
-                _loop.callbackRemove(_loopCallback);
-            }
+            loopCallbackRemove();
             return super.clear();
         }
     }
