@@ -1,5 +1,4 @@
 package org.dzyga.eventloop {
-    import flash.display.DisplayObject;
     import flash.errors.IllegalOperationError;
     import flash.utils.getTimer;
 

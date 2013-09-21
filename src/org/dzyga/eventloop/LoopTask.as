@@ -1,5 +1,4 @@
 package org.dzyga.eventloop {
-    import org.dzyga.callbacks.ITask;
     import org.dzyga.callbacks.TaskState;
 
     public class LoopTask extends LoopTaskBasic {
