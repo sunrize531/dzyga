@@ -66,8 +66,8 @@ package org.dzyga.eventloop {
         override public function start (...args):ITask {
             _timeStart = getTimer();
             _valueInitial = getValue();
-            super.start.apply(this, args);
-            return this;
+            loopCallbackRegister();
+            return super.start.apply(this, args);
         }
 
         override public function resolve (...args):ITask {

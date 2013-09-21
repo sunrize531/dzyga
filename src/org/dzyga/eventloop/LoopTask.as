@@ -8,7 +8,9 @@ package org.dzyga.eventloop {
         }
 
         override protected function loopCallbackRegister ():void {
-            _loopCallback = _loop.call(runner, priority);
+            if (!_loopCallback) {
+                _loopCallback = _loop.call(runner, priority);
+            }
         }
 
         protected function runner ():void {

@@ -51,16 +51,19 @@ package org.dzyga.eventloop {
         protected function loopCallbackCancel ():void {
             if (_loopCallback) {
                 _loopCallback.cancel();
+                _loopCallback = null;
             }
         }
 
         protected function loopCallbackRemove ():void {
             if (_loopCallback) {
                 _loop.callbackRemove(_loopCallback);
+                _loopCallback = null;
             }
         }
 
         override public function start (...args):ITask {
+            loopCallbackRegister();
             return super.start.apply(this, args);
         }
 
