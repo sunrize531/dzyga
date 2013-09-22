@@ -215,7 +215,9 @@ package org.dzyga.display {
          * @return this
          */
         public function clear ():IDisplayProxy {
-            DisplayUtils.clear(container);
+            if (container) {
+                DisplayUtils.clear(container);
+            }
             return this;
         }
 

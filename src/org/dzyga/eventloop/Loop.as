@@ -44,9 +44,7 @@ package org.dzyga.eventloop {
         protected static var _frameEnterCallbackCollection:SortedSet = new SortedSet(new LoopCallbackComparator());
         protected static var _delayedCallbackCollection:SortedSet = new SortedSet(new LoopCallbackDelayedComparator());
         protected static var _immediateCallbackCollection:LinkedList = new LinkedList();
-
         protected static var _frameExitCallbackCollection:SortedSet = new SortedSet(new LoopCallbackComparator());
-
         protected static var _callbackIterator:LoopCallbackIterator = new LoopCallbackIterator();
 
         protected static const FRAME_ENTER_THRESHOLD:Number = 0.7;
