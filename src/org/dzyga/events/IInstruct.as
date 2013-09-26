@@ -11,6 +11,6 @@ package org.dzyga.events {
 
         function get name ():String
 
-        function init():void
+        function init(...params):void
     }
 }
