@@ -20,7 +20,7 @@ package org.dzyga.display {
             assertTrue(display(sprite) != display(sprite));
             assertEquals(display(sprite).view == display(sprite).view);
 
-            display(first).name('first').moveTo(20, 0);
+            display(first).nameSet('first').moveTo(20, 0);
 
             assertEquals(first.x, 20);
             assertEquals(first.y, 0);

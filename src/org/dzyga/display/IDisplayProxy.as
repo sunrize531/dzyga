@@ -24,7 +24,7 @@ package org.dzyga.display {
         function get graphics ():Graphics;
 
 
-        function name (name:String):IDisplayProxy;
+        function nameSet (name:String):IDisplayProxy;
         function moveTo (x:Number, y:Number, truncate:Boolean = false):IDisplayProxy;
         function offset (dx:Number, dy:Number, truncate:Boolean = false):IDisplayProxy;
         function scale (scaleX:Number, scaleY:Number=NaN):IDisplayProxy;

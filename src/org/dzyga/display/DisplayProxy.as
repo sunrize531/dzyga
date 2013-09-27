@@ -105,7 +105,7 @@ package org.dzyga.display {
          * @param name
          * @return this
          */
-        public function name (name:String):IDisplayProxy {
+        public function nameSet (name:String):IDisplayProxy {
             view.name = name;
             return this;
         }
