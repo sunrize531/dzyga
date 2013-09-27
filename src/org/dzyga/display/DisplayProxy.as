@@ -246,11 +246,13 @@ package org.dzyga.display {
          * Hittest view with point. Point should be in global coordinates space.
          * Method will check, if view's bounds contains point first, before actual hittesting.
          *
-         * @param point
+         * @param globalY
+         * @param globalX
+         * @param checkContainer
          * @return
          */
-        public function hitTest (point:Point):Boolean {
-            return DisplayUtils.hitTest(view, point);
+        public function hitTest (globalX:int, globalY:int, checkContainer:Boolean = true):Boolean {
+            return DisplayUtils.hitTest(view, globalX, globalY, checkContainer);
         }
 
         // Visibility

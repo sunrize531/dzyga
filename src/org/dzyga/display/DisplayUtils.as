@@ -1,7 +1,11 @@
 package org.dzyga.display {
+    import flash.display.Bitmap;
+    import flash.display.BitmapData;
     import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;
     import flash.display.InteractiveObject;
+    import flash.display.Sprite;
+    import flash.geom.Matrix;
     import flash.geom.Point;
 
     import org.dzyga.geom.Rect;
@@ -179,12 +183,50 @@ package org.dzyga.display {
          * Method will check, if view's bounds contains point first, before actual hittesting.
          *
          * @param view
-         * @param point
          * @return
+         * @param checkBounds
+         * @param globalY
+         * @param globalX
          */
-        public static function hitTest (view:DisplayObject, point:Point):Boolean {
-            return getBounds(view).containsPoint(view.globalToLocal(point)) &&
-                    view.hitTestPoint(point.x, point.y, true);
+        public static function hitTest(view:DisplayObject, globalX:int, globalY:int, checkBounds:Boolean = true):Boolean {
+            _HIT_POINT.x = globalX;
+            _HIT_POINT.y = globalY;
+            if (checkBounds && !getBounds(view).containsPoint(view.globalToLocal(new Point(globalX, globalY)))){
+                return false;
+            }
+            var localPoint:Point = DisplayObject(view).globalToLocal(_HIT_POINT);
+            if (view is Bitmap) {
+                return hitTestBitmap(view as Bitmap, localPoint.x, localPoint.y);
+            }
+            if (view is Sprite) {
+                return view.hitTestPoint(globalX, globalY, true);
+            } else {
+                return hitTestShape(view, localPoint.x, localPoint.y);
+            }
+        }
+
+        private static const _HIT_TEST_HELPER_BD:BitmapData = new BitmapData(1, 1, true, 0);
+        private static const _HIT_TEST_MATRIX:Matrix = new Matrix();
+        private static const _HIT_POINT:Point = new Point();
+
+        private static function hitTestShape(target:DisplayObject, localX:Number, localY:Number):Boolean {
+            _HIT_TEST_MATRIX.tx = -localX;
+            _HIT_TEST_MATRIX.ty = -localY;
+
+            _HIT_TEST_HELPER_BD.setPixel32(0, 0, 0x1000000 - 100);
+            _HIT_TEST_HELPER_BD.draw(target, _HIT_TEST_MATRIX);
+
+            return _HIT_TEST_HELPER_BD.getPixel32(0, 0) > 0x1000000;
+        }
+
+        private static function hitTestBitmap(bitmap:Bitmap, localX:int, localY:int):Boolean {
+            if (bitmap) {
+                var bitmapData:BitmapData = bitmap.bitmapData;
+                if (localX < bitmap.width && localX >= 0 && localY < bitmap.height && localY >= 0) {
+                    if (bitmapData.getPixel32(localX, localY) > 0x1000000) return true;
+                }
+            }
+            return false;
         }
 
         // Visibility

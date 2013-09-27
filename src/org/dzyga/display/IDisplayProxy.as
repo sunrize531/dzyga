@@ -44,6 +44,6 @@ package org.dzyga.display {
 
 
         function getBounds ():Rect;
-        function hitTest (point:Point):Boolean;
+        function hitTest (globalX:int, globalY:int, checkContainer:Boolean = true):Boolean;
     }
 }
