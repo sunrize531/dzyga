@@ -191,10 +191,17 @@ package org.dzyga.display {
         public static function hitTest(view:DisplayObject, globalX:int, globalY:int, checkBounds:Boolean = true):Boolean {
             _HIT_POINT.x = globalX;
             _HIT_POINT.y = globalY;
-            if (checkBounds && !getBounds(view).containsPoint(view.globalToLocal(new Point(globalX, globalY)))){
-                return false;
+            if (checkBounds){
+                if((!view is Bitmap) && !getBounds(view).containsPoint(view.globalToLocal(new Point(globalX, globalY)))){
+                    return false;
+                }
             }
             var localPoint:Point = DisplayObject(view).globalToLocal(_HIT_POINT);
+            if (checkBounds) {
+                if(localPoint.x < 0 || localPoint.y < 0 || localPoint.x >= view.width || localPoint.y >= view.height){
+                    return false;
+                }
+            }
             if (view is Bitmap) {
                 return hitTestBitmap(view as Bitmap, localPoint.x, localPoint.y);
             }
