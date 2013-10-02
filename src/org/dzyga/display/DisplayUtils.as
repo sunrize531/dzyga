@@ -197,16 +197,13 @@ package org.dzyga.display {
                 }
             }
             var localPoint:Point = DisplayObject(view).globalToLocal(_HIT_POINT);
-            if (checkBounds) {
+            if (checkBounds && view is Bitmap) {
                 if(localPoint.x < 0 || localPoint.y < 0 || localPoint.x >= view.width || localPoint.y >= view.height){
                     return false;
                 }
             }
             if (view is Bitmap) {
                 return hitTestBitmap(view as Bitmap, localPoint.x, localPoint.y);
-            }
-            if (view is Sprite) {
-                return view.hitTestPoint(globalX, globalY, true);
             } else {
                 return hitTestShape(view, localPoint.x, localPoint.y);
             }
