@@ -245,7 +245,6 @@ package org.dzyga.display {
          *
          * @param globalY
          * @param globalX
-         * @param checkContainer
          * @return
          */
         public function hitTest (globalX:int, globalY:int):Boolean {
