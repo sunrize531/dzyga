@@ -6,10 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 package org.dzyga.display {
-    import flash.events.Event;
-    import flash.events.IEventDispatcher;
-
-    import org.dzyga.events.IDispatcherProxy;
     import flash.display.Bitmap;
     import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;
@@ -17,11 +13,12 @@ package org.dzyga.display {
     import flash.display.InteractiveObject;
     import flash.display.Shape;
     import flash.display.Sprite;
-    import flash.geom.Point;
+    import flash.events.Event;
+    import flash.events.IEventDispatcher;
     import flash.text.TextField;
 
+    import org.dzyga.events.IDispatcherProxy;
     import org.dzyga.geom.Rect;
-
 
     public class DisplayProxy implements IDisplayProxy {
         protected var _view:DisplayObject;
@@ -204,7 +201,7 @@ package org.dzyga.display {
          * @param child
          * @return this
          */
-        public function removeChildFrom (child:DisplayObject):IDisplayProxy {
+        public function removeChild (child:DisplayObject):IDisplayProxy {
             DisplayUtils.removeChild(container, child);
             return this;
         }
@@ -251,8 +248,8 @@ package org.dzyga.display {
          * @param checkContainer
          * @return
          */
-        public function hitTest (globalX:int, globalY:int, checkContainer:Boolean = true):Boolean {
-            return DisplayUtils.hitTest(view, globalX, globalY, checkContainer);
+        public function hitTest (globalX:int, globalY:int):Boolean {
+            return DisplayUtils.hitTest(view, globalX, globalY);
         }
 
         // Visibility
@@ -282,7 +279,7 @@ package org.dzyga.display {
          *
          * @return this
          */
-        public function toggle (view:DisplayObject):IDisplayProxy {
+        public function toggle ():IDisplayProxy {
             DisplayUtils.toggle(view);
             return this;
         }

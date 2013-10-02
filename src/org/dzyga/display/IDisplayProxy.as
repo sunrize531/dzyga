@@ -6,7 +6,6 @@ package org.dzyga.display {
     import flash.display.InteractiveObject;
     import flash.display.Shape;
     import flash.display.Sprite;
-    import flash.geom.Point;
     import flash.text.TextField;
 
     import org.dzyga.events.IDispatcherProxy;
@@ -32,7 +31,7 @@ package org.dzyga.display {
         function addChild (child:DisplayObject, level:int = int.MAX_VALUE):IDisplayProxy;
         function insertTo (target:DisplayObjectContainer, level:int = int.MAX_VALUE):IDisplayProxy;
         function getChild (name:String):IDisplayProxy;
-        function removeChildFrom (child:DisplayObject):IDisplayProxy;
+        function removeChild (child:DisplayObject):IDisplayProxy;
         function clear ():IDisplayProxy;
         function detach ():IDisplayProxy;
         function show ():IDisplayProxy;
@@ -44,6 +43,6 @@ package org.dzyga.display {
 
 
         function getBounds ():Rect;
-        function hitTest (globalX:int, globalY:int, checkContainer:Boolean = true):Boolean;
+        function hitTest (globalX:int, globalY:int):Boolean;
     }
 }
