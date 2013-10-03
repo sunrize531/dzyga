@@ -1,10 +1,3 @@
-/**
- * Created with IntelliJ IDEA.
- * User: sunrize
- * Date: 31.07.13
- * Time: 9:43
- * To change this template use File | Settings | File Templates.
- */
 package org.dzyga.display {
     import flash.display.Bitmap;
     import flash.display.DisplayObject;
