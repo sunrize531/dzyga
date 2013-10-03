@@ -33,14 +33,7 @@ package org.dzyga.events {
 
 
         /**
-         * Add listener for bridge's target.
-         *
-         * @param eventType - Event type to listen
-         * @param callback - callback function
-         * @param once - remove callback after first run
-         * @param thisArg - bind callback to thisArgs
-         * @param argArray - pass additional arguments to callback
-         * @return this
+         * @inheritDoc
          */
         public function listen (
                 eventType:String, callback:Function, once:Boolean = false,
@@ -49,15 +42,7 @@ package org.dzyga.events {
         }
 
         /**
-         * Add listener for target.
-         *
-         * @param target
-         * @param eventType
-         * @param callback
-         * @param once
-         * @param thisArg
-         * @param argArray
-         * @return
+         * @inheritDoc
          */
         public function listenTo (
                 target:IEventDispatcher, eventType:String, callback:Function, once:Boolean = false,
@@ -81,10 +66,16 @@ package org.dzyga.events {
             return this;
         }
 
-        public function isListening (eventType:String = null, callback:Function = null):Boolean {
+        /**
+         * @inheritDoc
+         */
+        public function isListening (eventType:String = '', callback:Function = null):Boolean {
             return isListeningTo(_target, eventType, callback);
         }
 
+        /**
+         * @inheritDoc
+         */
         public function isListeningTo (
                 target:IEventDispatcher = null, eventType:String = '',
                 callback:Function = null):Boolean {
@@ -105,10 +96,16 @@ package org.dzyga.events {
             return re;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function stopListening (eventType:String = '', callback:Function = null):IDispatcherProxy {
             return stopListeningTo(_target, eventType, callback);
         }
 
+        /**
+         * @inheritDoc
+         */
         public function stopListeningTo (
                 target:IEventDispatcher = null, eventType:String = '',
                 callback:Function = null):IDispatcherProxy {
@@ -135,25 +132,23 @@ package org.dzyga.events {
         }
 
         /**
-         * Trigger Event with specified type.
-         * @param eventType
-         * @return this
+         * @inheritDoc
          */
         public function trigger (eventType:String):IDispatcherProxy {
             return triggerTo(_target, eventType);
         }
 
         /**
-         * Trigger Event with specified type on target.
-         * @param target
-         * @param eventType
-         * @return this
+         * @inheritDoc
          */
         public function triggerTo (target:IEventDispatcher, eventType:String):IDispatcherProxy {
             target.dispatchEvent(new Event(eventType));
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function clear ():IDispatcherProxy {
             // TODO: Can do it faster. Just iterate through all targets, remove listeners and clear collections.
             return stopListeningTo();
@@ -192,6 +187,9 @@ package org.dzyga.events {
             }
         }
 
+        /**
+         * @inheritDoc
+         */
         public function addEventListener (
                 type:String, listener:Function, useCapture:Boolean = false,
                 priority:int = 0, useWeakReference:Boolean = false):void {
@@ -201,6 +199,9 @@ package org.dzyga.events {
             _directListenerList.add(eventListener);
         }
 
+        /**
+         * @inheritDoc
+         */
         public function removeEventListener (type:String, listener:Function, useCapture:Boolean = false):void {
             _target.removeEventListener(type, listener, useCapture);
             var directListenerIterator:DirectListenerFilterIterator = new DirectListenerFilterIterator(
@@ -212,18 +213,30 @@ package org.dzyga.events {
             }
         }
 
+        /**
+         * @inheritDoc
+         */
         public function dispatchEvent (event:Event):Boolean {
             return _target.dispatchEvent(event);
         }
 
+        /**
+         * @inheritDoc
+         */
         public function hasEventListener (type:String):Boolean {
             return _target.hasEventListener(type);
         }
 
+        /**
+         * @inheritDoc
+         */
         public function willTrigger (type:String):Boolean {
             return _target.willTrigger(type);
         }
 
+        /**
+         * @inheritDoc
+         */
         public static function listenerHashGenerate (
                 target:IEventDispatcher, event:String,
                 callback:Function, useCapture:Boolean = false):String {
@@ -232,6 +245,9 @@ package org.dzyga.events {
                 event + ObjectUtils.hash(target) + ObjectUtils.hash(callback)).toFixed(0), 16, '0');
         }
 
+        /**
+         * @inheritDoc
+         */
         public static function targetHashGenerate (target:IEventDispatcher, event:String):String {
             return event + ObjectUtils.hash(target);
         }

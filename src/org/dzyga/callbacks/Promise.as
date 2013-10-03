@@ -16,6 +16,9 @@ package org.dzyga.callbacks {
             _unique = unique;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function resolve (... args):IPromise {
             var iterator:ICollectionIterator = callbackIterator();
             while (iterator.hasNext()) {
@@ -32,6 +35,9 @@ package org.dzyga.callbacks {
             return new Callback(callback, once, thisArg, argsArray);
         }
 
+        /**
+         * @inheritDoc
+         */
         public function callbackRegister (
                 callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):IPromise {
             if (callback != null) {
@@ -53,20 +59,29 @@ package org.dzyga.callbacks {
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function callbackRemove (callback:Function = null):IPromise {
             var iterator:ICollectionIterator = callbackIterator(callback);
             while (iterator.hasNext()) {
-                var promiseCallback:* = iterator.next();
+                iterator.next();
                 iterator.remove();
             }
             delete _callbackMap[callback];
             return this;
         }
 
+        /**
+         * Return LinkedSet, containing handles for all registered callbacks.
+         */
         public function get callbackCollection ():LinkedSet {
             return _callbackCollection;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function callbackIterator (callback:Function = null):ICollectionIterator {
             if (callback == null) {
                 return _callbackCollection.iterator() as ICollectionIterator;
@@ -78,14 +93,27 @@ package org.dzyga.callbacks {
             }
         }
 
+        /**
+         * Alias for callbackIterator, and also IIterable implementation.
+         *
+         * @param cursor
+         * @return
+         */
         public function iterator (cursor:* = null):IIterator {
             return callbackIterator();
         }
 
+        /**
+         * True, if Promise will check callbacks when registering to prevent creation of several handles
+         * for one callback.
+         */
         public function get unique ():Boolean {
             return _unique;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function clear ():IPromise {
             _callbackCollection.clear();
             if (_unique) {
