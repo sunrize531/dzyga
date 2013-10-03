@@ -14,12 +14,13 @@ package org.dzyga.callbacks {
         }
 
         /**
-         * If Once is resolved callback will be run immediately.
+         * If Once is resolved callback will be run immediately. If once argument is false, handle will be created
+         * and appended to promise, so it can be still executed on subsequent resolve calls.
          *
-         * @param callback
-         * @param once
-         * @param thisArg
-         * @param argsArray
+         * @param callback Function to call.
+         * @param once Remove callback after first run.
+         * @param thisArg Apply callback to specified context.
+         * @param argsArray Execute callback with additional arguments. Arguments will be appended to event.
          * @return
          */
         override public function callbackRegister (
@@ -36,6 +37,9 @@ package org.dzyga.callbacks {
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         override public function resolve (...args):IPromise {
             super.resolve(args);
             _resolved = true;
@@ -43,15 +47,31 @@ package org.dzyga.callbacks {
             return this;
         }
 
+        /**
+         * Reset this Once instance to set resolved property back to false.
+         *
+         * @return this
+         */
         public function reset ():IPromise {
             _resolved = false;
             _resolveArgs = null;
             return this;
         }
 
+        /**
+         * True if resolved at least once.
+         */
+        public function get resolved ():Boolean {
+            return _resolved;
+        }
+
+        /**
+         * @inheritDoc
+         */
         override public function clear ():IPromise {
             reset();
             return super.clear();
         }
+
     }
 }
