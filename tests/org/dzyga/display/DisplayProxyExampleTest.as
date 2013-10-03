@@ -18,7 +18,7 @@ package org.dzyga.display {
 
             // Each view call creates new instance of ViewProxy for view.
             assertTrue(display(sprite) != display(sprite));
-            assertEquals(display(sprite).view == display(sprite).view);
+            assertEquals(display(sprite).view, display(sprite).view);
 
             display(first).nameSet('first').moveTo(20, 0);
 
