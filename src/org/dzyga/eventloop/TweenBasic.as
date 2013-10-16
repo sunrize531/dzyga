@@ -1,19 +1,10 @@
 package org.dzyga.eventloop {
-    public class TweenBasic extends TweenAbstract {
-        protected var _property:String;
+    public class TweenBasic extends Tween {
 
-        public function TweenBasic (object:*, property:String, time:Number, value:Number, loop:Loop = null) {
-            super(object, time, value, loop);
-            _property = property;
-        }
-
-        override protected function getValue ():Number {
-            return object[_property];
-        }
-
-        override protected function setValue (value:Number):Number {
-            _object[_property] = value;
-            return value;
+        public function TweenBasic (object:*, property:String, time:Number, value:Number) {
+            var values:Object = {};
+            values[property] = value;
+            super(object, time, values);
         }
     }
 }
