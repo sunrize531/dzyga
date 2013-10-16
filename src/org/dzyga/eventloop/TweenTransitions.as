@@ -58,6 +58,8 @@ package org.dzyga.eventloop {
         public static const EASE_IN_OUT_BOUNCE:String = "easeinoutbounce";
         public static const EASE_OUT_IN_BOUNCE:String = "easeoutinbounce";
 
+        public static const HIGHLIGHT:String = "highlight";
+
         public static function getFunction(easingName:String):Function {
             if (!initialized) {
                 init();
@@ -120,6 +122,8 @@ package org.dzyga.eventloop {
             functions[EASE_OUT_BOUNCE] =        easeOutBounce;         // mx.transitions.easing.Bounce.easeOut
             functions[EASE_IN_OUT_BOUNCE] =     easeInOutBounce;       // mx.transitions.easing.Bounce.easeInOut
             functions[EASE_OUT_IN_BOUNCE] =     easeOutInBounce;
+
+            functions[HIGHLIGHT] =              highlight;
 
             initialized = true;
         }
@@ -736,6 +740,22 @@ package org.dzyga.eventloop {
         private static function easeOutInBounce (t:Number, b:Number, c:Number, d:Number, p_params:Object = null):Number {
                 if (t < d/2) return easeOutBounce (t*2, b, c/2, d, p_params);
                 return easeInBounce((t*2)-d, b+c/2, c/2, d, p_params);
+        }
+
+
+        /**
+         * Highlighting by loop in/out some times
+         *
+         * @param t             Current time (in frames or seconds).
+         * @param b             Starting value.
+         * @param c             Change needed in value.
+         * @param d             Expected easing duration (in frames or seconds).
+         * @param loop          Number of loop
+         * @return              The correct value.
+         */
+        private static function highlight (t:Number, b:Number, c:Number, d:Number, p_params:Object = null):Number {
+            var loop:Number = !Boolean(p_params) || isNaN(p_params.loop) ? 3 : p_params.loop;
+            return c * (1 + Math.cos(3 + 5.25 * loop * t/d)) / 2 + b;
         }
     }
 }
