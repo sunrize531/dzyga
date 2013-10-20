@@ -108,7 +108,7 @@ package org.dzyga.geom {
                     clear();
                 } else {
                     left = Math.max(left, toOverlap.left);
-                    top = Math.max(top, toOverlap.left);
+                    top = Math.max(top, toOverlap.top);
                     right = Math.min(right, toOverlap.right);
                     bottom = Math.min(bottom, toOverlap.bottom);
                 }
