@@ -20,6 +20,16 @@ package org.dzyga.callbacks {
             return promise || new Promise();
         }
 
+        /**
+         * Override this function to replace promise with subclass.
+         *
+         * @param promise
+         * @return
+         */
+        protected function getOnce(promise:IPromise):IPromise {
+            return promise || new Once();
+        }
+
         // Be lazy
         protected var _started:IPromise;
 
@@ -27,7 +37,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         public function get started ():IPromise {
-            _started = getPromise(_started);
+            _started = getOnce(_started);
             return _started;
         }
 
@@ -37,7 +47,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         public function get done ():IPromise {
-            _done = getPromise(_done);
+            _done = getOnce(_done);
             return _done;
         }
 
@@ -47,7 +57,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         public function get failed ():IPromise {
-            _failed = getPromise(_failed);
+            _failed = getOnce(_failed);
             return _failed;
         }
 
@@ -57,7 +67,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         public function get finished ():IPromise {
-            _finished = getPromise(_finished);
+            _finished = getOnce(_finished);
             return _finished;
         }
 
@@ -151,6 +161,13 @@ package org.dzyga.callbacks {
             return promise;
         }
 
+        protected function resetPromise(promise:IPromise):IPromise {
+            if (promise && promise is Once) {
+                Once(promise).reset();
+            }
+            return promise;
+        }
+
         /**
          * @inheritDoc
          */
@@ -161,6 +178,15 @@ package org.dzyga.callbacks {
             clearPromise(_failed);
             clearPromise(_finished);
             _started = _progress = _done = _failed = _finished = undefined;
+            _state = TaskState.IDLE;
+            return this;
+        }
+
+        public function reset():ITask {
+            resetPromise(_started);
+            resetPromise(_done);
+            resetPromise(_failed);
+            resetPromise(_finished);
             _state = TaskState.IDLE;
             return this;
         }
