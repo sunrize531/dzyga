@@ -4,7 +4,7 @@ package org.dzyga.utils {
      */
     public class MathUtils {
         public static function xor (value1:Boolean, value2:Boolean):Boolean {
-            return (value1 && value2) || (!value1 && !value2);
+            return !(value1 && value2) && (value1 || value2);
         }
     }
 }
