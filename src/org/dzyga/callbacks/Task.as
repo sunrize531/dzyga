@@ -182,6 +182,9 @@ package org.dzyga.callbacks {
             return this;
         }
 
+        /**
+         * @inheritDoc
+         */
         public function reset():ITask {
             resetPromise(_started);
             resetPromise(_done);

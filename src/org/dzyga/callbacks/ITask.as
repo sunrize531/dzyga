@@ -83,6 +83,13 @@ package org.dzyga.callbacks {
         function clear ():ITask;
 
         /**
+         * Prepare task for restarting. Set state to TaskState.IDLE.
+         *
+         * @return
+         */
+        function reset ():ITask;
+
+        /**
          * Register callback in started promise. Shortcut for chaining.
          *
          * @param callback
