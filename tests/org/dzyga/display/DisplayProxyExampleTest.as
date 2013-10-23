@@ -3,6 +3,8 @@ package org.dzyga.display {
     import flash.events.Event;
     import flash.events.MouseEvent;
 
+    import org.dzyga.Dz;
+
     import org.dzyga.events.dispatcher;
     import org.flexunit.asserts.assertEquals;
     import org.flexunit.asserts.assertFalse;
@@ -18,6 +20,7 @@ package org.dzyga.display {
 
             // Each view call creates new instance of ViewProxy for view.
             assertTrue(display(sprite) != display(sprite));
+            assertTrue(display(sprite) != Dz.display(sprite));
             assertEquals(display(sprite).view, display(sprite).view);
 
             display(first).nameSet('first').moveTo(20, 0);
