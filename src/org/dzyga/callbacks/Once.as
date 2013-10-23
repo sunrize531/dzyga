@@ -41,7 +41,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         override public function resolve (...args):IPromise {
-            super.resolve(args);
+            super.resolve.apply(null, args);
             _resolved = true;
             _resolveArgs = args;
             return this;
