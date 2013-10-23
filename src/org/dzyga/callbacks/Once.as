@@ -25,7 +25,7 @@ package org.dzyga.callbacks {
          */
         override public function callbackRegister (
                 callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):IPromise {
-            if (callback) {
+            if (callback != null) {
                 if (_resolved) {
                     callback.apply(thisArg, ArrayUtils.add(_resolveArgs, argsArray));
                     if (once) {
