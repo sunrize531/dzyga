@@ -53,7 +53,7 @@ package org.dzyga.eventloop {
             return _object;
         }
 
-        override public function run (args:Array):* {
+        override public function run (... args):* {
             var time:Number = getTimer() - _timeStart;
             if (time >= _timeTotal) {
                 resolve();
