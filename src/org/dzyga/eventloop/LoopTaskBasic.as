@@ -1,7 +1,6 @@
 package org.dzyga.eventloop {
     import org.dzyga.callbacks.ITask;
     import org.dzyga.callbacks.Task;
-    import org.dzyga.utils.FunctionUtils;
 
     public class LoopTaskBasic extends Task {
         protected var _loop:Loop;
@@ -37,12 +36,14 @@ package org.dzyga.eventloop {
             return _result;
         }
 
-        public function get callback ():Function {
-            if (hasOwnProperty('run')) {
-                return this['run'];
-            } else {
-                return FunctionUtils.identity;
-            }
+        /**
+         * This method will be executed by loop till the task is resolved.
+         * The value returned but this method will be stored in result.
+         *
+         * @param args
+         * @return
+         */
+        public function run (...args):* {
         }
 
         protected function loopCallbackRegister ():void {

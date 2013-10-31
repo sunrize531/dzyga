@@ -9,7 +9,7 @@ package org.dzyga.eventloop {
         }
 
 
-        public function run ():void {
+        override public function run (... args):* {
             wait(100);
             if (_counter++ >= _iterations) {
                 resolve();

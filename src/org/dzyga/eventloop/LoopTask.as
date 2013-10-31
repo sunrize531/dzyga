@@ -14,7 +14,8 @@ package org.dzyga.eventloop {
 
         protected function runner ():void {
             if (state == TaskState.STARTED) {
-                _result = callback.apply(thisArg, argsArray);
+                _result = run.apply(thisArg, argsArray);
+                _loopCallback = null;
             }
             if (state == TaskState.STARTED) {
                 loopCallbackRegister();

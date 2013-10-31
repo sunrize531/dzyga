@@ -6,7 +6,7 @@ package org.dzyga.eventloop {
 
         override protected function loopCallbackRegister ():void {
             if (!_loopCallback) {
-                _loopCallback = _loop.frameEnterCall(callback, priority, thisArg, argsArray);
+                _loopCallback = _loop.frameEnterCall(run, priority, thisArg, argsArray);
             }
         }
     }
