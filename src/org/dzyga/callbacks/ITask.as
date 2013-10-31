@@ -1,7 +1,7 @@
 package org.dzyga.callbacks {
     import flash.errors.IllegalOperationError
 
-    public interface ITask {
+    public interface ITask  {
         // Promises
         /**
          * Resolves when task started
@@ -27,6 +27,7 @@ package org.dzyga.callbacks {
          * Resolves when notify() method called
          */
         function get progress ():IPromise;
+
 
         /**
          * Task state. One of TaskState.STARTED, TaskState.RESOLVED, TaskState.REJECTED or TaskState.IDLE.

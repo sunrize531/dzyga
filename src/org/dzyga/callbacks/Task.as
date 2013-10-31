@@ -1,84 +1,59 @@
 package org.dzyga.callbacks {
-    import org.dzyga.events.*;
     import flash.errors.IllegalOperationError;
 
-    import org.dzyga.callbacks.TaskState;
-
-    import org.dzyga.utils.ArrayUtils;
 
     public class Task implements ITask {
         public function Task () {
         }
 
         /**
-         * Override this function to replace promise with subclass.
-         *
-         * @param promise
-         * @return
+         * Override this method to generate different promise factory for this task.
          */
-        protected function getPromise (promise:IPromise):IPromise {
-            return promise || new Promise();
+        protected var _promiseFactory:IPromiseTaskFactory;
+        protected function initPromiseFactory ():IPromiseTaskFactory {
+            return _promiseFactory = new PromiseTaskFactory();
         }
 
-        /**
-         * Override this function to replace promise with subclass.
-         *
-         * @param promise
-         * @return
-         */
-        protected function getOnce(promise:IPromise):IPromise {
-            return promise || new Once();
+        protected final function get promiseFactory ():IPromiseTaskFactory {
+            if (!_promiseFactory) {
+                initPromiseFactory();
+            }
+            return _promiseFactory;
         }
-
-        // Be lazy
-        protected var _started:IPromise;
 
         /**
          * @inheritDoc
          */
         public function get started ():IPromise {
-            _started = getOnce(_started);
-            return _started;
+            return promiseFactory.started;
         }
-
-        protected var _done:IPromise;
 
         /**
          * @inheritDoc
          */
         public function get done ():IPromise {
-            _done = getOnce(_done);
-            return _done;
+            return promiseFactory.done;
         }
-
-        protected var _failed:IPromise;
 
         /**
          * @inheritDoc
          */
         public function get failed ():IPromise {
-            _failed = getOnce(_failed);
-            return _failed;
+            return promiseFactory.failed;
         }
-
-        protected var _finished:IPromise;
 
         /**
          * @inheritDoc
          */
         public function get finished ():IPromise {
-            _finished = getOnce(_finished);
-            return _finished;
+            return promiseFactory.finished;
         }
-
-        protected var _progress:IPromise;
 
         /**
          * @inheritDoc
          */
         public function get progress ():IPromise {
-            _progress = getPromise(_progress);
-            return _progress;
+            return promiseFactory.progress;
         }
 
         protected var _state:String = TaskState.IDLE;
@@ -119,7 +94,7 @@ package org.dzyga.callbacks {
                 throw new IllegalOperationError('Reject or resolve the task first. Current state - ' + _state);
             }
             _state = TaskState.STARTED;
-            resolvePromise(_started, args);
+            resolvePromise(started, args);
             return this;
         }
 
@@ -130,7 +105,7 @@ package org.dzyga.callbacks {
             if (_state != TaskState.STARTED) {
                 throw new IllegalOperationError('Start the task first. Current state - ' + _state);
             }
-            resolvePromise(_progress, args);
+            resolvePromise(progress, args);
             return this;
         }
 
@@ -139,8 +114,8 @@ package org.dzyga.callbacks {
          */
         public function resolve (...args):ITask {
             _state = TaskState.RESOLVED;
-            resolvePromise(_done, args);
-            resolvePromise(_finished, args);
+            resolvePromise(done, args);
+            resolvePromise(finished, args);
             return this;
         }
 
@@ -149,35 +124,16 @@ package org.dzyga.callbacks {
          */
         public function reject (...args):ITask {
             _state = TaskState.REJECTED;
-            resolvePromise(_failed, args);
-            resolvePromise(_finished, args);
+            resolvePromise(failed, args);
+            resolvePromise(finished, args);
             return this;
-        }
-
-        protected function clearPromise (promise:IPromise):IPromise {
-            if (promise) {
-                promise.clear();
-            }
-            return promise;
-        }
-
-        protected function resetPromise(promise:IPromise):IPromise {
-            if (promise && promise is Once) {
-                Once(promise).reset();
-            }
-            return promise;
         }
 
         /**
          * @inheritDoc
          */
         public function clear ():ITask {
-            clearPromise(_started);
-            clearPromise(_progress);
-            clearPromise(_done);
-            clearPromise(_failed);
-            clearPromise(_finished);
-            _started = _progress = _done = _failed = _finished = undefined;
+            promiseFactory.clear();
             _state = TaskState.IDLE;
             return this;
         }
@@ -186,10 +142,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         public function reset():ITask {
-            resetPromise(_started);
-            resetPromise(_done);
-            resetPromise(_failed);
-            resetPromise(_finished);
+            promiseFactory.reset();
             _state = TaskState.IDLE;
             return this;
         }
