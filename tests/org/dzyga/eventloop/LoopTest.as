@@ -1,7 +1,6 @@
 package org.dzyga.eventloop {
     import flash.events.Event;
     import flash.events.EventDispatcher;
-    import flash.utils.getTimer;
 
     import org.flexunit.asserts.assertEquals;
     import org.flexunit.asserts.assertFalse;
