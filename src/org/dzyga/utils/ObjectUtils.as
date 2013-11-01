@@ -2,39 +2,38 @@
  * ObjectUtils
  * A small set of Object utilites
  *
- * @author		Ivan Filimonov
- * @version		0.2
+ * @author        Ivan Filimonov
+ * @version        0.2
  */
 
 /*
-Licensed under the MIT License
+ Licensed under the MIT License
 
-Copyright (c) 2009-2010 Ivan Filimonov
+ Copyright (c) 2009-2010 Ivan Filimonov
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in
+ the Software without restriction, including without limitation the rights to
+ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ the Software, and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
 package org.dzyga.utils {
     import flash.utils.Dictionary;
 
     public final class ObjectUtils {
-        public static function get(obj:Object, key:*, def:*=null):* {
+        public static function get(obj:Object, key:*, def:* = null):* {
             if (!obj.hasOwnProperty(key)) {
                 return def;
             }
@@ -43,7 +42,7 @@ package org.dzyga.utils {
             }
         }
 
-        public static function pop(obj:Object, key:*, def:*=null):* {
+        public static function pop(obj:Object, key:*, def:* = null):* {
             if (!obj.hasOwnProperty(key)) {
                 return def;
             }
@@ -54,14 +53,14 @@ package org.dzyga.utils {
             }
         }
 
-        public static function isNull (object:*):Boolean {
+        public static function isNull(object:*):Boolean {
             return object === null || object === undefined;
         }
 
         public static function isSimple(object:*):Boolean {
             return object === null || object === undefined ||
-                object is Boolean || object is int || object is uint || object is Number ||
-                object is String || object is RegExp;
+                    object is Boolean || object is int || object is uint || object is Number ||
+                    object is String || object is RegExp;
         }
 
         public static function isList(obj:*):Boolean {
@@ -129,6 +128,7 @@ package org.dzyga.utils {
         }
 
         private static var _keys:Array = [];
+
         public static function clear(obj:Object):void {
             if (ObjectUtils.isSimple(obj) || ObjectUtils.isEmpty(obj)) {
                 return;
@@ -156,6 +156,13 @@ package org.dzyga.utils {
                 }
             }
             return obj;
+        }
+
+        public static function push(obj:Object, key:String, value:*):void {
+            if (!obj[key]) {
+                obj[key] = [];
+            }
+            obj[key].push(value);
         }
 
         public static function defaults(obj:Object, subject:Object):Object {
@@ -193,15 +200,15 @@ package org.dzyga.utils {
             }
         }
 
-        public static function objectPropCount(object : Object) : uint {
+        public static function objectPropCount(object:Object):uint {
             var count:uint = 0;
-            for (var key : String in object) {
-                if(object[key] != null) count++;
+            for (var key:String in object) {
+                if (object[key] != null) count++;
             }
             return count;
         }
 
-        public static function merge (object:Object, subject:Object, keepNulls:Boolean = false):Object {
+        public static function merge(object:Object, subject:Object, keepNulls:Boolean = false):Object {
             for (var key:String in subject) {
                 var subjectValue:* = subject[key];
                 var objectValue:* = object[key];
@@ -214,7 +221,7 @@ package org.dzyga.utils {
                     continue;
                 }
                 if (isSimple(objectValue) || isList(objectValue) ||
-                    isSimple(subjectValue) || isList(subjectValue)) {
+                        isSimple(subjectValue) || isList(subjectValue)) {
                     object[key] = clone(subjectValue);
                     continue;
                 }
@@ -224,7 +231,8 @@ package org.dzyga.utils {
         }
 
         private static var _hashTable:Dictionary = new Dictionary(true);
-        public static function hash (object:Object):String {
+
+        public static function hash(object:Object):String {
             var re:String = _hashTable[object];
             if (!re) {
                 re = StringUtils.uniqueID();
