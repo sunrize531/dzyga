@@ -233,5 +233,12 @@ package org.dzyga.utils {
             return re;
         }
 
+        public static function setDefault (object:Object, key:String, defaultValue:* = null) {
+            if (!object.hasOwnProperty(key)) {
+                object[key] = defaultValue;
+            }
+            return object[key];
+        }
+
     }
 }
