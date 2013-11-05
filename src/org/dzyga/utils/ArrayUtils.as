@@ -86,6 +86,8 @@ package org.dzyga.utils {
                 for each (v in array) {
                     re.push((v[callback] as Function).apply(thisArg, args));
                 }
+            } else {
+                return ArrayUtils.add(re, array);
             }
             return re;
         }
