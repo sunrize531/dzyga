@@ -66,14 +66,15 @@ package org.dzyga.utils {
 
 
         /**
-         * Apply callback to each element in the array. Callback can be Function or String. If callback is String, then
+         * Apply callback to each element in the iterable. Iterable can be array vector or dynamic object.
+         * Callback can be Function or String. If callback is String, then
          * method will try to find field in the array element and call it.
          *
          * @param iterable
          * @param callback Function or method name.
          * @param thisArg
          * @param args
-         * @return new Array instance.
+         * @return new Array instance containing results for each callback.
          */
         public static function map(iterable:*, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
@@ -93,14 +94,14 @@ package org.dzyga.utils {
         }
 
         /**
-         * Apply callback to each element in the array. Callback can be Function or String. If callback is String, then
+         * Apply callback to each element in the iterable. Iterable can be array vector or dynamic object.
+         * Callback can be Function or String. If callback is String, then
          * method will try to find field in the array element and call it.
          *
          * @param iterable
          * @param callback Function or method name.
          * @param thisArg
          * @param args
-         * @return new Array instance.
          */
         public static function forEach(iterable:*, callback:*, thisArg:* = null, ...args):void {
             var v:*;
