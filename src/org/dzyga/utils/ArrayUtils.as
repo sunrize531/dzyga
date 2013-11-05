@@ -69,25 +69,25 @@ package org.dzyga.utils {
          * Apply callback to each element in the array. Callback can be Function or String. If callback is String, then
          * method will try to find field in the array element and call it.
          *
-         * @param array
+         * @param iterable
          * @param callback Function or method name.
          * @param thisArg
          * @param args
          * @return new Array instance.
          */
-        public static function map(array:*, callback:*, thisArg:* = null, ...args):Array {
+        public static function map(iterable:*, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
             var v:*;
             if (callback is Function) {
-                for each (v in array) {
+                for each (v in iterable) {
                     re.push(callback.apply(thisArg, add([v], args)));
                 }
             } else if (callback is String) {
-                for each (v in array) {
+                for each (v in iterable) {
                     re.push((v[callback] as Function).apply(thisArg, add([v], args)));
                 }
             } else {
-                return ArrayUtils.add(re, array);
+                return ArrayUtils.add(re, iterable);
             }
             return re;
         }
@@ -96,20 +96,20 @@ package org.dzyga.utils {
          * Apply callback to each element in the array. Callback can be Function or String. If callback is String, then
          * method will try to find field in the array element and call it.
          *
-         * @param array
+         * @param iterable
          * @param callback Function or method name.
          * @param thisArg
          * @param args
          * @return new Array instance.
          */
-        public static function forEach(array:*, callback:*, thisArg:* = null, ...args):void {
+        public static function forEach(iterable:*, callback:*, thisArg:* = null, ...args):void {
             var v:*;
             if (callback is Function) {
-                for each (v in array) {
+                for each (v in iterable) {
                     callback.apply(thisArg, add([v], args));
                 }
             } else if (callback is String) {
-                for each (v in array) {
+                for each (v in iterable) {
                     (v[callback] as Function).apply(thisArg, add([v], args));
                 }
             }
