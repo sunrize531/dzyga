@@ -77,7 +77,6 @@ package org.dzyga.utils {
          */
         public static function map(array:Array, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
-            var m:Function;
             for each (var v:* in array) {
                 if (callback is String) {
                     re.push((v[callback] as Function).apply(thisArg, args));
@@ -87,6 +86,27 @@ package org.dzyga.utils {
             }
             return re;
         }
+
+        /**
+         * Apply callback to each element in the array. Callback can be Function or String. If callback is String, then
+         * method will try to find field in the array element and call it.
+         *
+         * @param array
+         * @param callback Function or method name.
+         * @param thisArg
+         * @param args
+         * @return new Array instance.
+         */
+        public static function forEach(array:Array, callback:*, thisArg:* = null, ...args):void {
+            for each (var v:* in array) {
+                if (callback is String) {
+                    (v[callback] as Function).apply(thisArg, args);
+                } else {
+                    callback.apply(thisArg, [v].concat(args));
+                }
+            }
+        }
+
 
 
         /**
