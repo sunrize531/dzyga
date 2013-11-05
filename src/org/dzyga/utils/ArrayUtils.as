@@ -75,7 +75,7 @@ package org.dzyga.utils {
          * @param args
          * @return new Array instance.
          */
-        public static function map(array:Array, callback:*, thisArg:* = null, ...args):Array {
+        public static function map(array:*, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
             var v:*;
             if (callback is Function) {
@@ -102,7 +102,7 @@ package org.dzyga.utils {
          * @param args
          * @return new Array instance.
          */
-        public static function forEach(array:Array, callback:*, thisArg:* = null, ...args):void {
+        public static function forEach(array:*, callback:*, thisArg:* = null, ...args):void {
             var v:*;
             if (callback is Function) {
                 for each (v in array) {
