@@ -77,11 +77,14 @@ package org.dzyga.utils {
          */
         public static function map(array:Array, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
-            for each (var v:* in array) {
-                if (callback is String) {
-                    re.push((v[callback] as Function).apply(thisArg, args));
-                } else {
+            var v:*;
+            if (callback is Function) {
+                for each (v in array) {
                     re.push(callback.apply(thisArg, [v].concat(args)));
+                }
+            } else if (callback is String) {
+                for each (v in array) {
+                    re.push((v[callback] as Function).apply(thisArg, args));
                 }
             }
             return re;
@@ -98,11 +101,14 @@ package org.dzyga.utils {
          * @return new Array instance.
          */
         public static function forEach(array:Array, callback:*, thisArg:* = null, ...args):void {
-            for each (var v:* in array) {
-                if (callback is String) {
-                    (v[callback] as Function).apply(thisArg, args);
-                } else {
+            var v:*;
+            if (callback is Function) {
+                for each (v in array) {
                     callback.apply(thisArg, [v].concat(args));
+                }
+            } else if (callback is String) {
+                for each (v in array) {
+                    (v[callback] as Function).apply(thisArg, args);
                 }
             }
         }
