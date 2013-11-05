@@ -84,7 +84,7 @@ package org.dzyga.utils {
                 }
             } else if (callback is String) {
                 for each (v in array) {
-                    re.push((v[callback] as Function).apply(thisArg, args));
+                    re.push((v[callback] as Function).apply(thisArg, [v].concat(args)));
                 }
             } else {
                 return ArrayUtils.add(re, array);
@@ -110,7 +110,7 @@ package org.dzyga.utils {
                 }
             } else if (callback is String) {
                 for each (v in array) {
-                    (v[callback] as Function).apply(thisArg, args);
+                    (v[callback] as Function).apply(thisArg, [v].concat(args));
                 }
             }
         }
