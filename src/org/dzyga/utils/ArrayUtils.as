@@ -80,11 +80,11 @@ package org.dzyga.utils {
             var v:*;
             if (callback is Function) {
                 for each (v in array) {
-                    re.push(callback.apply(thisArg, [v].concat(args)));
+                    re.push(callback.apply(thisArg, add([v], args)));
                 }
             } else if (callback is String) {
                 for each (v in array) {
-                    re.push((v[callback] as Function).apply(thisArg, [v].concat(args)));
+                    re.push((v[callback] as Function).apply(thisArg, add([v], args)));
                 }
             } else {
                 return ArrayUtils.add(re, array);
@@ -106,11 +106,11 @@ package org.dzyga.utils {
             var v:*;
             if (callback is Function) {
                 for each (v in array) {
-                    callback.apply(thisArg, [v].concat(args));
+                    callback.apply(thisArg, add([v], args));
                 }
             } else if (callback is String) {
                 for each (v in array) {
-                    (v[callback] as Function).apply(thisArg, [v].concat(args));
+                    (v[callback] as Function).apply(thisArg, add([v], args));
                 }
             }
         }
