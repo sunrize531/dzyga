@@ -85,7 +85,7 @@ package org.dzyga.utils {
                 }
             } else if (callback is String) {
                 for each (v in iterable) {
-                    re.push((v[callback] as Function).apply(thisArg, add([v], args)));
+                    re.push(Function(v[callback]).apply(thisArg, add([v], args)));
                 }
             } else {
                 return ArrayUtils.add(re, iterable);
@@ -111,7 +111,7 @@ package org.dzyga.utils {
                 }
             } else if (callback is String) {
                 for each (v in iterable) {
-                    (v[callback] as Function).apply(thisArg, add([v], args));
+                    Function(v[callback]).apply(thisArg, add([v], args));
                 }
             }
         }
