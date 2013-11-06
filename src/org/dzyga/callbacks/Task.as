@@ -11,12 +11,12 @@ package org.dzyga.callbacks {
          */
         protected var _promiseFactory:IPromiseTaskFactory;
         protected function initPromiseFactory ():IPromiseTaskFactory {
-            return _promiseFactory = new PromiseTaskFactory();
+            return new PromiseTaskFactory();
         }
 
         protected final function get promiseFactory ():IPromiseTaskFactory {
             if (!_promiseFactory) {
-                initPromiseFactory();
+                _promiseFactory = initPromiseFactory();
             }
             return _promiseFactory;
         }
