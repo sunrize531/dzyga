@@ -72,7 +72,8 @@ package org.dzyga.callbacks {
             return _promiseStateMap.keyIterator() as ICollectionIterator;
         }
 
-        protected function promiseResolveCallback (promise:IPromise):void {
+        protected function promiseResolveCallback (...args):void {
+            var promise:IPromise = args.pop();
             _promiseStateMap.replaceFor(promise, true);
             supervisorCallbackRemove(promise);
             check();
