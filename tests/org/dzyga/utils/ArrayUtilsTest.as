@@ -28,6 +28,18 @@ package org.dzyga.utils {
         }
 
         [Test]
+        public function testMap ():void {
+            var source:Array = [1, 2, 3, 4];
+            var mapped:Array = ArrayUtils.map(source, function (num:int, a:int):int {
+                return num + a;
+            }, null, 1);
+            assertTrue(ArrayUtils.equals(mapped, [2, 3, 4, 5]));
+
+            mapped = ArrayUtils.map(mapped, 'toString');
+            assertTrue(ArrayUtils.equals(mapped, ['2', '3', '4', '5']));
+        }
+
+        [Test]
         public function testPluck ():void {
             assertTrue(ArrayUtils.equals(
                     ['one', 'two', 'three'],
