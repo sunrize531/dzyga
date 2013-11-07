@@ -29,6 +29,7 @@ package org.dzyga.callbacks {
         }
 
         private function next ():void {
+            trace(_currentTask)
             if (_taskStack.length == _currentIndex) {
                 _progress = 1;
                 progress.resolve();
@@ -36,11 +37,10 @@ package org.dzyga.callbacks {
             } else {
                 var data:Array = _taskStack[_currentIndex];
                 _currentTask = data[0];
-                _currentTask.start(data[1]).doneCallbackRegister(next);
-                _currentTask.start(data[1]).failedCallbackRegister(fail);
                 _progress = _taskStack.length / _currentIndex
                 progress.resolve();
                 _currentIndex++;
+                _currentTask.doneCallbackRegister(next).failedCallbackRegister(fail).start(data[1]);
             }
         }
 
