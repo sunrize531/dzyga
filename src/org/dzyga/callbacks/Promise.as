@@ -26,6 +26,7 @@ package org.dzyga.callbacks {
                 callback.call.apply(null, args);
                 if (callback.once) {
                     iterator.remove();
+                    delete _callbackMap[callback.callback];
                 }
             }
             return this;
