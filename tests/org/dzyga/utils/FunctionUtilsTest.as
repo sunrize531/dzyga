@@ -8,6 +8,17 @@ package org.dzyga.utils {
         }
 
         [Test]
+        public function testArgumentsCopy ():void {
+            var f:Function = function (... args):void {
+                ArrayUtils.add(args, [1, 2, 3]);
+                assertEquals(5, args.length);
+            };
+            var argsArray:Array = [1, 2];
+            f.apply(null, argsArray);
+            assertEquals(2, argsArray.length);
+        }
+
+        [Test]
         public function testPartial ():void {
             var k:int = 0;
             var j:int = 0;

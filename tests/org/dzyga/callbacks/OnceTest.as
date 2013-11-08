@@ -54,12 +54,21 @@ package org.dzyga.callbacks {
 
         [Test]
         public function testResolveOnceArgs ():void {
-            var promise:IPromise = getPromise();
-            promise.callbackRegister(multipleArgsCallback, false, null, [1, 2])
+            var once:Once = getPromise() as Once;
+            once.callbackRegister(multipleArgsCallback, false, null, [1, 2])
                     .resolve(3);
             assertEquals(6, _multipleCounter);
+
             _multipleCounter = 0;
-            promise.callbackRegister(multipleArgsCallback, false, null, [1]);
+            once.callbackRegister(multipleArgsCallback, false, null, [1]);
+            assertEquals(4, _multipleCounter);
+
+            _multipleCounter = 0;
+            once.reset();
+            once.callbackRegister(multipleArgsCallback, true, null, [1, 2]).resolve(3);
+            assertEquals(6, _multipleCounter);
+            _multipleCounter = 0;
+            once.callbackRegister(multipleArgsCallback, true, null, [1]);
             assertEquals(4, _multipleCounter);
         }
     }
