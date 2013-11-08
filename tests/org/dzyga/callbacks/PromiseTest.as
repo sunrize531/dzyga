@@ -3,19 +3,24 @@ package org.dzyga.callbacks {
     import org.flexunit.asserts.assertEquals;
 
     public class PromiseTest {
-        private var _firstCounter:int = 0;
-        private var _secondCounter:int = 0;
+        protected var _firstCounter:int = 0;
+        protected var _secondCounter:int = 0;
+        protected var _multipleCounter:int = 0;
 
+        protected function getPromise(uniq:Boolean = true):IPromise {
+            return new Promise(uniq);
+        }
 
         [Before]
         public function before ():void {
             _firstCounter = 0;
             _secondCounter = 0;
+            _multipleCounter = 0;
         }
 
         [Test]
         public function testCallbackRegisterUniq ():void {
-            var promise:Promise = new Promise();
+            var promise:IPromise = getPromise();
             promise
                 .callbackRegister(firstCallback, false, null, [2])
                 .callbackRegister(firstCallback)
@@ -29,7 +34,7 @@ package org.dzyga.callbacks {
 
         [Test]
         public function testCallbackRegister ():void {
-            var promise:Promise = new Promise(false);
+            var promise:IPromise = getPromise(false);
             promise
                 .callbackRegister(firstCallback, false, null, [2])
                 .callbackRegister(firstCallback)
@@ -41,7 +46,7 @@ package org.dzyga.callbacks {
 
         [Test]
         public function testCallbackRemoveUniq ():void {
-            var promise:Promise = new Promise();
+            var promise:IPromise = getPromise();
             promise
                 .callbackRegister(firstCallback)
                 .callbackRegister(secondCallback)
@@ -53,7 +58,7 @@ package org.dzyga.callbacks {
 
         [Test]
         public function testCallbackRemove ():void {
-            var promise:Promise = new Promise(false);
+            var promise:IPromise = getPromise(false);
             promise
                 .callbackRegister(firstCallback)
                 .callbackRegister(firstCallback)
@@ -67,7 +72,7 @@ package org.dzyga.callbacks {
 
         [Test]
         public function testCallbackReRegister ():void {
-            var promise:Promise = new Promise();
+            var promise:IPromise = getPromise();
             promise.callbackRegister(firstCallback)
                 .resolve()
                 .callbackRemove(firstCallback)
@@ -79,7 +84,7 @@ package org.dzyga.callbacks {
 
         [Test]
         public function testCallbackRegisterOnce ():void {
-            var promise:Promise = new Promise();
+            var promise:IPromise = getPromise();
             promise
                 .callbackRegister(firstCallback, true, null, [2])
                 .resolve()
@@ -89,21 +94,29 @@ package org.dzyga.callbacks {
 
         [Test]
         public function testResolveArgs ():void {
-            var promise:Promise = new Promise();
+            var promise:IPromise = getPromise();
             promise
                 .callbackRegister(firstCallback)
+                .callbackRegister(multipleArgsCallback, false, null, [1, 1, 1])
                 .resolve(2)
                 .resolve();
             assertEquals(3, _firstCounter);
+            assertEquals(8, _multipleCounter);
         }
 
 
-        private function firstCallback (inc:int = 1):void {
+        protected function firstCallback (inc:int = 1):void {
             _firstCounter += inc;
         }
 
-        private function secondCallback (inc:int = 1):void {
+        protected function secondCallback (inc:int = 1):void {
             _secondCounter += inc;
+        }
+
+        protected function multipleArgsCallback (... args):void {
+            for each (var i:int in args) {
+                _multipleCounter += i;
+            }
         }
     }
 }
