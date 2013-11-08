@@ -3,6 +3,7 @@ package org.dzyga {
     import flash.events.IEventDispatcher;
 
     import org.dzyga.display.DisplayProxy;
+    import org.dzyga.eventloop.Loop;
     import org.dzyga.events.IDispatcherProxy;
 
     public class Dz {
@@ -12,6 +13,14 @@ package org.dzyga {
 
         public static function display (view:DisplayObject):IDispatcherProxy {
             return new DisplayProxy(view);
+        }
+
+        private static var _loop:Loop;
+        public static function loop ():Loop {
+            if (!_loop) {
+                _loop = new Loop();
+            }
+            return _loop;
         }
     }
 }
