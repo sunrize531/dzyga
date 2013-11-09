@@ -20,8 +20,8 @@ package org.dzyga.eventloop {
         [BeforeClass]
         public static function loopInit ():void {
             _dispatcher = new EventDispatcher();
-            LoopSubclass.initLoop(_dispatcher, 25);
-            _loop = new LoopSubclass();
+            Loop.init(_dispatcher, 25);
+            _loop = new Loop();
         }
 
         [Before]

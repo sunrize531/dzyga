@@ -1,13 +1,11 @@
 package org.dzyga.eventloop {
+    import flash.events.IEventDispatcher;
+
     import org.dzyga.events.*;
     import flash.display.Stage;
-    import flash.errors.IllegalOperationError;
-    import flash.events.Event;
     import flash.utils.getTimer;
 
-    import org.as3commons.collections.LinkedList;
     import org.as3commons.collections.Map;
-    import org.as3commons.collections.SortedSet;
     import org.as3commons.collections.framework.ICollection;
     import org.as3commons.collections.framework.ICollectionIterator;
     import org.as3commons.collections.framework.IIterator;
@@ -18,82 +16,29 @@ package org.dzyga.eventloop {
         public static const IDLE_STATE:String = 'idle';
 
         protected static var _stage:Stage;
-        protected static var _dispatcher:IDispatcherProxy;
         protected static var _state:String;
+        protected static var _dispatcher:IDispatcherProxy;
+        protected static var _processor:LoopProcessor = new LoopProcessor();
 
         public function Loop () {
         }
 
-        public static function init (stage:Stage):void {
-            if (_stage) {
-                throw new IllegalOperationError('Loop already initialized.');
-            }
-            _stage = stage;
-            _dispatcher = new DispatcherProxy(stage);
-            _dispatcher
-                .listen(Event.ENTER_FRAME, frameEnterHandler)
-                .listen(Event.EXIT_FRAME, frameExitHandler);
+        public static function init (dispatcher:IEventDispatcher, fps:Number = NaN):void {
+            _processor.init(dispatcher, fps);
         }
 
-        public static function get fps ():Number {
-            return _stage.frameRate;
+        public function get fps ():Number {
+            return _processor.fps;
         }
 
-        // Callback lists
-
-        protected static var _frameEnterCallbackCollection:SortedSet = new SortedSet(new LoopCallbackComparator());
-        protected static var _delayedCallbackCollection:SortedSet = new SortedSet(new LoopCallbackDelayedComparator());
-        protected static var _immediateCallbackCollection:LinkedList = new LinkedList();
-        protected static var _frameExitCallbackCollection:SortedSet = new SortedSet(new LoopCallbackComparator());
-        protected static var _callbackIterator:LoopCallbackIterator = new LoopCallbackIterator();
-
-        protected static const FRAME_ENTER_THRESHOLD:Number = 0.7;
-        protected static const FRAME_EXIT_THRESHOLD:Number = 0.3;
-
-        protected static var _frameTime:Number = 0;
-
-        protected static function callbackCollectionListProcess (
-                callbackIterator:LoopCallbackIterator, frameTime:Number):void {
-            _frameTime = getTimer();
-            var elapsedTime:Number = 0;
-            while (callbackIterator.hasNext()) {
-                var callback:ILoopCallback = callbackIterator.next();
-                if (callback.canceled) {
-                    callbackIterator.remove();
-                } else if (callback.timeout <= _frameTime && (!callback.priority || elapsedTime < frameTime)) {
-                    callback.call();
-                    if (callback.once) {
-                        callback.cancel();
-                        callbackIterator.remove();
-                    }
-                }
-                elapsedTime = getTimer() - _frameTime;
-            }
+        public function get frameTime ():Number {
+            return _processor.frameTime;
         }
 
-        protected static function frameEnterProcess (frameTime:Number):void {
-            _state = FRAME_ENTER_STATE;
-            _callbackIterator.setCallbackCollection(
-                _frameEnterCallbackCollection, _delayedCallbackCollection, _immediateCallbackCollection);
-            callbackCollectionListProcess(_callbackIterator, frameTime);
-            _immediateCallbackCollection.clear();
-            _state = IDLE_STATE;
+        public function get state ():String {
+            return _processor.state;
         }
 
-        protected static function frameExitProcess (frameTime:Number):void {
-            _state = FRAME_EXIT_STATE;
-            _callbackIterator.setCallbackCollection(_frameExitCallbackCollection);
-            callbackCollectionListProcess(_callbackIterator, frameTime);
-            _state = IDLE_STATE;
-        }
-
-        protected static function frameEnterHandler (e:Event):void {
-            frameEnterProcess(1000 / fps * FRAME_ENTER_THRESHOLD);
-        }
-
-        protected static function frameExitHandler (e:Event):void {
-            frameExitProcess(1000 / fps * FRAME_EXIT_THRESHOLD);
-        }
 
         // Instance methods.
 
@@ -108,8 +53,7 @@ package org.dzyga.eventloop {
          * @param argsArray Execute callback with provided args.
          * @return new ILoopCallback instance
          */
-        protected function callbackInit (callback:Function,
-                                         delay:Number, priority:uint, once:Boolean,
+        protected function callbackInit (callback:Function, delay:Number, priority:uint, once:Boolean,
                                          thisArg:*, argsArray:Array):ILoopCallback {
             return new LoopCallback(this, callback, delay, priority, once, thisArg, argsArray);
         }
@@ -129,8 +73,8 @@ package org.dzyga.eventloop {
         public function frameEnterCall (callback:Function, priority:uint = 1,
                                         thisArg:* = null, argsArray:Array = null):ILoopCallback {
             var loopCallback:ILoopCallback = callbackInit(callback, 0, priority, false, thisArg, argsArray);
-            _frameEnterCallbackCollection.add(loopCallback);
-            _callbackHash.add(loopCallback, _frameEnterCallbackCollection);
+            _processor.frameEnterCallbackCollection.add(loopCallback);
+            _callbackHash.add(loopCallback, _processor.frameEnterCallbackCollection);
             return loopCallback;
         }
 
@@ -146,8 +90,8 @@ package org.dzyga.eventloop {
         public function frameExitCall (callback:Function, priority:uint = 1,
                                        thisArg:* = null, argsArray:Array = null):ILoopCallback {
             var loopCallback:ILoopCallback = callbackInit(callback, 0, priority, false, thisArg, argsArray);
-            _frameExitCallbackCollection.add(loopCallback);
-            _callbackHash.add(loopCallback, _frameExitCallbackCollection);
+            _processor.frameExitCallbackCollection.add(loopCallback);
+            _callbackHash.add(loopCallback, _processor.frameExitCallbackCollection);
             return loopCallback;
         }
 
@@ -166,12 +110,12 @@ package org.dzyga.eventloop {
         public function call (callback:Function, priority:uint = 1,
                               thisArg:* = null, argsArray:Array = null):ILoopCallback {
             var loopCallback:ILoopCallback = callbackInit(
-                callback, _frameTime, priority, true,
+                callback, frameTime, priority, true,
                 thisArg, argsArray);
-            _delayedCallbackCollection.add(loopCallback);
-            _callbackHash.add(loopCallback, _delayedCallbackCollection);
+            _processor.delayedCallbackCollection.add(loopCallback);
+            _callbackHash.add(loopCallback, _processor.delayedCallbackCollection);
             if (_state == FRAME_ENTER_STATE) {
-                _immediateCallbackCollection.add(loopCallback);
+                _processor.immediateCallbackCollection.add(loopCallback);
             }
             return loopCallback;
         }
@@ -191,8 +135,8 @@ package org.dzyga.eventloop {
             var loopCallback:ILoopCallback = callbackInit(
                 callback, getTimer() + delay, priority, true,
                 thisArg, argsArray);
-            _delayedCallbackCollection.add(loopCallback);
-            _callbackHash.add(loopCallback, _delayedCallbackCollection);
+            _processor.delayedCallbackCollection.add(loopCallback);
+            _callbackHash.add(loopCallback, _processor.delayedCallbackCollection);
             return loopCallback;
         }
 
