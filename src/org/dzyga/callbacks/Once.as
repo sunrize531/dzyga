@@ -27,7 +27,13 @@ package org.dzyga.callbacks {
                 callback:Function, once:Boolean = false, thisArg:* = null, argsArray:Array = null):IPromise {
             if (callback != null) {
                 if (_resolved) {
-                    callback.apply(thisArg, _resolveArgs.concat(argsArray || []));
+                    var args:Array;
+                    if (argsArray === null) {
+                        args = _resolveArgs;
+                    } else {
+                        args = _resolveArgs.concat(argsArray);
+                    }
+                    callback.apply(thisArg, args);
                     if (once) {
                         return this;
                     }
