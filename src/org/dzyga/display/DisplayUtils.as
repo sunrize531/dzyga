@@ -321,5 +321,11 @@ package org.dzyga.display {
             }
             return view;
         }
+
+        public static function bitmapCopy (bitmap:Bitmap):Bitmap {
+            var copy:Bitmap = new Bitmap(bitmap.bitmapData);
+            return match(copy, bitmap) as Bitmap;
+        }
+
     }
 }
