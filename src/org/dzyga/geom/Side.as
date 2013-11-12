@@ -14,7 +14,7 @@ package org.dzyga.geom {
             return right - left;
         }
 
-        public function set width (v:Number) {
+        public function set width (v:Number):void {
             right = left + v;
         }
 
