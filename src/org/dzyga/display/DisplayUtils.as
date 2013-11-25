@@ -9,6 +9,7 @@ package org.dzyga.display {
     import flash.geom.Point;
 
     import org.dzyga.geom.Rect;
+    import org.dzyga.geom.Side;
 
     /**
      * Set of utilities for working with flash display objects.
@@ -71,7 +72,7 @@ package org.dzyga.display {
          * @return org.dzyga.display.display
          */
         public static function match (view:DisplayObject, target:DisplayObject):DisplayObject {
-            view.transform.matrix = target.transform.matrix;
+            view.transform.matrix = target.transform.matrix.clone();
             return view;
         }
 
@@ -321,5 +322,29 @@ package org.dzyga.display {
             }
             return view;
         }
+
+
+        public static function bitmapCopy (bitmap:Bitmap):Bitmap {
+            return new Bitmap(bitmap.bitmapData);
+        }
+
+        private static var _tmpSide:Side = new Side();
+        public static function align (
+                view:DisplayObject, target:DisplayObject = null, hAlign:int = 2, vAlign:int = 0):DisplayObject {
+            target = target || view;
+            vAlign = vAlign || hAlign;
+            if (hAlign != Align.NONE) {
+                _tmpSide.left = target.x;
+                _tmpSide.width = target.width;
+                view.x = int(_tmpSide.align(hAlign));
+            }
+            if (vAlign != Align.NONE) {
+                _tmpSide.left = target.y;
+                _tmpSide.width = target.height;
+                view.y = int(_tmpSide.align(vAlign));
+            }
+            return view;
+        }
+
     }
 }

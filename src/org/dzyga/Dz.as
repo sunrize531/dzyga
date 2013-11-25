@@ -3,6 +3,7 @@ package org.dzyga {
     import flash.events.IEventDispatcher;
 
     import org.dzyga.display.DisplayProxy;
+    import org.dzyga.display.IDisplayProxy;
     import org.dzyga.eventloop.Loop;
     import org.dzyga.events.IDispatcherProxy;
 
@@ -11,7 +12,7 @@ package org.dzyga {
             return org.dzyga.events.dispatcher(target);
         }
 
-        public static function display (view:DisplayObject):IDispatcherProxy {
+        public static function display (view:DisplayObject):IDisplayProxy {
             return new DisplayProxy(view);
         }
 
