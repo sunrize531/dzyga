@@ -132,15 +132,22 @@ package org.dzyga.events {
         /**
          * @inheritDoc
          */
-        public function trigger (eventType:String):IDispatcherProxy {
-            return triggerTo(_target, eventType);
+        public function trigger (event:*, data:* = null):IDispatcherProxy {
+            return triggerTo(_target, event);
         }
 
         /**
          * @inheritDoc
          */
-        public function triggerTo (target:IEventDispatcher, eventType:String):IDispatcherProxy {
-            target.dispatchEvent(new Event(eventType));
+        public function triggerTo (target:IEventDispatcher, event:*, data:* = null):IDispatcherProxy {
+            if (event is String) {
+                target.dispatchEvent(new Event(event, data));
+            } else if (event is Event) {
+                event.data = data;
+                target.dispatchEvent(event);
+            } else {
+                throw new ArgumentError('Only string or Event can be triggered.');
+            }
             return this;
         }
 

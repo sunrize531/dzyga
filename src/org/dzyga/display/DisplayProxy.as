@@ -352,13 +352,13 @@ package org.dzyga.display {
             return this;
         }
 
-        public function trigger (eventType:String):IDispatcherProxy {
-            dispatcher.trigger(eventType);
+        public function trigger (event:*, data:* = null):IDispatcherProxy {
+            dispatcher.trigger(event);
             return this;
         }
 
-        public function triggerTo (target:IEventDispatcher, eventType:String):IDispatcherProxy {
-            dispatcher.triggerTo(target, eventType);
+        public function triggerTo (target:IEventDispatcher, event:*, data:* = null):IDispatcherProxy {
+            dispatcher.triggerTo(target, event);
             return this;
         }
 

@@ -76,18 +76,20 @@ package org.dzyga.events {
         /**
          * Create an Event instance with specified eventType and dispatch it on current target.
          *
-         * @param eventType Event type.
+         * @param event Event. Can be string or Event itself. If String - default Event will be instantiated.
+         * @param data Data to send with event.
          * @return this
          */
-        function trigger (eventType:String):IDispatcherProxy;
+        function trigger (event:*, data:* = null):IDispatcherProxy;
 
         /**
          * Create an Event instance with specified eventType and dispatch it on target.
          *
          * @param target Target to dispatch event on.
-         * @param eventType Event type.
+         * @param event Event. Can be string or Event itself. If String - default Event will be instantiated.
+         * @param data Data to send with event.
          * @return this
          */
-        function triggerTo (target:IEventDispatcher, eventType:String):IDispatcherProxy;
+        function triggerTo (target:IEventDispatcher, event:*, data:* = null):IDispatcherProxy;
     }
 }
