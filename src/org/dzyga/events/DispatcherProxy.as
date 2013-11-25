@@ -177,7 +177,10 @@ package org.dzyga.events {
             var listenerRemoved:Boolean = false;
             while (listenerIterator.hasNext()) {
                 var listener:EventListener = listenerIterator.next() as EventListener;
-                listener.call(event.clone());
+                if (event.bubbles) {
+                    event = event.clone();
+                }
+                listener.call(event);
                 if (listener.once) {
                     listenerRemoved = listenerRemoved || listenerIterator.remove();
                 }
