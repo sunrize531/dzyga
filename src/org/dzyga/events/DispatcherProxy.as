@@ -19,8 +19,6 @@ package org.dzyga.events {
      * - Event listeners added with listen and listenTo methods can be executed with additional arguments array
      *   and with another content (this).
      * - Each callback can be added with listen and listenTo as listener only once for each target.
-     * - Each event will be cloned for each callback (in native EventDispatcher the first Event object will be passed
-     *   to the first listener as is, for following dispatchers it will be cloned).
      */
     public class DispatcherProxy implements IDispatcherProxy {
         protected var _target:IEventDispatcher;
@@ -177,9 +175,6 @@ package org.dzyga.events {
             var listenerRemoved:Boolean = false;
             while (listenerIterator.hasNext()) {
                 var listener:EventListener = listenerIterator.next() as EventListener;
-                if (event.bubbles) {
-                    event = event.clone();
-                }
                 listener.call(event);
                 if (listener.once) {
                     listenerRemoved = listenerRemoved || listenerIterator.remove();
