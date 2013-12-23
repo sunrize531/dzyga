@@ -8,7 +8,7 @@ package org.dzyga.utils {
          * @param arr2
          * @return arr1
          */
-        public static function add(arr1:Array, arr2:Array):Array {
+        public static function add (arr1:Array, arr2:Array):Array {
             for each (var i:* in arr2) {
                 arr1.push(i);
             }
@@ -22,7 +22,7 @@ package org.dzyga.utils {
          * @param args Values to append to arr.
          * @return arr
          */
-        public static function append(arr:Array, ...args):Array {
+        public static function append (arr:Array, ...args):Array {
             return add(arr, args);
         }
 
@@ -35,7 +35,7 @@ package org.dzyga.utils {
          * @param el - element to find a place for.
          * @return index where el should be placed.
          */
-        public static function search(array:*, func:Function, el:*):int {
+        public static function search (array:*, func:Function, el:*):int {
             var length:int = array.length;
             if (length == 0) {
                 return 0;
@@ -76,7 +76,7 @@ package org.dzyga.utils {
          * @param args
          * @return new Array instance containing results for each callback.
          */
-        public static function map(iterable:*, callback:*, thisArg:* = null, ...args):Array {
+        public static function map (iterable:*, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
             var v:*;
             if (callback is Function) {
@@ -103,7 +103,7 @@ package org.dzyga.utils {
          * @param thisArg
          * @param args
          */
-        public static function forEach(iterable:*, callback:*, thisArg:* = null, ...args):void {
+        public static function forEach (iterable:*, callback:*, thisArg:* = null, ...args):void {
             var v:*;
             if (callback is Function) {
                 for each (v in iterable) {
@@ -117,7 +117,6 @@ package org.dzyga.utils {
         }
 
 
-
         /**
          * Filter array elements with callback. Callback can be Function or String.
          *
@@ -127,7 +126,7 @@ package org.dzyga.utils {
          * @param args
          * @return
          */
-        public static function filter(array:Array, callback:*, thisArg:* = null, ...args):Array {
+        public static function filter (array:Array, callback:*, thisArg:* = null, ...args):Array {
             var re:Array = [];
             for each (var v:* in array) {
                 var filtered:*;
@@ -151,7 +150,7 @@ package org.dzyga.utils {
          * @param value
          * @return true if value is found.
          */
-        public static function isExists(array:Array, value:*):Boolean {
+        public static function isExists (array:Array, value:*):Boolean {
             return array.indexOf(value) != -1;
         }
 
@@ -163,7 +162,7 @@ package org.dzyga.utils {
          * @param propName
          * @return
          */
-        public static function checkEntry(array:*, value:*, propName:String = null):Boolean {
+        public static function checkEntry (array:*, value:*, propName:String = null):Boolean {
             var tempLen:int = array.length;
             if (!tempLen) {
                 return false;
@@ -191,7 +190,7 @@ package org.dzyga.utils {
          * @param returnCopy if false will shuffle input array, otherwise will shuffle copy.
          * @return
          */
-        public static function shuffle(array:Array, returnCopy:Boolean = false):Array {
+        public static function shuffle (array:Array, returnCopy:Boolean = false):Array {
             if (!array) {
                 return null;
             }
@@ -214,7 +213,7 @@ package org.dzyga.utils {
         }
 
 
-        public static function getRandomEntries(source:Array, entriesCount:int = 10, removeFromSource:Boolean = false):Array {
+        public static function getRandomEntries (source:Array, entriesCount:int = 10, removeFromSource:Boolean = false):Array {
             if (!source || !source.length) {
                 return [];
             }
@@ -243,7 +242,7 @@ package org.dzyga.utils {
         }
 
 
-        public static function getRandomEntry(array:Array, removeFromSource:Boolean = false):* {
+        public static function getRandomEntry (array:Array, removeFromSource:Boolean = false):* {
             if (!array.length) {
                 return null;
             }
@@ -256,7 +255,7 @@ package org.dzyga.utils {
         }
 
 
-        public static function getEntriesByProperty(array:*, propName:String, propValue:*, removeFromSource:Boolean = false):Array {
+        public static function getEntriesByProperty (array:*, propName:String, propValue:*, removeFromSource:Boolean = false):Array {
             var temp:Array = [];
             for (var i:int = array.length - 1; i >= 0; i--) {
                 if (array[i] != null && array[i].hasOwnProperty(propName) && array[i][propName] == propValue) {
@@ -289,7 +288,7 @@ package org.dzyga.utils {
          * @param value Value to remove.
          * @return Is value was removed or not.
          */
-        public static function removeEntry(array:*, value:*):Boolean {
+        public static function removeEntry (array:*, value:*):Boolean {
             var len:int = array.length;
             for (var i:int = 0; i < len; i++) {
                 if (array[i] == value) {
@@ -324,7 +323,7 @@ package org.dzyga.utils {
         /**
          * Sort array on entry, with function or just sort and return it.
          */
-        public static function sort (array:Array, ... args):Array {
+        public static function sort (array:Array, ...args):Array {
             var firstArg:* = args[0];
             if (firstArg is String || firstArg is Array) {
                 array.sortOn.apply(null, args);
@@ -344,12 +343,12 @@ package org.dzyga.utils {
             return map(array, FunctionUtils.partial(FunctionUtils.field, field));
         }
 
-        private static function _convertToString(obj:Object, deep:Boolean):String {
+        private static function _convertToString (obj:Object, deep:Boolean):String {
             return obj.toString();
         }
 
 
-        public static function repr(arr:Array, deep:Boolean = false):String {
+        public static function repr (arr:Array, deep:Boolean = false):String {
             var mapper:*;
             var mapped:Array;
             if (deep) {

@@ -29,7 +29,7 @@ package org.dzyga.utils {
         }
 
         /**
-         * Return iterator which applies f to each value for object. object will be passed to iterator() first, so
+         * Return iterator which applies f to each value in object. object will be passed to iterator() first, so
          * primitive, arrays, iterables and iterators allowed.
          *
          * @param object primitive or iterable or iterator
@@ -41,6 +41,22 @@ package org.dzyga.utils {
         // TODO: implement class instantiation support here.
         public static function map (object:*, f:Function, thisArg:* = null, ... args):IIterator {
             return new MapperIterator(iterator(object), f, thisArg, args);
+        }
+
+        /**
+         * Apply f to each value in object. object will be passed to iterator() first, so
+         * primitive, arrays, iterables and iterators allowed.
+         *
+         * @param object primitive or iterable or iterator
+         * @param f function to apply
+         * @param thisArg
+         * @param args
+         */
+        public static function forEach (object:*, f:Function, thisArg:* = null, ... args):void {
+            var i:IIterator = iterator(object);
+            while (i.hasNext()) {
+                f.apply(thisArg, ArrayUtils.add([i.next()], args));
+            }
         }
 
 
