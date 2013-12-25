@@ -1,6 +1,6 @@
 package org.dzyga.events {
     import org.as3commons.collections.framework.IMap;
-    import org.dzyga.utils.IStripIterator;
+    import org.dzyga.collections.IStripIterator;
 
     /**
      * Iterate through one (yeah) event with specified _listenerHash

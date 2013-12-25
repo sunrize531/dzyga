@@ -2,7 +2,7 @@ package org.dzyga.events {
     import flash.events.IEventDispatcher;
 
     import org.as3commons.collections.framework.IMap;
-    import org.dzyga.utils.IStripIterator;
+    import org.dzyga.collections.IStripIterator;
 
     internal final class ListenerIterator implements IStripIterator {
         private var _iterator:IStripIterator;

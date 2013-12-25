@@ -3,7 +3,7 @@ package org.dzyga.events {
 
     import org.as3commons.collections.framework.ICollection;
     import org.as3commons.collections.iterators.CollectionFilterIterator;
-    import org.dzyga.utils.IStripIterator;
+    import org.dzyga.collections.IStripIterator;
 
     /**
      * Filter for direct listeners.

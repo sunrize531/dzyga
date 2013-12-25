@@ -1,4 +1,4 @@
-package org.dzyga.utils {
+package org.dzyga.collections {
     import org.as3commons.collections.framework.IIterator;
     import org.dzyga.callbacks.Handle;
 

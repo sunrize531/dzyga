@@ -3,7 +3,7 @@ package org.dzyga.eventloop {
     import org.as3commons.collections.framework.ICollection;
     import org.as3commons.collections.framework.ICollectionIterator;
     import org.as3commons.collections.framework.IIterator;
-    import org.dzyga.utils.IStripIterator;
+    import org.dzyga.collections.IStripIterator;
 
     internal class LoopCallbackIterator implements IStripIterator {
         private var callbackCollectionList:LinkedList = new LinkedList();
