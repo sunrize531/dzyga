@@ -21,7 +21,7 @@ package org.dzyga.collections {
             return null;
         }
 
-        public function reset ():Boolean {
+        public function reset ():void {
             return false;
         }
     }

@@ -1,5 +1,4 @@
 package org.dzyga.collections {
-    import org.as3commons.collections.framework.IIterator;
     import org.dzyga.callbacks.Handle;
 
     internal class MapperIterator implements IIterator {
@@ -18,6 +17,10 @@ package org.dzyga.collections {
 
         public function hasNext ():Boolean {
             return _sourceIterator.hasNext();
+        }
+
+        public function reset ():void {
+            _sourceIterator.reset();
         }
     }
 }

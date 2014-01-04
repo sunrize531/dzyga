@@ -4,6 +4,6 @@ package org.dzyga.collections {
 
         function next ():*;
 
-        function reset ():Boolean;
+        function reset ():void;
     }
 }

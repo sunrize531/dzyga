@@ -1,5 +1,4 @@
 package org.dzyga.collections {
-    import org.as3commons.collections.framework.IIterator;
 
     internal class PrimitiveIterator implements IIterator {
         private var _primitive:*;
@@ -20,6 +19,10 @@ package org.dzyga.collections {
 
         public function hasNext ():Boolean {
             return !_done;
+        }
+
+        public function reset ():void {
+            _done = false;
         }
     }
 }
