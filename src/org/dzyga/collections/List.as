@@ -71,6 +71,29 @@ package org.dzyga.collections {
             return true;
         }
 
+        internal function _nodeRemove (node:IBinaryNode):Boolean {
+            if (_size) {
+                if (_size == 1 && node == _first) {
+                    _size = 0;
+                    _first = _last = null;
+                    return true;
+                }
+                if (node == _first) {
+                    _first = node.right;
+                    _first.left = null;
+                } else if (node == _last) {
+                    _last = node.left;
+                    _last.right = null;
+                } else {
+                    node.left.right = node.right;
+                    node.right.left = node.left;
+                }
+                _size -= 1;
+                return true;
+            }
+            return false;
+        }
+
         protected function _nodeFind (item:*):IBinaryNode {
             var cursor:IBinaryNode = _first;
             while (cursor) {
@@ -82,20 +105,27 @@ package org.dzyga.collections {
             return null;
         }
 
+        private static var _removeItemSet:Set;
+
         public function remove (...args):Boolean {
-            // TODO: make it with ListIterator and Set
-            /*
-            var r:Boolean = false;
-            for
-            for each (var value:* in args) {
-                var node:IBinaryNode = _nodeFind(value);
-                if (node) {
-                    _nodeRemove(node);
-                    r = true;
+            if (_size) {
+                if (args.length) {
+                    _removeItemSet.add.apply(null, args);
+                    var cursor:IBinaryNode = _first;
+                    var removed:IBinaryNode;
+                    while (cursor) {
+                        if (_removeItemSet.has(cursor.value)) {
+                            removed = cursor;
+                            cursor = cursor.right;
+                            _nodeRemove(removed);
+                        } else {
+                            cursor = cursor.right;
+                        }
+                    }
+                    return true;
                 }
+                return clear();
             }
-            return r;
-            */
             return false;
         }
 
@@ -106,6 +136,13 @@ package org.dzyga.collections {
         public function has (item:*):Boolean {
             var node:IBinaryNode = _nodeFind(item);
             return node !== null;
+        }
+
+        public function clear ():Boolean {
+            var _re:Boolean = (_size != 0);
+            _first = _last = null;
+            _size = 0;
+            return _re;
         }
     }
 }

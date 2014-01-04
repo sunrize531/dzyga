@@ -3,5 +3,6 @@ package org.dzyga.collections {
         function add (...args):Boolean;
         function remove (...args):Boolean;
         function size ():int;
+        function clear ():Boolean;
     }
 }

@@ -4,7 +4,7 @@ package org.dzyga.collections {
 
     public class ArrayIteratorTest {
         [Test]
-        public function testHasNext ():void {
+        public function testNext ():void {
             var iterator:IIterator = new ArrayIterator([1, 2, 3, 4]);
             assertEquals(1, iterator.next());
             assertEquals(2, iterator.next());

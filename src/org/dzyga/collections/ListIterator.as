@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public class ListIterator implements IIterator {
+    public class ListIterator implements IStripIterator {
         protected var _list:List;
         protected var _cursor:IBinaryNode;
 
@@ -18,11 +18,19 @@ package org.dzyga.collections {
         }
 
         public function next ():* {
-            return null;
+            if (hasNext()) {
+                var value:* = _cursor.value;
+                _cursor = _cursor.right;
+                return value;
+            }
         }
 
         public function reset ():void {
-            return false;
+            _cursor = null;
+        }
+
+        public function remove ():Boolean {
+            return _list._nodeRemove(_cursor);
         }
     }
 }

@@ -1,6 +1,6 @@
 package org.dzyga.collections {
 
-    internal class PrimitiveIterator implements IIterator {
+    public class PrimitiveIterator implements IIterator {
         private var _primitive:*;
         private var _done:Boolean = false;
 

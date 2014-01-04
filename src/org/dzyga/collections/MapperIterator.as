@@ -1,7 +1,7 @@
 package org.dzyga.collections {
     import org.dzyga.callbacks.Handle;
 
-    internal class MapperIterator implements IIterator {
+    public class MapperIterator implements IIterator {
         private var _sourceIterator:IIterator;
         private var _handle:Handle;
 

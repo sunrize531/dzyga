@@ -1,8 +1,7 @@
 package org.dzyga.collections {
-    import org.as3commons.collections.framework.IIterator;
     import org.dzyga.callbacks.Handle;
 
-    internal class FilterIterator implements IIterator {
+    public class FilterIterator implements IIterator {
         private var _sourceIterator:IIterator;
         private var _handle:Handle;
         private var _function:Function;
@@ -18,9 +17,11 @@ package org.dzyga.collections {
         }
 
         public function next ():* {
-            var re:* = _next;
-            _next = undefined;
-            return re;
+            if (hasNext()) {
+                var re:* = _next;
+                _next = undefined;
+                return re;
+            }
         }
 
         public function hasNext ():Boolean {
@@ -35,6 +36,10 @@ package org.dzyga.collections {
                 }
             }
             return false;
+        }
+
+        public function reset ():void {
+            _sourceIterator.reset();
         }
     }
 }

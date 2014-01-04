@@ -1,7 +1,7 @@
 package org.dzyga.collections {
     import org.dzyga.utils.ObjectUtils;
 
-    public class ObjectIterator implements IIterator {
+    public class ObjectIterator implements IKeyIterator {
         protected var _object:Object;
         protected var _keyIterator:ArrayIterator;
 
@@ -20,6 +20,11 @@ package org.dzyga.collections {
 
         public function nextKey ():* {
             return _keyIterator.next();
+        }
+
+        public function nextItem ():KeyValue {
+            var key:* = nextKey();
+            return new KeyValue(key, _object[key]);
         }
 
         public function reset ():void {
