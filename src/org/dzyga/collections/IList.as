@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public interface IList extends ICollection {
+    public interface IList extends ICollection, IIterable {
         function first ():*;
 
         function last ():*;

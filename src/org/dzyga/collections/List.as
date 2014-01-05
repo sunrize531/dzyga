@@ -144,5 +144,9 @@ package org.dzyga.collections {
             _size = 0;
             return _re;
         }
+
+        public function iterator ():IIterator {
+            return new ListIterator(this);
+        }
     }
 }

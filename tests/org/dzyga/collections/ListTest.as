@@ -1,6 +1,3 @@
-/**
- * Created by sunrize on 12/25/13.
- */
 package org.dzyga.collections {
     import org.flexunit.asserts.assertEquals;
     import org.flexunit.asserts.assertFalse;

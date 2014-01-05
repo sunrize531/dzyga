@@ -4,9 +4,6 @@ package org.dzyga.collections {
     public class FilterIterator implements IIterator {
         private var _sourceIterator:IIterator;
         private var _handle:Handle;
-        private var _function:Function;
-        private var _thisArg:*;
-        private var _argsArray:Array;
         private var _next:*;
 
 
