@@ -32,6 +32,8 @@
 package org.dzyga.utils {
     import flash.utils.Dictionary;
 
+    import org.dzyga.collections.IHashable;
+
     public final class ObjectUtils {
         public static function get(obj:Object, key:*, def:* = null):* {
             if (!obj.hasOwnProperty(key)) {
@@ -55,6 +57,10 @@ package org.dzyga.utils {
 
         public static function isNull(object:*):Boolean {
             return object === null || object === undefined;
+        }
+
+        public static function isPrimitive (object:*):Boolean {
+            return object === null || object === undefined || object is RegExp;
         }
 
         public static function isSimple(object:*):Boolean {
@@ -232,13 +238,32 @@ package org.dzyga.utils {
 
         private static var _hashTable:Dictionary = new Dictionary(true);
 
-        public static function hash(object:Object):String {
-            var re:String = _hashTable[object];
-            if (!re) {
-                re = StringUtils.uniqueID();
-                _hashTable[object] = re;
+        public static const STRING_HASH_PREFIX:String = '!h';
+        public static const NUMBER_HASH_PREFIX:String = '!n';
+        public static const PRIMITIVE_HASH_PREFIX:String = '!p';
+        public static const OBJECT_HASH_PREFIX:String = '!b';
+
+        public static function hash(object:*):String {
+            if (object is String) {
+                return STRING_HASH_PREFIX + object;
             }
-            return re;
+            if (object is Number) {
+                return NUMBER_HASH_PREFIX + object.toString(16);
+            }
+            if (isPrimitive(object)) {
+                return PRIMITIVE_HASH_PREFIX + object;
+            }
+
+            if (object is IHashable) {
+                object = object.hash();
+            }
+
+            var h:* = _hashTable[object];
+            if (h === undefined) {
+                h = OBJECT_HASH_PREFIX + StringUtils.uniqueID();
+                _hashTable[object] = h;
+            }
+            return h;
         }
 
         public static function setDefault (object:Object, key:String, defaultValue:* = null):* {

@@ -8,7 +8,7 @@ package org.dzyga.collections {
 
         [Before]
         public function setInit ():void {
-            _set = new Set('1', 2, undefined);
+            _set = new Set('1', 2, null);
         }
 
         [Test]
@@ -21,9 +21,9 @@ package org.dzyga.collections {
             assertEquals(1, _set.size());
             assertFalse(_set.has(2));
 
-            _set.remove(undefined);
+            _set.remove(null);
             assertEquals(0, _set.size());
-            assertFalse(_set.has(undefined));
+            assertFalse(_set.has(null));
         }
 
 
@@ -34,12 +34,6 @@ package org.dzyga.collections {
             assertTrue(_set.has('1'));
             assertEquals(4, _set.size());
             assertFalse(_set.add(2));
-        }
-
-        [Test]
-        public function testUpdate ():void {
-            assertTrue(_set.update([1, 2, undefined]));
-            assertEquals(4, _set.size());
         }
 
         [Test]
@@ -56,6 +50,27 @@ package org.dzyga.collections {
             assertEquals(3, count);
             assertEquals(2, _set.size());
             assertFalse(_set.has(2));
+        }
+
+        [Test]
+        public function testUpdate ():void {
+            assertTrue(_set.update([1, 2, null]));
+            assertEquals(4, _set.size());
+        }
+
+        [Test]
+        public function testSubtract ():void {
+            assertTrue(_set.subtract([1, 2, null]));
+            assertEquals(1, _set.size());
+            assertTrue(_set.has('1'));
+        }
+
+        [Test]
+        public function testIntersect ():void {
+            assertTrue(_set.intersect([1, 2, null]));
+            assertEquals(2, _set.size());
+            assertTrue(_set.has(2));
+            assertTrue(_set.has(null));
         }
     }
 }

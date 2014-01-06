@@ -11,7 +11,5 @@ package org.dzyga.collections {
         function append (item:*):int;
 
         function prepend (item:*):int;
-
-        function has (item:*):Boolean;
     }
 }

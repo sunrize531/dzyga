@@ -95,12 +95,12 @@ package org.dzyga.collections {
         }
 
         protected function _nodeFind (item:*):IBinaryNode {
-            var cursor:IBinaryNode = _first;
-            while (cursor) {
-                if (cursor.value === item) {
-                    return cursor;
+            var current:IBinaryNode = _first;
+            while (current) {
+                if (current.value === item) {
+                    return current;
                 }
-                cursor = cursor.right;
+                current = current.right;
             }
             return null;
         }
@@ -142,6 +142,16 @@ package org.dzyga.collections {
             var _re:Boolean = (_size != 0);
             _first = _last = null;
             _size = 0;
+            return _re;
+        }
+
+        public function items ():Array {
+            var _re:Array = [];
+            var current:IBinaryNode = _first;
+            while (current) {
+                _re.push(current.value);
+                current = current.right;
+            }
             return _re;
         }
 

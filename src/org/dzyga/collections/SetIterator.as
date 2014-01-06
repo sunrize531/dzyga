@@ -7,7 +7,7 @@ package org.dzyga.collections {
 
         public function SetIterator (s:Set) {
             _set = s;
-            _listItems();
+            _items = s.items();
         }
 
         public function hasNext ():Boolean {
@@ -25,18 +25,7 @@ package org.dzyga.collections {
 
         public function reset ():void {
             _current = -1;
-            _listItems();
-        }
-
-        protected function _listItems ():Array {
-            var item:*;
-            for (item in _set._items) {
-                _items.push(item);
-            }
-            for (item in _set._strings) {
-                _items.push(item);
-            }
-            return _items;
+            _items = _set.items();
         }
     }
 }

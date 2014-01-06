@@ -1,36 +1,3 @@
-/**
- * StringUtils
- * A small set of string utilites
- *
- * @author        Ivan Filimonov
- * @version        0.2
- */
-
-
-/*
- Licensed under the MIT License
-
- Copyright (c) 2009-2010 Ivan Filimonov
-
- Permission is hereby granted, free of charge, to any person obtaining a copy of
- this software and associated documentation files (the "Software"), to deal in
- the Software without restriction, including without limitation the rights to
- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- the Software, and to permit persons to whom the Software is furnished to do so,
- subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-
 package org.dzyga.utils {
     import flash.utils.ByteArray;
     import flash.utils.getTimer;
@@ -48,6 +15,19 @@ package org.dzyga.utils {
 
         private static var sf_index:int;
         private static var sf_args:Array;
+
+        private static const _buffer:Vector.<String> = new <String>[];
+
+        internal static function _initBuffer (length:uint = 0):Vector.<String> {
+            _buffer.length = length;
+            return _buffer;
+        }
+
+        internal static function _flushBuffer ():String {
+            var s:String = _buffer.join('');
+            _buffer.length = 0;
+            return s;
+        }
 
         private static function stringFormat (val:String, name:String, fmt:String, ...args):String {
             var value:*;
@@ -137,16 +117,16 @@ package org.dzyga.utils {
                 if (value >= 0) {
                     if (sign) {
                         result = StringUtils.NF_PLUS +
-                            StringUtils.fillleft(result, length - 1, StringUtils.NF_ZERO);
+                            StringUtils.fillLeft(result, length - 1, StringUtils.NF_ZERO);
                     }
                     else {
                         result =
-                            StringUtils.fillleft(result, length, StringUtils.NF_ZERO);
+                            StringUtils.fillLeft(result, length, StringUtils.NF_ZERO);
                     }
                 }
                 else {
                     result = StringUtils.NF_MINUS +
-                        StringUtils.fillleft(result.substr(1), length - 1, StringUtils.NF_ZERO);
+                        StringUtils.fillLeft(result.substr(1), length - 1, StringUtils.NF_ZERO);
                 }
             }
             else {
@@ -182,22 +162,62 @@ package org.dzyga.utils {
             return (str.substr(-suffix.length) == suffix);
         }
 
+        /**
+         * Alias for fillLeft.
+         *
+         * @deprecated
+         */
         public static function fillleft (str:String, len:int, fillchar:String = ' '):String {
+            return fillLeft(str, len, fillchar);
+        }
+
+        /**
+         * Pad string to specified length filling with fillChar from left.
+         *
+         * @param str String to pad.
+         * @param len Desired string length.
+         * @param fillChar Character to fill with. Default to space.
+         * @return New padded String or str itself, if it's length greater or equal than len.
+         */
+        public static function fillLeft (str:String, len:int, fillChar:String = ' '):String {
             var length:int = str.length;
             if (length < len) {
-                for (var i:int = len - length; i > 0; i--) {
-                    str = fillchar + str;
+                var d:int = len - length;
+                _buffer.length = d + 1;
+                for (var i:uint = 0; i < d; i++) {
+                    _buffer[i] = fillChar;
                 }
+                _buffer[d] = str;
+                return _flushBuffer();
             }
             return str;
         }
 
+        /**
+         * Alias for fillRight
+         *
+         * @deprecated
+         */
         public static function fillright (str:String, len:int, fillchar:String = ' '):String {
             var length:int = str.length;
             if (length < len) {
                 for (var i:int = len - length; i > 0; i--) {
                     str = str + fillchar;
                 }
+            }
+            return str;
+        }
+
+        public static function fillRight (str:String, len:int, fillChar:String = ' '):String {
+            var length:int = str.length;
+            if (length < len) {
+                var d:int = len - length;
+                _buffer.length = d + 1;
+                _buffer[0] = str;
+                for (var i:uint = 0; i < d; i++) {
+                    _buffer[i + 1] = fillChar;
+                }
+                return _flushBuffer();
             }
             return str;
         }
@@ -214,13 +234,20 @@ package org.dzyga.utils {
         }
 
         public static function hex (s:String):String {
-            var l:int = s.length;
-            var i:int = 0;
-            var h:String = '';
-            while (i < l) {
-                h += fillleft(s.charCodeAt(i++).toString(16), 2, '0');
+            var length:int = s.length;
+            _buffer.length = length << 1;
+            for (var i:uint = 0; i < length; i++) {
+                var c:String = s.charCodeAt(i).toString(16);
+                var bi:int = i << 1;
+                if (c.length == 1) {
+                    _buffer[bi] = ZERO;
+                    _buffer[bi + 1] = c;
+                } else {
+                    _buffer[bi] = c.charAt(0);
+                    _buffer[bi + 1] = c.charAt(1);
+                }
             }
-            return h;
+            return _flushBuffer();
         }
 
         private static const ADLER_NMAX:int = 5552;
@@ -239,7 +266,7 @@ package org.dzyga.utils {
             var a:int = 1;
             var b:int = 0;
             while (length) {
-                l = ( length > ADLER_NMAX ) ? ADLER_NMAX : length;
+                l = (length > ADLER_NMAX) ? ADLER_NMAX : length;
                 length -= l;
                 do {
                     a += buffer.charCodeAt(i++);
@@ -259,14 +286,13 @@ package org.dzyga.utils {
         }
 
         private static var _counter:int = 0;
-        private static var _bytes:ByteArray = new ByteArray();
+        private static const ZERO:String = '0';
+
         public static function uniqueID ():String {
-            _bytes.writeUnsignedInt(getTimer());
-            _bytes.writeInt(_counter++);
-            _bytes.writeByte(Math.random() * 256);
-            var re:String = hex(_bytes.toString());
-            _bytes.clear();
-            return re;
+            var buffer:Vector.<String> = StringUtils._initBuffer(2);
+            buffer[0] = ((getTimer() & 0xffffff) | 0x1000000).toString(16).substr(1);
+            buffer[1] = (((_counter++ & 0xffff) << 8) | (Math.random() * 0xff) | 0x1000000).toString(16).substr(1);
+            return StringUtils._flushBuffer();
         }
 
         private static const TEMPLATE_INTERPOLATE:RegExp = /\{\{\s*(.+?)\s*\}\}/g;
@@ -302,7 +328,7 @@ package org.dzyga.utils {
          * Parse string to convert time formatted like "4m20s", "5m", "2h1s", etc. to seconds.
          *
          */
-        public static function parseTime(value:String):int {
+        public static function parseTime (value:String):int {
             value = value.replace(" ", "");
             if (value.search(CHECK_LETTER_PATTERN) != -1) {
                 var h:int = 0;
@@ -335,7 +361,7 @@ package org.dzyga.utils {
             return int(value);
         }
 
-        public static function formatTime(value:int):String {
+        public static function formatTime (value:int):String {
             var h:int = value / 3600;
             var m:int = (value / 60) % 60;
             var s:int = value % 60;
