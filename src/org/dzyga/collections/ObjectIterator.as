@@ -1,7 +1,7 @@
 package org.dzyga.collections {
     import org.dzyga.utils.ObjectUtils;
 
-    public class ObjectIterator implements IKeyIterator {
+    public class ObjectIterator implements IMappingIterator {
         protected var _object:Object;
         protected var _keyIterator:ArrayIterator;
 

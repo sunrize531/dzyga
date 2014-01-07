@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public interface IMap extends ICollection {
+    public interface IMapping extends ICollection {
         function has (key:*):Boolean;
 
         function set (attributes:Object):Boolean;

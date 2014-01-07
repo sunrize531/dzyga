@@ -31,5 +31,9 @@ package org.dzyga.collections {
         public function set value (v:*):void {
             _value = v;
         }
+
+        public function hash ():* {
+            return _value;
+        }
     }
 }

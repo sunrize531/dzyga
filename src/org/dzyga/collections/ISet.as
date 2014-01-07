@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public interface ISet extends ICollection, IIterable {
+    public interface ISet extends ICollection, ISequence {
         function update (iterable:*):Boolean;
 
         function subtract (iterable:*):Boolean;

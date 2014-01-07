@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public interface IBinaryNode {
+    public interface IBinaryNode extends IHashable {
         function get left ():IBinaryNode;
 
         function set left (v:IBinaryNode):void;

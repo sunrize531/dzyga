@@ -1,4 +1,5 @@
-package org.dzyga.utils {
+package org.dzyga.collections {
+    import org.dzyga.utils.*;
     import org.flexunit.asserts.assertEquals;
     import org.flexunit.asserts.assertFalse;
 
@@ -34,9 +35,5 @@ class HashableTestClass implements IHashable {
 
     public function hash ():* {
         return _primitive;
-    }
-
-    public function compare (other:*):int {
-        return (_primitive == other.hash()) ? 0: 1;
     }
 }

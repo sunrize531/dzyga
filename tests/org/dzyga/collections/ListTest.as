@@ -5,8 +5,14 @@ package org.dzyga.collections {
     import org.flexunit.asserts.assertTrue;
 
     public class ListTest {
-        public function ListTest () {
+        private var _list:List;
+
+        [Before]
+        public function setInit ():void {
+            _list = new List();
+            _list.extend(['1', 2, null]);
         }
+
 
         [Test]
         public function testRemove ():void {
@@ -15,34 +21,29 @@ package org.dzyga.collections {
 
         [Test]
         public function testAdd ():void {
-            var l:List = new List('1', 2, undefined);
-            assertStrictlyEquals('1', l.first());
-            assertStrictlyEquals(undefined, l.last());
-            assertEquals(3, l.size());
+            assertStrictlyEquals('1', _list.first());
+            assertStrictlyEquals(undefined, _list.last());
+            assertEquals(3, _list.size());
         }
 
         [Test]
         public function testHas ():void {
-            var l:List = new List('1', 2, undefined);
-            assertTrue(l.has(2));
-            assertFalse(l.has('3'));
+            assertTrue(_list.has(2));
+            assertFalse(_list.has('3'));
         }
 
         [Test]
         public function testAppend ():void {
-            var l:List = new List('1', 2, undefined);
-            l.append('value');
-            assertEquals('value', l.last());
-            assertEquals(4, l.size());
+            _list.add('value');
+            assertEquals('value', _list.last());
+            assertEquals(4, _list.size());
         }
 
         [Test]
         public function testPrepend ():void {
-            var l:List = new List('1', 2, undefined);
-            l.prepend('value');
-            assertEquals('value', l.first());
-            assertEquals(4, l.size());
+            _list.prepend('value');
+            assertEquals('value', _list.first());
+            assertEquals(4, _list.size());
         }
-
     }
 }

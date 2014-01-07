@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public interface IKeyIterator extends IIterator {
+    public interface IMappingIterator extends IIterator {
         function nextKey ():*;
         function nextItem ():KeyValue;
     }

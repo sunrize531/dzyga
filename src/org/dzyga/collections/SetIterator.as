@@ -1,11 +1,11 @@
 package org.dzyga.collections {
     public class SetIterator implements IStripIterator {
-        protected var _set:Set;
+        protected var _set:SetSimple;
         protected var _item:*;
         protected var _items:Array = [];
         protected var _current:int = -1;
 
-        public function SetIterator (s:Set) {
+        public function SetIterator (s:SetSimple) {
             _set = s;
             _items = s.items();
         }
@@ -20,7 +20,7 @@ package org.dzyga.collections {
         }
 
         public function remove ():Boolean {
-            return _current != -1 && _set._itemRemove(_item);
+            return _current != -1 && _set.remove(_item);
         }
 
         public function reset ():void {

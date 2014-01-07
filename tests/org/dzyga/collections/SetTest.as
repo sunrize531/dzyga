@@ -4,11 +4,12 @@ package org.dzyga.collections {
     import org.flexunit.asserts.assertTrue;
 
     public class SetTest {
-        public var _set:Set;
+        private var _set:Set;
 
         [Before]
         public function setInit ():void {
-            _set = new Set('1', 2, null);
+            _set = new Set();
+            _set.update(['1', 2, null]);
         }
 
         [Test]
