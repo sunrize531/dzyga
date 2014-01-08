@@ -10,16 +10,8 @@ package org.dzyga.collections {
             return _first;
         }
 
-        dz_collections function set _firstNode (v:IBinaryNode):void {
-            _first = v;
-        }
-
         override dz_collections function get _lastNode ():IBinaryNode {
             return _last;
-        }
-
-        dz_collections function set _lastNode (v:IBinaryNode):void {
-            _last = v;
         }
 
         override dz_collections function _nodeInit (item:*):IBinaryNode {
