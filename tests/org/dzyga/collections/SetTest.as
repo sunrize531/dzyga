@@ -39,7 +39,7 @@ package org.dzyga.collections {
 
         [Test]
         public function testIterator ():void {
-            var iterator:SetIterator = _set.iterator() as SetIterator;
+            var iterator:ISequenceIterator = _set.iterator() as ISequenceIterator;
             var count:int = 0;
             while (iterator.hasNext()) {
                 var item:* = iterator.next();

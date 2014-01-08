@@ -1,5 +1,4 @@
 package org.dzyga.collections {
-    import org.as3commons.collections.framework.ISetIterator;
     import org.dzyga.utils.IterUtils;
 
     public class SetUtils {
@@ -32,7 +31,7 @@ package org.dzyga.collections {
         }
 
         public static function intersect (s:ISet, iterable:*):Boolean {
-            var iterator:ISetIterator = s.iterator() as ISetIterator;
+            var iterator:ISequenceIterator = s.iterator() as ISequenceIterator;
             var other:ISet = toSet(iterable);
             var _re:Boolean = false;
             while (iterator.hasNext()) {
@@ -46,7 +45,7 @@ package org.dzyga.collections {
         }
 
         public static function isSubSet (s:ISet, iterable:*):Boolean {
-            var iterator:ISetIterator = s.iterator() as ISetIterator;
+            var iterator:ISequenceIterator = s.iterator() as ISequenceIterator;
             var other:ISet = toSet(iterable);
             var _re:Boolean = true;
             while (iterator.hasNext()) {

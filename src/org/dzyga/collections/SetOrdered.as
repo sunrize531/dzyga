@@ -1,9 +1,37 @@
 package org.dzyga.collections {
     import org.dzyga.utils.ObjectUtils;
+    use namespace dz_collections;
 
-    public class SetOrdered implements ISet, IOrdered {
-        protected var _itemsList:ListSimple = new ListSimple();
+    public class SetOrdered extends ListAbstract implements ISet, IOrdered {
+        internal var _itemsList:ListSimple = new ListSimple();
         protected var _itemsHash:Object = {};
+
+
+        override dz_collections function get _firstNode ():IBinaryNode {
+            return _itemsList._firstNode;
+        }
+
+        override dz_collections function get _lastNode ():IBinaryNode {
+            return _itemsList._lastNode;
+        }
+
+        override dz_collections function _nodeInit (item:*):IBinaryNode {
+            return _itemsList._nodeInit(item);
+        }
+
+        override dz_collections function _nodeAppend (node:IBinaryNode):void {
+            _itemsList._nodeAppend(node);
+        }
+
+        override dz_collections function _nodePrepend (node:IBinaryNode):void {
+            _itemsList._nodePrepend(node);
+        }
+
+        override dz_collections function _nodeRemove (node:IBinaryNode):Boolean {
+            var hash:String = _hash(node.value);
+            delete _itemsHash[hash];
+            return _itemsList._nodeRemove(node);
+        }
 
         protected function _hash (item:*):String {
             return ObjectUtils.hash(item);
@@ -14,14 +42,14 @@ package org.dzyga.collections {
         }
 
         public function first ():* {
-            return _itemsList._first;
+            return _itemsList.first();
         }
 
         public function last ():* {
-            return _itemsList._last;
+            return _itemsList.last();
         }
 
-        public function add (item:*):Boolean {
+        override public function add (item:*):Boolean {
             var hash:String = _hash(item);
             if (!_itemsHash.hasOwnProperty(hash)) {
                 var node:IBinaryNode = _itemsList._nodeInit(item);
@@ -43,12 +71,11 @@ package org.dzyga.collections {
             return false;
         }
 
-        public function remove (item:*):Boolean {
+        override public function remove (item:*):Boolean {
             var hash:String = _hash(item);
             var node:IBinaryNode = _itemsHash[hash];
             if (node) {
-                _itemsList._nodeRemove(node);
-                delete _itemsHash[hash];
+                _nodeRemove(node);
                 return true;
             }
             return false;
@@ -72,7 +99,7 @@ package org.dzyga.collections {
             }
         }
 
-        public function size ():int {
+        override public function size ():int {
             return _itemsList.size();
         }
 
@@ -90,7 +117,7 @@ package org.dzyga.collections {
         }
 
         public function iterator ():IIterator {
-            return new ListIterator(_itemsList);
+            return new ListIterator(this);
         }
 
         public function update (iterable:*):Boolean {

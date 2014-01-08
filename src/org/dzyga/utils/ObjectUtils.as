@@ -238,7 +238,7 @@ package org.dzyga.utils {
 
         private static var _hashTable:Dictionary = new Dictionary(true);
 
-        public static const STRING_HASH_PREFIX:String = '!h';
+        public static const STRING_HASH_PREFIX:String = '!s';
         public static const NUMBER_HASH_PREFIX:String = '!n';
         public static const PRIMITIVE_HASH_PREFIX:String = '!p';
         public static const OBJECT_HASH_PREFIX:String = '!b';

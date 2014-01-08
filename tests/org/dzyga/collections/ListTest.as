@@ -45,5 +45,20 @@ package org.dzyga.collections {
             assertEquals('value', _list.first());
             assertEquals(4, _list.size());
         }
+
+        [Test]
+        public function testIterator ():void {
+            var iterator:ISequenceIterator = _list.iterator() as ISequenceIterator;
+            var count:int = 0;
+            while (iterator.hasNext()) {
+                var item:* = iterator.next();
+                if (item === 2) {
+                    iterator.remove();
+                }
+                count++;
+            }
+            assertEquals(3, count);
+            assertEquals(2, _list.size());
+        }
     }
 }

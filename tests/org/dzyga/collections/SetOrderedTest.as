@@ -25,22 +25,22 @@ package org.dzyga.collections {
 
         [Test]
         override public function testIterator ():void {
-            // super.testIterator();
+            super.testIterator();
         }
 
         [Test]
         override public function testUpdate ():void {
-            // super.testUpdate();
+            super.testUpdate();
         }
 
         [Test]
         override public function testSubtract ():void {
-            // super.testSubtract();
+            super.testSubtract();
         }
 
         [Test]
         override public function testIntersect ():void {
-            // super.testIntersect();
+            super.testIntersect();
         }
     }
 }

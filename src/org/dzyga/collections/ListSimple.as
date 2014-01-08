@@ -1,10 +1,28 @@
 package org.dzyga.collections {
-    public class ListSimple implements IListSimple {
-        internal var _first:IBinaryNode;
-        internal var _last:IBinaryNode;
+    use namespace dz_collections;
+
+    public class ListSimple extends ListAbstract implements IListSimple {
+        protected var _first:IBinaryNode;
+        protected var _last:IBinaryNode;
         protected var _size:int = 0;
 
-        internal function _nodeInit (item:*):IBinaryNode {
+        override dz_collections function get _firstNode ():IBinaryNode {
+            return _first;
+        }
+
+        dz_collections function set _firstNode (v:IBinaryNode):void {
+            _first = v;
+        }
+
+        override dz_collections function get _lastNode ():IBinaryNode {
+            return _last;
+        }
+
+        dz_collections function set _lastNode (v:IBinaryNode):void {
+            _last = v;
+        }
+
+        override dz_collections function _nodeInit (item:*):IBinaryNode {
             if (item is IBinaryNode) {
                 return item;
             } else {
@@ -12,9 +30,10 @@ package org.dzyga.collections {
             }
         }
 
-        internal function _nodeAppend (node:IBinaryNode):void {
+        override dz_collections function _nodeAppend (node:IBinaryNode):void {
             if (_last) {
                 _last.right = node;
+                node.left = _last;
                 _last = node;
             } else {
                 _first = node;
@@ -23,9 +42,10 @@ package org.dzyga.collections {
             _size++;
         }
 
-        internal function _nodePrepend (node:IBinaryNode):void {
+        override dz_collections function _nodePrepend (node:IBinaryNode):void {
             if (_first) {
                 _first.left = node;
+                node.right = _first;
                 _first = node;
             } else {
                 _first = node;
@@ -34,7 +54,32 @@ package org.dzyga.collections {
             _size++;
         }
 
-        public function add (item:*):Boolean {
+        override dz_collections function _nodeRemove (node:IBinaryNode):Boolean {
+            if (_size == 1) {
+                if (node == _first) {
+                    _size = 0;
+                    _first = _last = null;
+                    return true;
+                }
+                return false;
+            }
+
+            if (node == _first) {
+                _first = node.right;
+                _first.left = null;
+            } else if (node == _last) {
+                _last = node.left;
+                _last.right = null;
+            } else {
+                node.left.right = node.right;
+                node.right.left = node.left;
+            }
+            _size--;
+            node.left = node.right = null;
+            return true;
+        }
+
+        override public function add (item:*):Boolean {
             var node:IBinaryNode = _nodeInit(item);
             _nodeAppend(node);
             return true;
@@ -81,7 +126,7 @@ package org.dzyga.collections {
             return _re;
         }
 
-        public function size ():int {
+        override public function size ():int {
             return _size;
         }
 
@@ -91,31 +136,7 @@ package org.dzyga.collections {
 
         protected var _iteratorLocal:ListIterator;
 
-        internal function _nodeRemove (node:IBinaryNode):Boolean {
-            if (_size == 1) {
-                if (node == _first) {
-                    _size = 0;
-                    _first = _last = null;
-                    return true;
-                }
-                return false;
-            }
-
-            if (node == _first) {
-                _first = node.right;
-                _first.left = null;
-            } else if (node == _last) {
-                _last = node.left;
-                _last.right = null;
-            } else {
-                node.left.right = node.right;
-                node.right.left = node.left;
-            }
-            _size--;
-            return true;
-        }
-
-        public function remove (item:*):Boolean {
+        override public function remove (item:*):Boolean {
             if (!_size) {
                 return false;
             }

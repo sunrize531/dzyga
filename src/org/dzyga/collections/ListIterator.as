@@ -1,25 +1,21 @@
 package org.dzyga.collections {
+    use namespace dz_collections;
+
     public class ListIterator implements IOrderedIterator, ISequenceIterator {
-        protected var _list:ListSimple;
+        protected var _list:ListAbstract;
         internal var _currentNode:IBinaryNode;
 
-        public function ListIterator (list:ListSimple) {
+        public function ListIterator (list:ListAbstract) {
             _list = list;
-            _currentNode = _list._first;
+            _currentNode = null;
         }
 
         public function hasNext ():Boolean {
-            if (!_list.size()) {
-                return false;
-            }
-            return _currentNode && _currentNode.right !== null;
+            return _list.size() && (!_currentNode || _currentNode.right !== null);
         }
 
         public function hasPrev ():Boolean {
-            if (!_list.size()) {
-                return false;
-            }
-            return _currentNode && _currentNode.left !== null;
+            return _list.size() && _currentNode && _currentNode.left !== null;
         }
 
         public function next ():* {
@@ -27,9 +23,12 @@ package org.dzyga.collections {
         }
 
         internal function _nextNode ():IBinaryNode {
-            var node:IBinaryNode = _currentNode;
-            _currentNode = _currentNode.right;
-            return node;
+            if (!_currentNode) {
+                _currentNode = _list._firstNode;
+            } else {
+                _currentNode = _currentNode.right;
+            }
+            return _currentNode;
         }
 
         public function current ():* {
@@ -41,21 +40,23 @@ package org.dzyga.collections {
         }
 
         internal function _prevNode ():IBinaryNode {
-            var node:IBinaryNode = _currentNode;
-            _currentNode = _currentNode.right;
-            return node;
+            _currentNode = _currentNode.left;
+            return _currentNode;
         }
 
         public function reset ():void {
-            _currentNode = _list._first;
+            _currentNode = null;
         }
 
         public function end ():* {
-            _currentNode = _list._last;
+            _currentNode = _list._lastNode;
+            return _currentNode.value;
         }
 
         public function remove ():Boolean {
-            return _list._nodeRemove(_currentNode);
+            var node:IBinaryNode = _currentNode;
+            _currentNode = _currentNode.left;
+            return _list._nodeRemove(node);
         }
     }
 }
