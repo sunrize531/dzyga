@@ -2,10 +2,10 @@ package org.dzyga.events {
     import flash.events.IEventDispatcher;
 
     import org.as3commons.collections.framework.IMap;
-    import org.dzyga.collections.IStripIterator;
+    import org.dzyga.collections.ISequenceIterator;
 
-    internal final class ListenerIterator implements IStripIterator {
-        private var _iterator:IStripIterator;
+    internal final class ListenerIterator implements ISequenceIterator {
+        private var _iterator:ISequenceIterator;
 
         public function ListenerIterator (listenerMap:IMap, target:IEventDispatcher = null, event:String = '', callback:Function = null) {
             if (target && event) {

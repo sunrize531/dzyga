@@ -1,7 +1,7 @@
 package org.dzyga.collections {
     import org.dzyga.utils.ObjectUtils;
 
-    public class SetSimple implements ICollection, ISequence {
+    public class SetSimple implements ISetSimple {
         internal var _items:Object = {};
         protected var _size:int = 0;
 

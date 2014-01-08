@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public class SetIterator implements IStripIterator {
+    public class SetIterator implements ISequenceIterator {
         protected var _set:SetSimple;
         protected var _item:*;
         protected var _items:Array = [];

@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public class ListSimple implements ISized, IIterable, ISequence, IOrdered {
+    public class ListSimple implements IListSimple {
         internal var _first:IBinaryNode;
         internal var _last:IBinaryNode;
         protected var _size:int = 0;

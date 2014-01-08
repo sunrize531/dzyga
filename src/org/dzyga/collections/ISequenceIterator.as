@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public interface IStripIterator extends IIterator {
+    public interface ISequenceIterator extends IIterator {
         function remove ():Boolean;
     }
 }

@@ -1,12 +1,5 @@
 package org.dzyga.collections {
-    public interface IList extends ICollection, ISequence, IOrdered {
+    public interface IList extends IListSimple, ICollection {
         function extend (iterable:*):Boolean;
-
-        /*
-        TODO: implement
-        function reversed ():IIterator;
-        function reverse ():IIterator;
-        */
-
     }
 }

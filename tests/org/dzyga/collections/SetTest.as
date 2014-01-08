@@ -4,7 +4,7 @@ package org.dzyga.collections {
     import org.flexunit.asserts.assertTrue;
 
     public class SetTest {
-        private var _set:Set;
+        protected var _set:ISet;
 
         [Before]
         public function setInit ():void {

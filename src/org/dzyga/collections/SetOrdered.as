@@ -90,27 +90,27 @@ package org.dzyga.collections {
         }
 
         public function iterator ():IIterator {
-            return null;
+            return new ListIterator(_itemsList);
         }
 
         public function update (iterable:*):Boolean {
-            return false;
+            return SetUtils.update(this, iterable);
         }
 
         public function subtract (iterable:*):Boolean {
-            return false;
+            return SetUtils.subtract(this, iterable);
         }
 
         public function intersect (iterable:*):Boolean {
-            return false;
+            return SetUtils.intersect(this, iterable);
         }
 
         public function isSubSet (iterable:*):Boolean {
-            return false;
+            return SetUtils.isSubSet(this, iterable);
         }
 
         public function isSuperSet (iterable:*):Boolean {
-            return false;
+            return SetUtils.isSuperSet(this, iterable);
         }
     }
 }

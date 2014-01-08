@@ -4,12 +4,12 @@ package org.dzyga.events {
     import org.as3commons.collections.framework.IMap;
     import org.as3commons.collections.iterators.CollectionFilterIterator;
     import org.as3commons.collections.iterators.FilterIterator;
-    import org.dzyga.collections.IStripIterator;
+    import org.dzyga.collections.ISequenceIterator;
 
     /**
      * Filter matched event listeners
      */
-    internal class EventListenerFilteredIterator implements IStripIterator {
+    internal class EventListenerFilteredIterator implements ISequenceIterator {
         private var _target:IEventDispatcher;
         private var _event:String;
         private var _callback:Function;

@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public class ListIterator implements IStripIterator {
+    public class ListIterator implements IOrderedIterator, ISequenceIterator {
         protected var _list:ListSimple;
         internal var _currentNode:IBinaryNode;
 

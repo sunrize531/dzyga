@@ -1,11 +1,11 @@
 package org.dzyga.events {
     import org.as3commons.collections.framework.IMap;
-    import org.dzyga.collections.IStripIterator;
+    import org.dzyga.collections.ISequenceIterator;
 
     /**
      * Iterate through one (yeah) event with specified _listenerHash
      */
-    internal class DistinctListenerIterator implements IStripIterator {
+    internal class DistinctListenerIterator implements ISequenceIterator {
         private var _targetHash:String;
         private var _listenerHash:String;
         private var _listenerMap:IMap;

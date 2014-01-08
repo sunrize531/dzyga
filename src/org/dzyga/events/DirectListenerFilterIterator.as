@@ -3,12 +3,12 @@ package org.dzyga.events {
 
     import org.as3commons.collections.framework.ICollection;
     import org.as3commons.collections.iterators.CollectionFilterIterator;
-    import org.dzyga.collections.IStripIterator;
+    import org.dzyga.collections.ISequenceIterator;
 
     /**
      * Filter for direct listeners.
      */
-    internal class DirectListenerFilterIterator implements IStripIterator {
+    internal class DirectListenerFilterIterator implements ISequenceIterator {
         private var _target:IEventDispatcher;
         private var _event:String;
         private var _callback:Function;
