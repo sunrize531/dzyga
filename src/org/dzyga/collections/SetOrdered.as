@@ -2,35 +2,14 @@ package org.dzyga.collections {
     import org.dzyga.utils.ObjectUtils;
     use namespace dz_collections;
 
-    public class SetOrdered extends ListAbstract implements ISet, IOrdered {
-        internal var _itemsList:ListSimple = new ListSimple();
+    public class SetOrdered extends ListSimple implements ISet, IOrdered {
         protected var _itemsHash:Object = {};
 
-
-        override dz_collections function get _firstNode ():IBinaryNode {
-            return _itemsList._firstNode;
-        }
-
-        override dz_collections function get _lastNode ():IBinaryNode {
-            return _itemsList._lastNode;
-        }
-
-        override dz_collections function _nodeInit (item:*):IBinaryNode {
-            return _itemsList._nodeInit(item);
-        }
-
-        override dz_collections function _nodeAppend (node:IBinaryNode):void {
-            _itemsList._nodeAppend(node);
-        }
-
-        override dz_collections function _nodePrepend (node:IBinaryNode):void {
-            _itemsList._nodePrepend(node);
-        }
 
         override dz_collections function _nodeRemove (node:IBinaryNode):Boolean {
             var hash:String = _hash(node.value);
             delete _itemsHash[hash];
-            return _itemsList._nodeRemove(node);
+            return super._nodeRemove(node);
         }
 
         protected function _hash (item:*):String {
@@ -41,30 +20,22 @@ package org.dzyga.collections {
             return _itemsHash.hasOwnProperty(ObjectUtils.hash(item));
         }
 
-        public function first ():* {
-            return _itemsList.first();
-        }
-
-        public function last ():* {
-            return _itemsList.last();
-        }
-
         override public function add (item:*):Boolean {
             var hash:String = _hash(item);
             if (!_itemsHash.hasOwnProperty(hash)) {
-                var node:IBinaryNode = _itemsList._nodeInit(item);
-                _itemsList._nodeAppend(node);
+                var node:IBinaryNode = _nodeInit(item);
+                _nodeAppend(node);
                 _itemsHash[hash] = node;
                 return true;
             }
             return false;
         }
 
-        public function prepend (item:*):Boolean {
+        override public function prepend (item:*):Boolean {
             var hash:String = _hash(item);
             if (!_itemsHash.hasOwnProperty(hash)) {
-                var node:IBinaryNode = _itemsList._nodeInit(item);
-                _itemsList._nodePrepend(node);
+                var node:IBinaryNode = _nodeInit(item);
+                _nodePrepend(node);
                 _itemsHash[hash] = node;
                 return true;
             }
@@ -81,43 +52,31 @@ package org.dzyga.collections {
             return false;
         }
 
-        public function pop ():* {
+        override public function pop ():* {
             if (size()) {
-                var item:* = _itemsList.pop();
+                var item:* = super.pop();
                 var hash:String = _hash(item);
                 delete _itemsHash[hash];
                 return item;
             }
         }
 
-        public function shift ():* {
+        override public function shift ():* {
             if (size()) {
-                var item:* = _itemsList.shift();
+                var item:* = super.shift();
                 var hash:String = _hash(item);
                 delete _itemsHash[hash];
                 return item;
             }
         }
 
-        override public function size ():int {
-            return _itemsList.size();
-        }
-
-        public function clear ():Boolean {
-            if (_itemsList.size()) {
-                _itemsList.clear();
+        override public function clear ():Boolean {
+            if (size()) {
+                super.clear();
                 _itemsHash = {};
                 return true;
             }
             return false;
-        }
-
-        public function items ():Array {
-            return _itemsList.items();
-        }
-
-        public function iterator ():IIterator {
-            return new ListIterator(this);
         }
 
         public function update (iterable:*):Boolean {
