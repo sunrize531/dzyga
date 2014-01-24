@@ -12,12 +12,12 @@ package org.dzyga.callbacks {
             _breakIfFail = breakIfFail;
         }
 
-        public function taskAdd (task:ITask, argsInStart:* = null):StackTasks {
+        public function taskAdd (task:ITask, ...args):StackTasks {
             if (_state == TaskState.REJECTED || _state == TaskState.RESOLVED) {
                 throw new IllegalOperationError('Cannot add more promises. StackTasks finished. ' +
                     'Reset it to add more promises');
             }
-            _taskStack.push([task, argsInStart]);
+            _taskStack.push([task, args]);
             return this;
         }
 
@@ -29,7 +29,6 @@ package org.dzyga.callbacks {
         }
 
         private function next ():void {
-            trace(_currentTask)
             if (_taskStack.length == _currentIndex) {
                 _progress = 1;
                 progress.resolve();
@@ -40,7 +39,7 @@ package org.dzyga.callbacks {
                 _progress = _taskStack.length / _currentIndex
                 progress.resolve();
                 _currentIndex++;
-                _currentTask.doneCallbackRegister(next).failedCallbackRegister(fail).start(data[1]);
+                _currentTask.doneCallbackRegister(next).failedCallbackRegister(fail).start.apply(null, data[1]);
             }
         }
 
