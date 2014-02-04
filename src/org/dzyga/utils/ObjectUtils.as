@@ -230,6 +230,20 @@ package org.dzyga.utils {
             return object;
         }
 
+        /**
+         * Create a new object with fields extracted from source objects.
+         * @param object Source object
+         * @param fields List of fields to extract
+         * @return new Object
+         */
+        public static function pick(object:Object, ... fields):Object {
+            var r:Object = {};
+            for each (var field:String in fields) {
+                r[field] = object[field];
+            }
+            return r;
+        }
+
         private static var _hashTable:Dictionary = new Dictionary(true);
 
         public static function hash(object:Object):String {
