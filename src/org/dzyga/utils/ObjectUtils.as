@@ -220,12 +220,15 @@ package org.dzyga.utils {
                     }
                     continue;
                 }
-                if (isSimple(objectValue) || isList(objectValue) ||
-                        isSimple(subjectValue) || isList(subjectValue)) {
+                if (isSimple(subjectValue)) {
+                    object[key] = subjectValue;
+                } else if (isList(subjectValue)) {
                     object[key] = clone(subjectValue);
-                    continue;
+                } else if (isSimple(objectValue) || isList(objectValue)) {
+                    object[key] = clone(subjectValue);
+                } else {
+                    merge(objectValue, subjectValue, keepNulls);
                 }
-                merge(objectValue, subjectValue, keepNulls);
             }
             return object;
         }
