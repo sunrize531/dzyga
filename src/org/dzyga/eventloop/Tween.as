@@ -62,6 +62,7 @@ package org.dzyga.eventloop {
                 for (var prop:String in _valuesDifference) {
                     _object[prop] = _valuesInitial[prop] + _valuesDifference[prop] * progress;
                 }
+                notify(progress);
             }
         }
 
