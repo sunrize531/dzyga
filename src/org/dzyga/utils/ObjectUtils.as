@@ -225,13 +225,16 @@ package org.dzyga.utils {
                     object[key] = clone(subjectValue);
                     continue;
                 }
+                if(isEmpty(subjectValue)) {
+                    object[key] = subjectValue;
+                    continue;
+                }
                 merge(objectValue, subjectValue, keepNulls);
             }
             return object;
         }
 
         private static var _hashTable:Dictionary = new Dictionary(true);
-
         public static function hash(object:Object):String {
             var re:String = _hashTable[object];
             if (!re) {
