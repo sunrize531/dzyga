@@ -226,6 +226,8 @@ package org.dzyga.utils {
                     object[key] = clone(subjectValue);
                 } else if (isSimple(objectValue) || isList(objectValue)) {
                     object[key] = clone(subjectValue);
+                } else if (isEmpty(subjectValue)) {
+                    object[key] = subjectValue;
                 } else {
                     merge(objectValue, subjectValue, keepNulls);
                 }
@@ -239,7 +241,7 @@ package org.dzyga.utils {
          * @param fields List of fields to extract
          * @return new Object
          */
-        public static function pick(object:Object, ... fields):Object {
+        public static function pick(object:Object, ...fields):Object {
             var r:Object = {};
             for each (var field:String in fields) {
                 r[field] = object[field];
@@ -258,7 +260,7 @@ package org.dzyga.utils {
             return re;
         }
 
-        public static function setDefault (object:Object, key:String, defaultValue:* = null):* {
+        public static function setDefault(object:Object, key:String, defaultValue:* = null):* {
             if (!object.hasOwnProperty(key)) {
                 object[key] = defaultValue;
             }
