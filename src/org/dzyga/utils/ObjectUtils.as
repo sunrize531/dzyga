@@ -220,21 +220,35 @@ package org.dzyga.utils {
                     }
                     continue;
                 }
-                if (isSimple(objectValue) || isList(objectValue) ||
-                        isSimple(subjectValue) || isList(subjectValue)) {
-                    object[key] = clone(subjectValue);
-                    continue;
-                }
-                if(isEmpty(subjectValue)) {
+                if (isSimple(subjectValue)) {
                     object[key] = subjectValue;
-                    continue;
+                } else if (isList(subjectValue)) {
+                    object[key] = clone(subjectValue);
+                } else if (isSimple(objectValue) || isList(objectValue)) {
+                    object[key] = clone(subjectValue);
+                } else {
+                    merge(objectValue, subjectValue, keepNulls);
                 }
-                merge(objectValue, subjectValue, keepNulls);
             }
             return object;
         }
 
+        /**
+         * Create a new object with fields extracted from source objects.
+         * @param object Source object
+         * @param fields List of fields to extract
+         * @return new Object
+         */
+        public static function pick(object:Object, ... fields):Object {
+            var r:Object = {};
+            for each (var field:String in fields) {
+                r[field] = object[field];
+            }
+            return r;
+        }
+
         private static var _hashTable:Dictionary = new Dictionary(true);
+
         public static function hash(object:Object):String {
             var re:String = _hashTable[object];
             if (!re) {
