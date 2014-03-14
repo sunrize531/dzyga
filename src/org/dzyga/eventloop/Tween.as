@@ -75,7 +75,7 @@ package org.dzyga.eventloop {
                 _valuesInitial[prop] = value;
                 _valuesDifference[prop] = _valuesObject[prop] - value;
             }
-            loopCallbackRegister();
+
             return super.start.apply(this, args);
         }
 
