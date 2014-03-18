@@ -19,8 +19,6 @@ package org.dzyga.timer {
         private var _paused:Boolean;
         private var _pauseTime:Number;
 
-        private var _currentTimeDiff:Number;
-
         public function TimerTask(pTime:Number, pTicksInterval:Number) {
             _time          = pTime;
             _ticksInterval = pTicksInterval;
@@ -109,6 +107,10 @@ package org.dzyga.timer {
             resolvePromise(resumePromise, args);
 
             return this;
+        };
+
+        public function addTime(pTime:int):void {
+            _time += pTime;
         };
     };
 }
