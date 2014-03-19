@@ -6,6 +6,8 @@ package org.dzyga.timer {
     import org.dzyga.callbacks.Promise;
     import org.dzyga.eventloop.FrameEnterTask;
 
+    import time.getTime;
+
     public class TimerTask extends FrameEnterTask {
         private var _time:Number;
         private var _ticksInterval:Number;
@@ -43,6 +45,10 @@ package org.dzyga.timer {
 
         public function get time():Number {
             return _time;
+        };
+
+        public function get timeDiff():Number {
+            return getTimer() - _startTime;
         };
 
         override public function start(...args):ITask {
