@@ -23,5 +23,25 @@ package org.dzyga.utils {
             var index:int = Math.round(args.length / 2);
             return args[index];
         }
-    }
+
+        /**
+         * Based on http://arduino.cc/en/reference/map#.Uy2gRvmm9zo
+         * Implemented by https://github.com/thenitro
+         * Original source https://github.com/thenitro/ngine/blob/master/source/ngine/math/TMath.as
+         *
+         * @param pNumber
+         * @param pMinValue
+         * @param pMaxValue
+         * @param pTargetMin
+         * @param pTargetMax
+         * @return
+         */
+        public static function map(pNumber:Number,
+                                   pMinValue:Number, pMaxValue:Number,
+                                   pTargetMin:Number, pTargetMax:Number):Number {
+            var index:Number = (pMaxValue - pMinValue) / pNumber;
+
+            return (pTargetMax - pTargetMin) / index;
+        };
+}
 }
