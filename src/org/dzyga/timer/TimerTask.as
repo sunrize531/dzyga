@@ -4,6 +4,7 @@ package org.dzyga.timer {
     import org.dzyga.callbacks.IPromise;
     import org.dzyga.callbacks.ITask;
     import org.dzyga.callbacks.Promise;
+    import org.dzyga.callbacks.TaskState;
     import org.dzyga.eventloop.FrameEnterTask;
 
     public class TimerTask extends FrameEnterTask {
@@ -80,8 +81,13 @@ package org.dzyga.timer {
         };
 
         override public function clear():ITask {
-            _pausePromise.clear();
-            _resumePromise.clear();
+            if (_pausePromise) {
+                _pausePromise.clear();
+            }
+
+            if (_resumePromise) {
+                _resumePromise.clear();
+            }
 
             _pausePromise  = null;
             _resumePromise = null;
@@ -90,6 +96,10 @@ package org.dzyga.timer {
         };
 
         public function pause(...args):ITask {
+            if (_state == TaskState.IDLE) {
+                return this;
+            }
+
             _paused    = true;
             _pauseTime = getTimer();
 
@@ -100,6 +110,10 @@ package org.dzyga.timer {
         };
 
         public function resume(...args):ITask {
+            if (_state == TaskState.IDLE) {
+                return this;
+            }
+
             var timeDiff:Number = getTimer() - _pauseTime;
 
             _paused = false;
