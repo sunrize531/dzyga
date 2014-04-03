@@ -9,7 +9,7 @@ package org.dzyga.collections {
             return _items.hasOwnProperty(ObjectUtils.hash(item));
         }
 
-        public function get (item:*):* {
+        public function getItem (item:*):* {
             var h:String = ObjectUtils.hash(item);
             if (_items.hasOwnProperty(h)) {
                 return _items[h];
