@@ -80,7 +80,7 @@ package org.dzyga.callbacks {
         }
 
 
-        protected function check (... args):IPromise {
+        public function check (... args):IPromise {
             if (!_resolved) {
                 var promiseIterator:IIterator = _promiseStateMap.iterator() as IIterator;
                 while (promiseIterator.hasNext()) {

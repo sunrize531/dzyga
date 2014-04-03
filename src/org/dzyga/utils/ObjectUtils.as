@@ -226,14 +226,33 @@ package org.dzyga.utils {
                     }
                     continue;
                 }
-                if (isSimple(objectValue) || isList(objectValue) ||
-                        isSimple(subjectValue) || isList(subjectValue)) {
+                if (isSimple(subjectValue)) {
+                    object[key] = subjectValue;
+                } else if (isList(subjectValue)) {
                     object[key] = clone(subjectValue);
-                    continue;
+                } else if (isSimple(objectValue) || isList(objectValue)) {
+                    object[key] = clone(subjectValue);
+                } else if (isEmpty(subjectValue)) {
+                    object[key] = subjectValue;
+                } else {
+                    merge(objectValue, subjectValue, keepNulls);
                 }
-                merge(objectValue, subjectValue, keepNulls);
             }
             return object;
+        }
+
+        /**
+         * Create a new object with fields extracted from source objects.
+         * @param object Source object
+         * @param fields List of fields to extract
+         * @return new Object
+         */
+        public static function pick(object:Object, ...fields):Object {
+            var r:Object = {};
+            for each (var field:String in fields) {
+                r[field] = object[field];
+            }
+            return r;
         }
 
         private static var _hashTable:Dictionary = new Dictionary(true);
@@ -266,7 +285,7 @@ package org.dzyga.utils {
             return h;
         }
 
-        public static function setDefault (object:Object, key:String, defaultValue:* = null):* {
+        public static function setDefault(object:Object, key:String, defaultValue:* = null):* {
             if (!object.hasOwnProperty(key)) {
                 object[key] = defaultValue;
             }
