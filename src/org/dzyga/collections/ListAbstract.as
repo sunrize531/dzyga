@@ -4,27 +4,27 @@ package org.dzyga.collections {
     use namespace dz_collections;
 
     public class ListAbstract implements ISequence, ISized {
-        dz_collections function get _firstNode ():IBinaryNode {
+        dz_collections function get _firstNode ():INodeBinary {
             throw new IllegalOperationError('Not implemented');
         }
 
-        dz_collections function get _lastNode ():IBinaryNode {
+        dz_collections function get _lastNode ():INodeBinary {
             throw new IllegalOperationError('Not implemented');
         }
 
-        dz_collections function _nodeInit (item:*):IBinaryNode {
+        dz_collections function _nodeInit (item:*):INodeBinary {
             throw new IllegalOperationError('Not implemented');
         }
 
-        dz_collections function _nodeAppend (node:IBinaryNode):void {
+        dz_collections function _nodeAppend (node:INodeBinary):void {
             throw new IllegalOperationError('Not implemented');
         }
 
-        dz_collections function _nodePrepend (node:IBinaryNode):void {
+        dz_collections function _nodePrepend (node:INodeBinary):void {
             throw new IllegalOperationError('Not implemented');
         }
 
-        dz_collections function _nodeRemove (node:IBinaryNode):Boolean {
+        dz_collections function _nodeRemove (node:INodeBinary):Boolean {
             throw new IllegalOperationError('Not implemented');
         }
 

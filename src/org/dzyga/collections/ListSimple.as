@@ -2,27 +2,27 @@ package org.dzyga.collections {
     use namespace dz_collections;
 
     public class ListSimple extends ListAbstract implements IListSimple {
-        protected var _first:IBinaryNode;
-        protected var _last:IBinaryNode;
+        protected var _first:INodeBinary;
+        protected var _last:INodeBinary;
         protected var _size:int = 0;
 
-        override dz_collections function get _firstNode ():IBinaryNode {
+        override dz_collections function get _firstNode ():INodeBinary {
             return _first;
         }
 
-        override dz_collections function get _lastNode ():IBinaryNode {
+        override dz_collections function get _lastNode ():INodeBinary {
             return _last;
         }
 
-        override dz_collections function _nodeInit (item:*):IBinaryNode {
-            if (item is IBinaryNode) {
+        override dz_collections function _nodeInit (item:*):INodeBinary {
+            if (item is INodeBinary) {
                 return item;
             } else {
-                return new BinaryNode(item);
+                return new NodeBinaryInternal(item);
             }
         }
 
-        override dz_collections function _nodeAppend (node:IBinaryNode):void {
+        override dz_collections function _nodeAppend (node:INodeBinary):void {
             if (_last) {
                 _last.right = node;
                 node.left = _last;
@@ -34,7 +34,7 @@ package org.dzyga.collections {
             _size++;
         }
 
-        override dz_collections function _nodePrepend (node:IBinaryNode):void {
+        override dz_collections function _nodePrepend (node:INodeBinary):void {
             if (_first) {
                 _first.left = node;
                 node.right = _first;
@@ -46,7 +46,7 @@ package org.dzyga.collections {
             _size++;
         }
 
-        override dz_collections function _nodeRemove (node:IBinaryNode):Boolean {
+        override dz_collections function _nodeRemove (node:INodeBinary):Boolean {
             if (_size == 1) {
                 if (node == _first) {
                     _size = 0;
@@ -72,47 +72,47 @@ package org.dzyga.collections {
         }
 
         override public function add (item:*):Boolean {
-            var node:IBinaryNode = _nodeInit(item);
+            var node:INodeBinary = _nodeInit(item);
             _nodeAppend(node);
             return true;
         }
 
         public function prepend (item:*):Boolean {
-            var node:IBinaryNode = _nodeInit(item);
+            var node:INodeBinary = _nodeInit(item);
             _nodePrepend(node);
             return true;
         }
 
         public function first ():* {
-            return _first && _first.value;
+            return _first && _first.item;
         }
 
         public function last ():* {
-            return _last && _last.value;
+            return _last && _last.item;
         }
 
         public function pop ():* {
-            var last:IBinaryNode = _last;
+            var last:INodeBinary = _last;
             if (last) {
                 _last = last.left || _first;
             }
-            return last && last.value;
+            return last && last.item;
         }
 
         public function shift ():* {
-            var first:IBinaryNode = _first;
+            var first:INodeBinary = _first;
             if (first) {
                 _first = first.left || _last;
                 _size--;
             }
-            return first && first.value;
+            return first && first.item;
         }
 
         public function items ():Array {
             var _re:Array = [];
-            var current:IBinaryNode = _first;
+            var current:INodeBinary = _first;
             while (current) {
-                _re.push(current.value);
+                _re.push(current.item);
                 current = current.right;
             }
             return _re;
@@ -133,15 +133,15 @@ package org.dzyga.collections {
                 return false;
             }
 
-            if (item is IBinaryNode) {
+            if (item is INodeBinary) {
                 return _nodeRemove(item);
             }
 
             _iteratorLocal ||= new ListIterator(this);
             var _re:Boolean = false;
             while (_iteratorLocal.hasNext()) {
-                var node:IBinaryNode = _iteratorLocal._nextNode();
-                if (node.value === item) {
+                var node:INodeBinary = _iteratorLocal._nextNode();
+                if (node.item === item) {
                     _nodeRemove(item);
                     _re = true;
                 }

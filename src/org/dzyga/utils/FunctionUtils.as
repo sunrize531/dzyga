@@ -43,9 +43,9 @@ package org.dzyga.utils {
          * @param args list of functions to compose
          * @return composition
          */
-        public static function compose (... args):Function {
+        public static function compose (...args):Function {
             var functions:Array = args.reverse();
-            return function (... args):* {
+            return function (...args):* {
                 for (var i:int = functions.length - 1; i >= 0; i--) {
                     args = [functions[i].apply(this, args)];
                 }
@@ -62,8 +62,8 @@ package org.dzyga.utils {
          * @param args args to define
          * @return new function
          */
-        public static function partial (f:Function, ... args):Function {
-            return function (... partialArgs):* {
+        public static function partial (f:Function, ...args):Function {
+            return function (...partialArgs):* {
                 return f.apply(null, ArrayUtils.add(partialArgs, args));
             }
         }
@@ -79,12 +79,11 @@ package org.dzyga.utils {
          * @param args args to define
          * @return new function
          */
-        public static function bind (f:Function, thisArg:* = null, ... args):Function {
-            return function (... partialArgs):* {
+        public static function bind (f:Function, thisArg:* = null, ...args):Function {
+            return function (...partialArgs):* {
                 return f.apply(thisArg, ArrayUtils.add(partialArgs, args));
             }
         }
-
 
 
         /**
@@ -95,7 +94,7 @@ package org.dzyga.utils {
          * @return new function
          */
         public static function wrap (f:Function, wrapper:Function):Function {
-            return function (... args):* {
+            return function (...args):* {
                 var wrapperArgs:Array = [f].concat(args);
                 wrapper.apply(this, wrapperArgs);
             };
@@ -108,7 +107,7 @@ package org.dzyga.utils {
          * @param args
          * @return value
          */
-        public static function identity (value:* = null, ... args):* {
+        public static function identity (value:* = null, ...args):* {
             return value;
         }
 
@@ -122,8 +121,27 @@ package org.dzyga.utils {
          * @param args
          * @return
          */
-        public static function field (object:Object, field:String, thisArg:* = null, ... args):* {
+        public static function field (object:Object, field:String, thisArg:* = null, ...args):* {
             return result.apply(null, ArrayUtils.add([object[field], thisArg], args));
+        }
+
+        public static function compare (value1:*, value2:*):Number {
+            return value1.valueOf() - value2.valueOf();
+        }
+
+        public static function compareAsString (value1:*, value2:*):Number {
+            return value1.toString() - value2.toString();
+        }
+
+        public static function select (value1:*, value2:*, comparator:Function = null):* {
+            if (comparator == null) {
+                comparator = compare;
+            }
+            if (comparator(value1, value2) > 0) {
+                return value2;
+            } else {
+                return value1;
+            }
         }
     }
 }

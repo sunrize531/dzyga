@@ -40,8 +40,8 @@ package org.dzyga.utils {
          * @param args
          * @return iterator
          */
-            // TODO: implement class instantiation support here.
         public static function map (object:*, f:Function, thisArg:* = null, ...args):IIterator {
+            // TODO: implement class instantiation support here.
             return new MapperIterator(iterator(object), f, thisArg, args);
         }
 

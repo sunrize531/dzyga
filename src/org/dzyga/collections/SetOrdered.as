@@ -6,8 +6,8 @@ package org.dzyga.collections {
         protected var _itemsHash:Object = {};
 
 
-        override dz_collections function _nodeRemove (node:IBinaryNode):Boolean {
-            var hash:String = _hash(node.value);
+        override dz_collections function _nodeRemove (node:INodeBinary):Boolean {
+            var hash:String = _hash(node.item);
             delete _itemsHash[hash];
             return super._nodeRemove(node);
         }
@@ -32,7 +32,7 @@ package org.dzyga.collections {
         override public function add (item:*):Boolean {
             var hash:String = _hash(item);
             if (!_itemsHash.hasOwnProperty(hash)) {
-                var node:IBinaryNode = _nodeInit(item);
+                var node:INodeBinary = _nodeInit(item);
                 _nodeAppend(node);
                 _itemsHash[hash] = node;
                 return true;
@@ -43,7 +43,7 @@ package org.dzyga.collections {
         override public function prepend (item:*):Boolean {
             var hash:String = _hash(item);
             if (!_itemsHash.hasOwnProperty(hash)) {
-                var node:IBinaryNode = _nodeInit(item);
+                var node:INodeBinary = _nodeInit(item);
                 _nodePrepend(node);
                 _itemsHash[hash] = node;
                 return true;
@@ -53,7 +53,7 @@ package org.dzyga.collections {
 
         override public function remove (item:*):Boolean {
             var hash:String = _hash(item);
-            var node:IBinaryNode = _itemsHash[hash];
+            var node:INodeBinary = _itemsHash[hash];
             if (node) {
                 _nodeRemove(node);
                 return true;

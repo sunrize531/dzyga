@@ -3,7 +3,7 @@ package org.dzyga.collections {
 
     public class ListIterator implements IOrderedIterator, ISequenceIterator {
         protected var _list:ListAbstract;
-        internal var _currentNode:IBinaryNode;
+        internal var _currentNode:INodeBinary;
 
         public function ListIterator (list:ListAbstract) {
             _list = list;
@@ -19,10 +19,10 @@ package org.dzyga.collections {
         }
 
         public function next ():* {
-            return _nextNode().value;
+            return _nextNode().item;
         }
 
-        internal function _nextNode ():IBinaryNode {
+        internal function _nextNode ():INodeBinary {
             if (!_currentNode) {
                 _currentNode = _list._firstNode;
             } else {
@@ -32,14 +32,14 @@ package org.dzyga.collections {
         }
 
         public function current ():* {
-            return _currentNode && _currentNode.value;
+            return _currentNode && _currentNode.item;
         }
 
         public function prev ():* {
-            return _prevNode().value;
+            return _prevNode().item;
         }
 
-        internal function _prevNode ():IBinaryNode {
+        internal function _prevNode ():INodeBinary {
             _currentNode = _currentNode.left;
             return _currentNode;
         }
@@ -50,11 +50,11 @@ package org.dzyga.collections {
 
         public function end ():* {
             _currentNode = _list._lastNode;
-            return _currentNode.value;
+            return _currentNode.item;
         }
 
         public function remove ():Boolean {
-            var node:IBinaryNode = _currentNode;
+            var node:INodeBinary = _currentNode;
             _currentNode = _currentNode.left;
             return _list._nodeRemove(node);
         }
