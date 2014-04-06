@@ -48,8 +48,13 @@ package org.dzyga.collections {
             _currentNode = null;
         }
 
-        public function end ():* {
+        public function last ():* {
             _currentNode = _list._lastNode;
+            return _currentNode.item;
+        }
+
+        public function first ():* {
+            _currentNode = _list._firstNode;
             return _currentNode.item;
         }
 

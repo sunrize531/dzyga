@@ -255,6 +255,13 @@ package org.dzyga.utils {
             return r;
         }
 
+        public static function setDefault(object:Object, key:String, defaultValue:* = null):* {
+            if (!object.hasOwnProperty(key)) {
+                object[key] = defaultValue;
+            }
+            return object[key];
+        }
+
         private static var _hashTable:Dictionary = new Dictionary(true);
 
         public static const STRING_HASH_PREFIX:String = '!s';
@@ -284,13 +291,5 @@ package org.dzyga.utils {
             }
             return h;
         }
-
-        public static function setDefault(object:Object, key:String, defaultValue:* = null):* {
-            if (!object.hasOwnProperty(key)) {
-                object[key] = defaultValue;
-            }
-            return object[key];
-        }
-
     }
 }

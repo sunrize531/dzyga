@@ -1,14 +1,14 @@
 package org.dzyga.callbacks {
     import flash.utils.Dictionary;
 
-    import org.as3commons.collections.LinkedSet;
-    import org.as3commons.collections.framework.ICollectionIterator;
-    import org.as3commons.collections.framework.IIterator;
-    import org.as3commons.collections.iterators.CollectionFilterIterator;
+    import org.dzyga.collections.IIterator;
+    import org.dzyga.collections.ISequenceIterator;
+    import org.dzyga.collections.SequenceFilterIterator;
+    import org.dzyga.collections.SetOrdered;
 
     public class Promise implements IPromise {
 
-        protected var _callbackCollection:LinkedSet = new LinkedSet();
+        protected var _callbackCollection:SetOrdered = new SetOrdered();
         protected var _callbackMap:Dictionary = new Dictionary(true);
         protected var _unique:Boolean;
 
@@ -20,7 +20,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         public function resolve (... args):IPromise {
-            var iterator:ICollectionIterator = callbackIterator();
+            var iterator:ISequenceIterator = callbackIterator();
             while (iterator.hasNext()) {
                 var callback:ICallback = iterator.next();
                 callback.call.apply(null, args);
@@ -64,7 +64,7 @@ package org.dzyga.callbacks {
          * @inheritDoc
          */
         public function callbackRemove (callback:Function = null):IPromise {
-            var iterator:ICollectionIterator = callbackIterator(callback);
+            var iterator:ISequenceIterator = callbackIterator(callback);
             while (iterator.hasNext()) {
                 iterator.next();
                 iterator.remove();
@@ -76,21 +76,21 @@ package org.dzyga.callbacks {
         /**
          * Return LinkedSet, containing handles for all registered callbacks.
          */
-        public function get callbackCollection ():LinkedSet {
+        public function get callbackCollection ():SetOrdered {
             return _callbackCollection;
         }
 
         /**
          * @inheritDoc
          */
-        public function callbackIterator (callback:Function = null):ICollectionIterator {
+        public function callbackIterator (callback:Function = null):ISequenceIterator {
             if (callback == null) {
-                return _callbackCollection.iterator() as ICollectionIterator;
+                return _callbackCollection.iterator() as ISequenceIterator;
             } else {
                 var filter:Function = function (handle:IHandle):Boolean {
                     return handle.callback === callback;
                 };
-                return new CollectionFilterIterator(_callbackCollection, filter);
+                return new SequenceFilterIterator(_callbackCollection.iterator(), filter);
             }
         }
 
@@ -100,7 +100,7 @@ package org.dzyga.callbacks {
          * @param cursor
          * @return
          */
-        public function iterator (cursor:* = null):IIterator {
+        public function iterator ():IIterator {
             return callbackIterator();
         }
 

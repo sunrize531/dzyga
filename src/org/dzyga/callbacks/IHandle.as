@@ -1,5 +1,7 @@
 package org.dzyga.callbacks {
-    public interface IHandle {
+    import org.dzyga.collections.INodeSorted;
+
+    public interface IHandle extends INodeSorted {
         /**
          * Registered callback.
          */
@@ -14,11 +16,6 @@ package org.dzyga.callbacks {
          * Callback arguments.
          */
         function get argsArray ():Array;
-
-        /**
-         * Unique hash for this Handle instance.
-         */
-        function get hash ():String;
 
         /**
          * True if handle is canceled.

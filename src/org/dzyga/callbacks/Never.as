@@ -1,7 +1,5 @@
 package org.dzyga.callbacks {
-    import org.as3commons.collections.LinkedSet;
-    import org.as3commons.collections.framework.ICollectionIterator;
-    import org.as3commons.collections.framework.IIterator;
+    import org.dzyga.collections.ISequenceIterator;
 
     /**
      * Promise that does nothing and never resolves. Totally irresponsible.
@@ -20,7 +18,7 @@ package org.dzyga.callbacks {
             return this;
         }
 
-        public function callbackIterator (callback:Function = null):ICollectionIterator {
+        public function callbackIterator (callback:Function = null):ISequenceIterator {
             return null;
         }
 

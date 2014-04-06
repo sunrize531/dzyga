@@ -1,5 +1,4 @@
 package org.dzyga.callbacks {
-    import org.dzyga.callbacks.Promise;
     import org.flexunit.asserts.assertEquals;
 
     public class PromiseTest {

@@ -1,9 +1,11 @@
 package org.dzyga.events {
     import flash.events.IEventDispatcher;
 
-    import org.as3commons.collections.framework.ICollection;
-    import org.as3commons.collections.iterators.CollectionFilterIterator;
+    import org.dzyga.collections.ICollection;
+    import org.dzyga.collections.IIterable;
+    import org.dzyga.collections.ISequence;
     import org.dzyga.collections.ISequenceIterator;
+    import org.dzyga.collections.SequenceFilterIterator;
 
     /**
      * Filter for direct listeners.
@@ -12,16 +14,16 @@ package org.dzyga.events {
         private var _target:IEventDispatcher;
         private var _event:String;
         private var _callback:Function;
-        private var _iterator:CollectionFilterIterator;
+        private var _iterator:SequenceFilterIterator;
         private var _useCapture:*;
 
         public function DirectListenerFilterIterator (
-                listenerMap:ICollection, target:IEventDispatcher = null,
+                listeners:IIterable, target:IEventDispatcher = null,
                 event:String = '', callback:Function = null, useCapture:* = undefined) {
             _target = target;
             _event = event;
             _callback = callback;
-            _iterator = new CollectionFilterIterator(listenerMap, listenerFilter);
+            _iterator = new SequenceFilterIterator(listeners.iterator(), listenerFilter);
             _useCapture = useCapture;
         }
 
@@ -44,6 +46,9 @@ package org.dzyga.events {
                     (_callback == null || eventListener.callback == _callback) &&
                     (_useCapture === undefined || eventListener.useCapture == _useCapture);
             return re;
+        }
+
+        public function reset ():void {
         }
     }
 }

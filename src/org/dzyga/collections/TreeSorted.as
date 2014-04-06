@@ -1,14 +1,9 @@
 package org.dzyga.collections {
     import org.dzyga.utils.FunctionUtils;
 
-    use namespace dz_collections;
-
-    internal class TreeSorted {
-        dz_collections var _root:INodeSorted;
-        dz_collections var _size:int = 0;
-
-        private var _comparator:Function;
-        private var _nodeCounter:int = 0;
+    internal class TreeSorted implements IIterable {
+        private static const RIGHT_ATTR:String = 'right';
+        private static const LEFT_ATTR:String = 'left';
 
         public function TreeSorted (comparator:Function = null) {
             if (comparator is Function) {
@@ -16,6 +11,21 @@ package org.dzyga.collections {
             } else {
                 _comparator = FunctionUtils.compare;
             }
+        }
+
+        private var _comparator:Function;
+        private var _nodeCounter:int = 0;
+
+        private var _root:INodeSorted;
+
+        public function get root ():org.dzyga.collections.INodeSorted {
+            return _root;
+        }
+
+        private var _size:int = 0;
+
+        public function get size ():int {
+            return _size;
         }
 
         public function hasEqual (item:*):Boolean {
@@ -32,7 +42,6 @@ package org.dzyga.collections {
             }
             return false;
         }
-
 
         public function nodeLeftMost (node:INodeSorted = null):INodeSorted {
             if (!_root) {
@@ -155,10 +164,7 @@ package org.dzyga.collections {
             _size--;
         }
 
-        private static const RIGHT_ATTR:String = 'right';
-        private static const LEFT_ATTR:String = 'left';
-
-        protected function _nodeRotate (parent:INodeSorted, child:INodeSorted):INodeSorted {
+        private function _nodeRotate (parent:INodeSorted, child:INodeSorted):INodeSorted {
             var grandparent:INodeSorted = parent.parent;
             var right:String = RIGHT_ATTR; // rotate with right child
             var left:String = LEFT_ATTR;
@@ -188,6 +194,10 @@ package org.dzyga.collections {
             } else {
                 _root = child;
             }
+        }
+
+        public function iterator ():IIterator {
+            return null;
         }
     }
 }

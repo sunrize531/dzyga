@@ -1,11 +1,13 @@
 package org.dzyga.callbacks {
     import flash.errors.IllegalOperationError;
 
+    import org.dzyga.collections.Node;
+
     import org.dzyga.utils.ArrayUtils;
 
     import org.dzyga.utils.ObjectUtils;
 
-    public class Handle implements IHandle {
+    public class Handle extends Node implements IHandle {
         protected var _canceled:Boolean = false;
         protected var _thisArg:*;
         protected var _argsArray:Array;
@@ -44,13 +46,6 @@ package org.dzyga.callbacks {
          */
         public function get argsArray ():Array {
             return _argsArray;
-        }
-
-        /**
-         * @inheritDoc
-         */
-        public function get hash ():String {
-            return _hash;
         }
 
         /**

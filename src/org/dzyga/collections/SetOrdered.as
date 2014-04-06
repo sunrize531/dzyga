@@ -1,32 +1,15 @@
 package org.dzyga.collections {
     import org.dzyga.utils.ObjectUtils;
+
     use namespace dz_collections;
 
     public class SetOrdered extends ListSimple implements ISet, IOrdered {
         protected var _itemsHash:Object = {};
 
-
         override dz_collections function _nodeRemove (node:INodeBinary):Boolean {
             var hash:String = _hash(node.item);
             delete _itemsHash[hash];
             return super._nodeRemove(node);
-        }
-
-        protected function _hash (item:*):String {
-            return ObjectUtils.hash(item);
-        }
-
-        public function has (item:*):Boolean {
-            return _itemsHash.hasOwnProperty(ObjectUtils.hash(item));
-        }
-
-        public function getItem (item:*):* {
-            var hash:String = _hash(item);
-            if (_itemsHash.hasOwnProperty(hash)) {
-                return _itemsHash[hash];
-            } else {
-                return null;
-            }
         }
 
         override public function add (item:*):Boolean {
@@ -88,6 +71,15 @@ package org.dzyga.collections {
             return false;
         }
 
+        public function has (item:*):Boolean {
+            return _itemsHash.hasOwnProperty(ObjectUtils.hash(item));
+        }
+
+        public function getItem (item:*):* {
+            var node:INodeBinary = _itemsHash[_hash(item)];
+            return node && node.item;
+        }
+
         public function update (iterable:*):Boolean {
             return SetUtils.update(this, iterable);
         }
@@ -106,6 +98,10 @@ package org.dzyga.collections {
 
         public function isSuperSet (iterable:*):Boolean {
             return SetUtils.isSuperSet(this, iterable);
+        }
+
+        protected function _hash (item:*):String {
+            return ObjectUtils.hash(item);
         }
     }
 }

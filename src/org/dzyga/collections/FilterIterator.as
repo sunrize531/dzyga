@@ -2,7 +2,7 @@ package org.dzyga.collections {
     import org.dzyga.callbacks.Handle;
 
     public class FilterIterator implements IIterator {
-        private var _sourceIterator:IIterator;
+        protected var _sourceIterator:IIterator;
         private var _handle:Handle;
         private var _next:*;
 

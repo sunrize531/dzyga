@@ -1,10 +1,10 @@
 package org.dzyga.callbacks {
-    import org.as3commons.collections.LinkedSet;
-    import org.as3commons.collections.framework.ICollectionIterator;
-    import org.as3commons.collections.framework.IIterable;
+    import org.dzyga.collections.IIterable;
+    import org.dzyga.collections.ISequenceIterator;
+    import org.dzyga.collections.SetOrdered;
 
     public interface IPromise extends IIterable {
-        function get callbackCollection ():LinkedSet;
+        function get callbackCollection ():SetOrdered;
 
         /**
          * Add callback to run when promise resolved.
@@ -32,7 +32,7 @@ package org.dzyga.callbacks {
          * @param callback
          * @return
          */
-        function callbackIterator (callback:Function = null):ICollectionIterator;
+        function callbackIterator (callback:Function = null):ISequenceIterator;
 
         /**
          * Resolve promise and execute all registered callbacks.

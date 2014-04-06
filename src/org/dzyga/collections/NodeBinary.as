@@ -30,7 +30,7 @@ package org.dzyga.collections {
         }
 
         public function hash():* {
-            return ObjectUtils.hash(this);
+            return this;
         }
     }
 }
