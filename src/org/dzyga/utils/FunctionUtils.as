@@ -125,14 +125,48 @@ package org.dzyga.utils {
             return result.apply(null, ArrayUtils.add([object[field], thisArg], args));
         }
 
+        /**
+         * Compare two values by results of its valueOf methods. Can be used as primitive comparator for sorting.
+         * Returns positive number if value1 < value2, negative number if value1 > value2
+         *
+         * @param value1
+         * @param value2
+         * @return
+         */
         public static function compare (value1:*, value2:*):Number {
-            return value1.valueOf() - value2.valueOf();
+            return value2.valueOf() - value1.valueOf();
         }
 
+        /**
+         * Compare string representations of values. Can be used as primitive comparator for sorting.
+         * Returns positive number if value1 < value2, negative number if value1 > value2
+         *
+         * @param value1
+         * @param value2
+         * @return
+         */
         public static function compareAsString (value1:*, value2:*):Number {
-            return value1.toString() - value2.toString();
+            var string1:String = value1.toString();
+            var string2:String = value2.toString();
+            if (string1 < string2) {
+                return 1;
+            } else if (string1 > string2) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
 
+
+        /**
+         * Compares values using provided comparator. id comparator is null - FunctionUtils.compare method used.
+         * Returns value which is considered greater.
+         *
+         * @param value1
+         * @param value2
+         * @param comparator Function to compare values
+         * @return Greater value
+         */
         public static function select (value1:*, value2:*, comparator:Function = null):* {
             if (comparator == null) {
                 comparator = compare;
