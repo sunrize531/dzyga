@@ -75,7 +75,7 @@ package org.dzyga.collections {
             return _itemsHash.hasOwnProperty(ObjectUtils.hash(item));
         }
 
-        public function getItem (item:*):* {
+        public function getEqualItem (item:*):* {
             var node:INodeBinary = _itemsHash[_hash(item)];
             return node && node.item;
         }

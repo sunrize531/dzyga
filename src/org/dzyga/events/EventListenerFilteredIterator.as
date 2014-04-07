@@ -1,10 +1,11 @@
 package org.dzyga.events {
     import flash.events.IEventDispatcher;
-
-    import org.as3commons.collections.framework.IMap;
-    import org.as3commons.collections.iterators.CollectionFilterIterator;
-    import org.as3commons.collections.iterators.FilterIterator;
+    import org.dzyga.collections.IIterator;
     import org.dzyga.collections.ISequenceIterator;
+    import org.dzyga.collections.MapperIterator;
+    import org.dzyga.collections.ObjectIterator;
+    import org.dzyga.collections.SequenceFilterIterator;
+    import org.dzyga.utils.IterUtils;
 
     /**
      * Filter matched event listeners
@@ -13,11 +14,12 @@ package org.dzyga.events {
         private var _target:IEventDispatcher;
         private var _event:String;
         private var _callback:Function;
-        private var _listenerMap:IMap;
-        private var _targetIterator:FilterIterator;
-        private var _targetListenerIterator:CollectionFilterIterator;
+        private var _listenerMap:Object;
+        private var _targetIterator:IIterator;
+        private var _targetListenerIterator:SequenceFilterIterator;
 
-        public function EventListenerFilteredIterator (listenerMap:IMap, target:IEventDispatcher, event:String, callback:Function) {
+        public function EventListenerFilteredIterator (
+                listenerMap:Object, target:IEventDispatcher, event:String, callback:Function) {
             _target = target;
             _event = event;
             _callback = callback;
@@ -31,12 +33,14 @@ package org.dzyga.events {
                     return true;
                 }
             }
+
             if (!_targetIterator) {
                 // First call here...
-                _targetIterator = new FilterIterator(_listenerMap, targetListenerFilter);
+                _targetIterator = IterUtils.filter(new ObjectIterator(_listenerMap), targetListenerFilter);
             }
             while (_targetIterator.hasNext()) {
-                _targetListenerIterator = new CollectionFilterIterator(_targetIterator.next(), eventListenerFilter);
+                _targetListenerIterator = new SequenceFilterIterator(
+                        _targetIterator.next().iterator(), eventListenerFilter);
                 if (_targetListenerIterator.hasNext()) {
                     // We have matched events here...
                     return true;
@@ -59,13 +63,18 @@ package org.dzyga.events {
             return false;
         }
 
-        private function targetListenerFilter (targetListener:TargetListenerMap):Boolean {
+        private function targetListenerFilter (targetListener:TargetListenerSet):Boolean {
             return (!_target || targetListener.target == _target) &&
                 (!_event || targetListener.event == _event);
         }
 
         private function eventListenerFilter (eventListener:EventListener):Boolean {
             return _callback == null || eventListener.callback == _callback;
+        }
+
+        public function reset ():void {
+            _targetListenerIterator = null;
+            _targetIterator = null;
         }
     }
 }

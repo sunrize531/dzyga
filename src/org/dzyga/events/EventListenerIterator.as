@@ -1,29 +1,27 @@
 package org.dzyga.events {
-    import org.as3commons.collections.framework.ICollectionIterator;
-    import org.as3commons.collections.framework.IMap;
     import org.dzyga.collections.ISequenceIterator;
 
     /**
      * Iterate through all events for specified targetHash
      */
     internal class EventListenerIterator implements ISequenceIterator {
-        private var _listenerMap:IMap;
+        private var _listenerMap:Object;
         private var _targetHash:String;
-        private var _targetListenerIterator:ICollectionIterator;
+        private var _targetListenerIterator:ISequenceIterator;
 
 
-        public function EventListenerIterator (listenerMap:IMap, targetHash:String) {
+        public function EventListenerIterator (listenerMap:Object, targetHash:String) {
             _listenerMap = listenerMap;
             _targetHash = targetHash;
         }
 
         public function hasNext ():Boolean {
             if (!_targetListenerIterator) {
-                var targetListenerMap:TargetListenerMap = _listenerMap.itemFor(_targetHash);
-                if (!targetListenerMap) {
+                var targetListenerSet:TargetListenerSet = _listenerMap[_targetHash];
+                if (!targetListenerSet) {
                     return false;
                 } else {
-                    _targetListenerIterator = targetListenerMap.iterator() as ICollectionIterator;
+                    _targetListenerIterator = targetListenerSet.iterator() as ISequenceIterator;
                 }
             }
             return _targetListenerIterator.hasNext();
@@ -41,6 +39,10 @@ package org.dzyga.events {
                 return _targetListenerIterator.remove();
             }
             return false;
+        }
+
+        public function reset ():void {
+            _targetListenerIterator = null;
         }
     }
 }

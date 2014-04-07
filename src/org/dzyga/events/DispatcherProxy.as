@@ -3,9 +3,8 @@ package org.dzyga.events {
     import flash.events.IEventDispatcher;
     import flash.utils.Dictionary;
 
-    import org.as3commons.collections.LinkedList;
-    import org.as3commons.collections.Map;
-    import org.as3commons.collections.framework.core.MapIterator;
+    import org.dzyga.collections.List;
+    import org.dzyga.collections.ObjectIterator;
     import org.dzyga.utils.ObjectUtils;
     import org.dzyga.utils.StringUtils;
 
@@ -22,8 +21,8 @@ package org.dzyga.events {
      */
     public class DispatcherProxy implements IDispatcherProxy {
         protected var _target:IEventDispatcher;
-        protected var _listenerMap:Map = new Map();
-        protected var _directListenerList:LinkedList = new LinkedList();
+        protected var _listenerMap:Object = {};
+        protected var _directListenerList:List = new List();
 
         public function DispatcherProxy (target:IEventDispatcher) {
             _target = target;
@@ -47,19 +46,15 @@ package org.dzyga.events {
                 thisArg:* = null, argArray:Array = null):IDispatcherProxy {
             var targetHash:String = targetHashGenerate(target, eventType);
             var listenerHash:String = listenerHashGenerate(target, eventType, callback);
-            var targetListenerMap:TargetListenerMap;
-            if (!_listenerMap.hasKey(targetHash)) {
-                targetListenerMap = new TargetListenerMap(target, eventType, targetHash);
-                _listenerMap.add(targetHash, targetListenerMap);
-                target.addEventListener(eventType, eventListenerRun, false, 0, true);
-            } else {
-                targetListenerMap = _listenerMap.itemFor(targetHash) as TargetListenerMap;
-                if (targetListenerMap.hasKey(listenerHash)) {
-                    // Listener did not passed uniqueness check. Maybe even throw something here...
-                    return this;
-                }
+            var targetListenerMap:TargetListenerSet = _listenerMap[targetHash];
+            if (!targetListenerMap) {
+                targetListenerMap = new TargetListenerSet(target, eventType, targetHash);
+                _listenerMap[targetHash] = targetListenerMap;
+                target.addEventListener(eventType, eventListenerRun, false, 0 , true);
+            } else if (targetListenerMap.has(listenerHash)) {
+                return this;
             }
-            targetListenerMap.listenerPut(new EventListener(
+            targetListenerMap.add(new EventListener(
                 target, eventType, callback, once, thisArg, argArray, false, listenerHash));
             return this;
         }
@@ -86,7 +81,7 @@ package org.dzyga.events {
             }
             if (!re) {
                 var directListenerIterator:DirectListenerFilterIterator = new DirectListenerFilterIterator(
-                    _directListenerList, target, eventType, callback);
+                        _directListenerList, target, eventType, callback);
                 if (directListenerIterator.hasNext()) {
                     return true;
                 }
@@ -160,9 +155,9 @@ package org.dzyga.events {
         }
 
         private function emptyTargetsCleanUp ():void {
-            var targetIterator:MapIterator = _listenerMap.iterator() as MapIterator;
+            var targetIterator:ObjectIterator = new ObjectIterator(_listenerMap);
             while (targetIterator.hasNext()) {
-                var targetListenerMap:TargetListenerMap = targetIterator.next() as TargetListenerMap;
+                var targetListenerMap:TargetListenerSet = targetIterator.next() as TargetListenerSet;
                 if (!targetListenerMap.size) {
                     targetListenerMap.target.removeEventListener(targetListenerMap.event, eventListenerRun);
                     targetIterator.remove();
@@ -196,10 +191,10 @@ package org.dzyga.events {
          * @inheritDoc
          */
         public function addEventListener (
-                type:String, listener:Function, useCapture:Boolean = false,
+                eventType:String, listener:Function, useCapture:Boolean = false,
                 priority:int = 0, useWeakReference:Boolean = false):void {
             var eventListener:EventListener = new EventListener(
-                _target, type, listener, false, null, null, useCapture);
+                _target, eventType, listener, false, null, null, useCapture);
             eventListener.listen(priority, useWeakReference);
             _directListenerList.add(eventListener);
         }
@@ -207,10 +202,10 @@ package org.dzyga.events {
         /**
          * @inheritDoc
          */
-        public function removeEventListener (type:String, listener:Function, useCapture:Boolean = false):void {
-            _target.removeEventListener(type, listener, useCapture);
+        public function removeEventListener (eventType:String, listener:Function, useCapture:Boolean = false):void {
+            _target.removeEventListener(eventType, listener, useCapture);
             var directListenerIterator:DirectListenerFilterIterator = new DirectListenerFilterIterator(
-                _directListenerList, _target, type, listener, useCapture);
+                _directListenerList, _target, eventType, listener, useCapture);
             while (directListenerIterator.hasNext()) {
                 var eventListener:EventListener = directListenerIterator.next();
                 eventListener.destroy();
@@ -228,15 +223,15 @@ package org.dzyga.events {
         /**
          * @inheritDoc
          */
-        public function hasEventListener (type:String):Boolean {
-            return _target.hasEventListener(type);
+        public function hasEventListener (eventType:String):Boolean {
+            return _target.hasEventListener(eventType);
         }
 
         /**
          * @inheritDoc
          */
-        public function willTrigger (type:String):Boolean {
-            return _target.willTrigger(type);
+        public function willTrigger (eventType:String):Boolean {
+            return _target.willTrigger(eventType);
         }
 
         /**
@@ -246,7 +241,7 @@ package org.dzyga.events {
                 target:IEventDispatcher, event:String,
                 callback:Function, useCapture:Boolean = false):String {
 
-            return StringUtils.fillleft(StringUtils.checksum(
+            return StringUtils.fillLeft(StringUtils.checksum(
                 event + ObjectUtils.hash(target) + ObjectUtils.hash(callback)).toFixed(0), 16, '0');
         }
 

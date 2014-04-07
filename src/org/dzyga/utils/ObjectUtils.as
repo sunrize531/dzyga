@@ -270,6 +270,10 @@ package org.dzyga.utils {
         public static const OBJECT_HASH_PREFIX:String = '!b';
 
         public static function hash(object:*):String {
+            if (object is IHashable) {
+                object = object.hash();
+            }
+
             if (object is String) {
                 return STRING_HASH_PREFIX + object;
             }
@@ -278,10 +282,6 @@ package org.dzyga.utils {
             }
             if (isPrimitive(object)) {
                 return PRIMITIVE_HASH_PREFIX + object;
-            }
-
-            if (object is IHashable) {
-                object = object.hash();
             }
 
             var h:* = _hashTable[object];

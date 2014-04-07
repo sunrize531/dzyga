@@ -1,19 +1,18 @@
 package org.dzyga.events {
-    import org.as3commons.collections.framework.IMap;
     import org.dzyga.collections.ISequenceIterator;
 
     /**
-     * Iterate through one (yeah) event with specified _listenerHash
+     * Iterate through one (yeah) event within specified _listenerHash
      */
     internal class DistinctListenerIterator implements ISequenceIterator {
         private var _targetHash:String;
         private var _listenerHash:String;
-        private var _listenerMap:IMap;
-        private var _targetListenerMap:TargetListenerMap;
+        private var _listenerMap:Object;
+        private var _targetListenerSet:TargetListenerSet;
         private var _next:EventListener;
         private var _current:EventListener;
 
-        public function DistinctListenerIterator (listenerMap:IMap, targetHash:String, listenerHash:String) {
+        public function DistinctListenerIterator (listenerMap:Object, targetHash:String, listenerHash:String) {
             _listenerMap = listenerMap;
             _targetHash = targetHash;
             _listenerHash = listenerHash;
@@ -23,11 +22,11 @@ package org.dzyga.events {
             if (_current) {
                 return false;
             }
-            _targetListenerMap = _listenerMap.itemFor(_targetHash) as TargetListenerMap;
-            if (!_targetListenerMap) {
+            _targetListenerSet = _listenerMap[_targetHash];
+            if (!_targetListenerSet) {
                 return false;
             } else {
-                _next = _targetListenerMap.itemFor(_listenerHash);
+                _next = _targetListenerSet.getEqualItem(_listenerHash);
                 return Boolean(_next);
             }
         }
@@ -43,11 +42,15 @@ package org.dzyga.events {
 
         public function remove ():Boolean {
             if (_next || hasNext()) {
-                _targetListenerMap.removeKey(_listenerHash);
+                _targetListenerSet.remove(_listenerHash);
                 _current = undefined;
                 return true;
             }
             return false;
+        }
+
+        public function reset ():void {
+            _current = undefined;
         }
     }
 }

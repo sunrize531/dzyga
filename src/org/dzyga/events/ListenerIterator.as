@@ -1,13 +1,12 @@
 package org.dzyga.events {
     import flash.events.IEventDispatcher;
-
-    import org.as3commons.collections.framework.IMap;
     import org.dzyga.collections.ISequenceIterator;
 
     internal final class ListenerIterator implements ISequenceIterator {
         private var _iterator:ISequenceIterator;
 
-        public function ListenerIterator (listenerMap:IMap, target:IEventDispatcher = null, event:String = '', callback:Function = null) {
+        public function ListenerIterator (
+                listenerMap:Object, target:IEventDispatcher = null, event:String = '', callback:Function = null) {
             if (target && event) {
                 var _targetHash:String = DispatcherProxy.targetHashGenerate(target, event);
                 if (callback != null) {
@@ -32,16 +31,8 @@ package org.dzyga.events {
         public function remove ():Boolean {
             return _iterator.remove();
         }
+
+        public function reset ():void {
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-

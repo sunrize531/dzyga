@@ -3,7 +3,8 @@ package org.dzyga.collections {
 
     public class ObjectIterator implements IMappingIterator {
         protected var _object:Object;
-        protected var _keyIterator:ArrayIterator;
+        protected var _keys:Array;
+        protected var _current:int = -1;
 
         public function ObjectIterator (object:Object) {
             _object = object;
@@ -11,15 +12,15 @@ package org.dzyga.collections {
         }
 
         public function hasNext ():Boolean {
-            return _keyIterator.hasNext();
+            return _current < _keys.length - 1;
         }
 
         public function next ():* {
-            return _object[_keyIterator.next()];
+            return _object[nextKey()];
         }
 
         public function nextKey ():* {
-            return _keyIterator.next();
+            return _keys[++_current];
         }
 
         public function nextItem ():KeyValue {
@@ -27,8 +28,25 @@ package org.dzyga.collections {
             return new KeyValue(key, _object[key]);
         }
 
+        public function remove ():Boolean {
+            if (_current == -1) {
+                if (_keys.length) {
+                    delete _object[_keys.shift()];
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (_current < _keys.length) {
+                delete _object[_keys[_current]];
+                _keys.splice(_current--, 1);
+                return true;
+            }
+            return false;
+        }
+
         public function reset ():void {
-            _keyIterator = new ArrayIterator(ObjectUtils.keys(_object));
+            _keys = ObjectUtils.keys(_object);
+            _current = -1;
         }
     }
 }

@@ -17,7 +17,7 @@ package org.dzyga.events {
             _target = target;
             _event = event;
             _useCapture = useCapture;
-            _hash = hash || DispatcherProxy.listenerHashGenerate(target, event, callback, useCapture);
+            _hash = hash || hashGenerate();
         }
 
         override public function hashGenerate ():String {
@@ -54,9 +54,12 @@ package org.dzyga.events {
             return _event;
         }
 
-
         public function get useCapture ():Boolean {
             return _useCapture;
+        }
+
+        override public function hash ():* {
+            return _hash;
         }
     }
 }

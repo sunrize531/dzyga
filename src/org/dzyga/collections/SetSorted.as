@@ -11,7 +11,7 @@ package org.dzyga.collections {
         protected var _itemsHash:Object = {};
         protected var _itemsTree:TreeSorted;
 
-        public function getItem (item:*):* {
+        public function getEqualItem (item:*):* {
             var node:INodeBinary = _getNode(item);
             return node && node.item;
         }

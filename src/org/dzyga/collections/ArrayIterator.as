@@ -1,5 +1,5 @@
 package org.dzyga.collections {
-    public class ArrayIterator implements IIterator {
+    public class ArrayIterator implements ISequenceIterator {
         protected var _array:Array;
         protected var _current:int = -1;
 
@@ -17,6 +17,21 @@ package org.dzyga.collections {
 
         public function reset ():void {
             _current = -1;
+        }
+
+        public function remove ():Boolean {
+            if (_current == -1) {
+                if (_array.length) {
+                    _array.shift();
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (_current < _array.length) {
+                _array.splice(_current--, 1);
+                return true;
+            }
+            return false;
         }
     }
 }

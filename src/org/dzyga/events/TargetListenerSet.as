@@ -1,14 +1,15 @@
 package org.dzyga.events {
     import flash.events.IEventDispatcher;
 
-    import org.as3commons.collections.LinkedMap;
+    import org.dzyga.collections.IHashable;
+    import org.dzyga.collections.SetOrdered;
 
-    public class TargetListenerMap extends LinkedMap {
+    public class TargetListenerSet extends SetOrdered implements IHashable {
         private var _target:IEventDispatcher;
         private var _event:String;
         private var _targetHash:String;
 
-        public function TargetListenerMap (target:IEventDispatcher, event:String, targetHash:String = null) {
+        public function TargetListenerSet (target:IEventDispatcher, event:String, targetHash:String = null) {
             _target = target;
             _event = event;
             _targetHash = targetHash || DispatcherProxy.targetHashGenerate(target, event);
@@ -22,16 +23,8 @@ package org.dzyga.events {
             return _event;
         }
 
-        public function get targetHash ():String {
+        public function hash ():* {
             return _targetHash;
-        }
-
-        public function listenerPut (listener:EventListener):EventListener {
-            return add(listener.hash, listener) as EventListener;
-        }
-
-        public function listenerRemove (listener:EventListener):EventListener {
-            return removeKey(listener.hash);
         }
     }
 }
