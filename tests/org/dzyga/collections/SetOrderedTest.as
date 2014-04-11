@@ -1,4 +1,5 @@
 package org.dzyga.collections {
+    import org.flexunit.asserts.assertEquals;
 
     public class SetOrderedTest extends SetTest{
 
@@ -21,6 +22,10 @@ package org.dzyga.collections {
 
         [Test]
         public function testOrdered ():void {
+            var iterator:IIterator = _set.iterator();
+            assertEquals('1', iterator.next());
+            assertEquals(2, iterator.next());
+            assertEquals(null, iterator.next());
         }
 
         [Test]

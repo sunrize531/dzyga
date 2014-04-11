@@ -134,7 +134,7 @@ package org.dzyga.utils {
          * @return
          */
         public static function compare (value1:*, value2:*):Number {
-            return value2.valueOf() - value1.valueOf();
+            return value1.valueOf() - value2.valueOf();
         }
 
         /**

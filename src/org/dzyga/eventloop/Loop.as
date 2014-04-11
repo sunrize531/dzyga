@@ -7,10 +7,13 @@ package org.dzyga.eventloop {
     import org.dzyga.collections.ISequence;
     import org.dzyga.collections.ObjectIterator;
     import org.dzyga.collections.ObjectIterator;
+    import org.dzyga.collections.ObjectIterator;
 
     import org.dzyga.events.*;
     import flash.display.Stage;
     import flash.utils.getTimer;
+
+    import org.dzyga.utils.ObjectUtils;
 
     public class Loop {
         public static const FRAME_ENTER_STATE:String = 'frame:enter';
@@ -174,9 +177,9 @@ package org.dzyga.eventloop {
          * @return true if specified function was added to the loop somehow.
          */
         public function willCall (callback:Function):Boolean {
-            var iterator:IIterator = _callbackHash.keyIterator();
+            var iterator:ObjectIterator = new ObjectIterator(_callbackHash);
             while (iterator.hasNext()) {
-                var loopCallback:ILoopCallback = iterator.next();
+                var loopCallback:ILoopCallback = iterator.nextKey();
                 if (loopCallback.callback == callback && !loopCallback.canceled) {
                     return true;
                 }
