@@ -1,14 +1,15 @@
 package org.dzyga.collections {
     use namespace dz_collections;
-    public class SetSortedIterator implements IOrderedIterator {
-        var _treeIterator:TreeSortedIterator;
+    public class SetSortedIterator implements IOrderedIterator, ISequenceIterator {
+        private var _set:SetSorted;
+        private var _treeIterator:TreeSortedIterator;
 
         public function SetSortedIterator (collection:SetSorted, offset:* = null) {
-            var tree:TreeSorted = collection._getItemsTree();
+            _set = collection;
             if (arguments.length > 1) {
-                offset = collection._getNode(offset);
+                offset = _set._nodeGet(offset);
             }
-            _treeIterator = new TreeSortedIterator(tree, offset);
+            _treeIterator = new TreeSortedIterator(_set._getItemsTree(), offset);
         }
 
         public function hasPrev ():Boolean {
@@ -40,6 +41,15 @@ package org.dzyga.collections {
 
         public function reset ():void {
             _treeIterator.reset();
+        }
+
+        public function remove ():Boolean {
+            var current:INodeSorted = _treeIterator.current;
+            if (current) {
+                _set._nodeRemove(current);
+                return _treeIterator.remove();
+            }
+            return false;
         }
     }
 }

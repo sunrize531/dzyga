@@ -12,7 +12,7 @@ package org.dzyga.collections {
         protected var _itemsTree:TreeSorted;
 
         public function getEqualItem (item:*):* {
-            var node:INodeBinary = _getNode(item);
+            var node:INodeBinary = _nodeGet(item);
             return node && node.item;
         }
 
@@ -24,8 +24,8 @@ package org.dzyga.collections {
             return null;
         }
 
-        public function has (value:*):Boolean {
-            return false;
+        public function has (item:*):Boolean {
+            return _itemsHash.hasOwnProperty(ObjectUtils.hash(item));
         }
 
         public function size ():int {
@@ -94,8 +94,12 @@ package org.dzyga.collections {
             return _itemsTree;
         }
 
-        dz_collections function _getNode (item:*):INodeSorted {
+        dz_collections function _nodeGet (item:*):INodeSorted {
             return _itemsHash[_hash(item)];
+        }
+
+        dz_collections function _nodeRemove (node:INodeSorted):void {
+            delete _itemsHash[_hash(node.item)];
         }
     }
 }

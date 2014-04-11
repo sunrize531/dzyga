@@ -2,7 +2,6 @@ package org.dzyga.events {
     import flash.events.IEventDispatcher;
     import org.dzyga.collections.IIterator;
     import org.dzyga.collections.ISequenceIterator;
-    import org.dzyga.collections.MapperIterator;
     import org.dzyga.collections.ObjectIterator;
     import org.dzyga.collections.SequenceFilterIterator;
     import org.dzyga.utils.IterUtils;

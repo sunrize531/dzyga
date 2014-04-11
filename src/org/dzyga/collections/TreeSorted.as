@@ -1,4 +1,10 @@
 package org.dzyga.collections {
+    import flash.utils.Dictionary;
+
+    import org.dzyga.collections.INodeSorted;
+
+    import org.dzyga.collections.INodeSorted;
+
     import org.dzyga.utils.FunctionUtils;
 
     internal class TreeSorted implements IIterable {
@@ -15,10 +21,10 @@ package org.dzyga.collections {
 
         private var _comparator:Function;
         private var _nodeCounter:int = 0;
-
+        private var _garden:Dictionary = new Dictionary(true);
         private var _root:INodeSorted;
 
-        public function get root ():org.dzyga.collections.INodeSorted {
+        public function get root ():INodeSorted {
             return _root;
         }
 
@@ -130,19 +136,32 @@ package org.dzyga.collections {
 
             // Balancing
             while (currentNode.parent) {
-                if (currentNode.parent.priority >= currentNode.priority) break;
+                if (_nodeSeed(currentNode.parent) >= _nodeSeed(currentNode)) break;
                 _nodeRotate(currentNode.parent, currentNode);
             }
         }
 
         public function nodeRemove (node:INodeSorted):void {
             var child:INodeSorted;
+            while (node.left || node.right) {
+                if (node.left && node.right) {
+                    child = INodeSorted(_nodeSeed(node.left) < _nodeSeed(node.right) ? node.left : node.right);
+                } else if (node.left) {
+                    child = INodeSorted(node.left);
+                } else if (node.right) {
+                    child = INodeSorted(node.right);
+                } else {
+                    break;
+                }
+                _nodeRotate(node, child);
+            }
+
             while (true) {
                 var nodeLeft:INodeSorted = node.left as INodeSorted;
                 var nodeRight:INodeSorted = node.right as INodeSorted;
                 if (nodeLeft || nodeRight) {
-                    var leftPriority:int = nodeLeft ? nodeLeft.priority : -1;
-                    var rightPriority:int = nodeRight ? nodeRight.priority : -1;
+                    var leftPriority:int = nodeLeft ? _nodeSeed(nodeLeft) : -1;
+                    var rightPriority:int = nodeRight ? _nodeSeed(nodeRight) : -1;
                     child = leftPriority < rightPriority ? nodeLeft : nodeRight;
                     _nodeRotate(node, child);
                 } else {
@@ -161,10 +180,11 @@ package org.dzyga.collections {
             } else {
                 _root = null;
             }
+            delete _garden[node];
             _size--;
         }
 
-        private function _nodeRotate (parent:INodeSorted, child:INodeSorted):INodeSorted {
+        private function _nodeRotate (parent:INodeSorted, child:INodeSorted):void {
             var grandparent:INodeSorted = parent.parent;
             var right:String = RIGHT_ATTR; // rotate with right child
             var left:String = LEFT_ATTR;
@@ -194,6 +214,15 @@ package org.dzyga.collections {
             } else {
                 _root = child;
             }
+        }
+
+        private function _nodeSeed (node:INodeBinary):Number {
+            var seed:Number = _garden[node];
+            if (isNaN(seed)) {
+                seed = int.MAX_VALUE * Math.random();
+                _garden[node] = seed;
+            }
+            return seed;
         }
 
         public function iterator ():IIterator {

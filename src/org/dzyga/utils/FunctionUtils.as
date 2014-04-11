@@ -157,6 +157,10 @@ package org.dzyga.utils {
             }
         }
 
+        public static function compareAsHash (value1:*, value2:*):Number {
+            return compareAsString(ObjectUtils.hash(value1), ObjectUtils.hash(value2));
+        }
+
 
         /**
          * Compares values using provided comparator. id comparator is null - FunctionUtils.compare method used.

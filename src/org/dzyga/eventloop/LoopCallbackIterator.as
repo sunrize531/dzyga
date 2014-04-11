@@ -1,44 +1,43 @@
 package org.dzyga.eventloop {
-    import org.as3commons.collections.LinkedList;
-    import org.as3commons.collections.framework.ICollection;
-    import org.as3commons.collections.framework.ICollectionIterator;
-    import org.as3commons.collections.framework.IIterator;
+    import org.dzyga.collections.ICollection;
+    import org.dzyga.collections.IIterator;
     import org.dzyga.collections.ISequenceIterator;
+    import org.dzyga.collections.List;
 
     internal class LoopCallbackIterator implements ISequenceIterator {
-        private var callbackCollectionList:LinkedList = new LinkedList();
-        private var callbackCollectionIterator:IIterator;
-        private var callbackIterator:ICollectionIterator;
+        private var _callbackCollectionList:List = new List();
+        private var _callbackCollectionIterator:IIterator;
+        private var _callbackIterator:ISequenceIterator;
 
         public function setCallbackCollection (...args):void {
-            callbackCollectionList.clear();
+            _callbackCollectionList.clear();
             for each (var i:ICollection in args) {
-                callbackCollectionList.add(i);
+                _callbackCollectionList.add(i);
             }
-            callbackCollectionIterator = callbackCollectionList.iterator();
-            callbackIterator = null;
+            _callbackCollectionIterator = _callbackCollectionList.iterator();
+            _callbackIterator = null;
         }
 
-        private function nextCollectionIterator ():ICollectionIterator {
-            return ICollection(callbackCollectionIterator.next()).iterator() as ICollectionIterator;
+        private function nextCollectionIterator ():* {
+            return ICollection(_callbackCollectionIterator.next()).iterator();
         }
 
         public function hasNext ():Boolean {
             // Some ugly repetitions here to avoid redundant calls.
-            if (!callbackIterator) {
-                while (callbackCollectionIterator.hasNext()) {
-                    callbackIterator = nextCollectionIterator();
-                    if (callbackIterator.hasNext()) {
+            if (!_callbackIterator) {
+                while (_callbackCollectionIterator.hasNext()) {
+                    _callbackIterator = nextCollectionIterator();
+                    if (_callbackIterator.hasNext()) {
                         return true;
                     }
                 }
                 return false;
-            } else if (callbackIterator.hasNext()) {
+            } else if (_callbackIterator.hasNext()) {
                 return true;
             } else {
-                while (callbackCollectionIterator.hasNext()) {
-                    callbackIterator = nextCollectionIterator();
-                    if (callbackIterator.hasNext()) {
+                while (_callbackCollectionIterator.hasNext()) {
+                    _callbackIterator = nextCollectionIterator();
+                    if (_callbackIterator.hasNext()) {
                         return true;
                     }
                 }
@@ -47,11 +46,14 @@ package org.dzyga.eventloop {
         }
 
         public function next ():* {
-            return callbackIterator.next();
+            return _callbackIterator.next();
         }
 
         public function remove ():Boolean {
-            return callbackIterator.remove();
+            return _callbackIterator.remove();
+        }
+
+        public function reset ():void {
         }
     }
 }

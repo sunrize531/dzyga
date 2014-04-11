@@ -5,12 +5,7 @@ package org.dzyga.collections {
      */
     public class Node extends NodeBinary implements INodeSorted {
         private var _parent:INodeSorted;
-        private var _priority:int;
         private var _order:int;
-
-        public function Node () {
-            _priority = int.MAX_VALUE * Math.random();
-        }
 
         public function get parent ():INodeSorted {
             return _parent;
@@ -26,10 +21,6 @@ package org.dzyga.collections {
 
         public function set order (v:int):void {
             _order = v;
-        }
-
-        public function get priority ():int {
-            return _priority;
         }
     }
 }

@@ -7,10 +7,5 @@ package org.dzyga.collections {
         function get order ():int;
 
         function set order (v:int):void;
-
-        /**
-         * Random value for treap implementation.
-         */
-        function get priority ():int;
     }
 }

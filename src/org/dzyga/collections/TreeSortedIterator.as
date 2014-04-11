@@ -1,8 +1,10 @@
 package org.dzyga.collections {
+    use namespace dz_collections;
+
     /**
      * Iterate through nodes in tree. For internal usage.
      */
-    internal class TreeSortedIterator implements IOrderedIterator {
+    internal class TreeSortedIterator implements IOrderedIterator, ISequenceIterator {
         private var _tree:TreeSorted;
         private var _next:INodeSorted;
         private var _current:INodeSorted;
@@ -62,6 +64,20 @@ package org.dzyga.collections {
         public function reset ():void {
             _next = _tree.nodeLeftMost();
             _current = null;
+        }
+
+        public function remove ():Boolean {
+            if (_current) {
+                _next = _tree.nodeNext(_current);
+                _tree.nodeRemove(_current);
+                _current = null;
+                return true;
+            }
+            return false;
+        }
+
+        dz_collections function get current ():INodeSorted {
+            return _current;
         }
     }
 }

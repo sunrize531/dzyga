@@ -1,14 +1,16 @@
 package org.dzyga.eventloop {
     import flash.events.IEventDispatcher;
+    import flash.utils.Dictionary;
+
+    import org.dzyga.collections.ICollection;
+    import org.dzyga.collections.IIterator;
+    import org.dzyga.collections.ISequence;
+    import org.dzyga.collections.ObjectIterator;
+    import org.dzyga.collections.ObjectIterator;
 
     import org.dzyga.events.*;
     import flash.display.Stage;
     import flash.utils.getTimer;
-
-    import org.as3commons.collections.Map;
-    import org.as3commons.collections.framework.ICollection;
-    import org.as3commons.collections.framework.ICollectionIterator;
-    import org.as3commons.collections.framework.IIterator;
 
     public class Loop {
         public static const FRAME_ENTER_STATE:String = 'frame:enter';
@@ -58,7 +60,7 @@ package org.dzyga.eventloop {
             return new LoopCallback(this, callback, delay, priority, once, thisArg, argsArray);
         }
 
-        protected var _callbackHash:Map = new Map();
+        protected var _callbackHash:Dictionary = new Dictionary();
 
 
         /**
@@ -74,7 +76,7 @@ package org.dzyga.eventloop {
                                         thisArg:* = null, argsArray:Array = null):ILoopCallback {
             var loopCallback:ILoopCallback = callbackInit(callback, 0, priority, false, thisArg, argsArray);
             _processor.frameEnterCallbackCollection.add(loopCallback);
-            _callbackHash.add(loopCallback, _processor.frameEnterCallbackCollection);
+            _callbackHash[loopCallback] = _processor.frameEnterCallbackCollection;
             return loopCallback;
         }
 
@@ -91,7 +93,7 @@ package org.dzyga.eventloop {
                                        thisArg:* = null, argsArray:Array = null):ILoopCallback {
             var loopCallback:ILoopCallback = callbackInit(callback, 0, priority, false, thisArg, argsArray);
             _processor.frameExitCallbackCollection.add(loopCallback);
-            _callbackHash.add(loopCallback, _processor.frameExitCallbackCollection);
+            _callbackHash[loopCallback] = _processor.frameExitCallbackCollection;
             return loopCallback;
         }
 
@@ -113,7 +115,7 @@ package org.dzyga.eventloop {
                 callback, frameTime, priority, true,
                 thisArg, argsArray);
             _processor.delayedCallbackCollection.add(loopCallback);
-            _callbackHash.add(loopCallback, _processor.delayedCallbackCollection);
+            _callbackHash[loopCallback] = _processor.delayedCallbackCollection;
             if (_state == FRAME_ENTER_STATE) {
                 _processor.immediateCallbackCollection.add(loopCallback);
             }
@@ -136,7 +138,7 @@ package org.dzyga.eventloop {
                 callback, getTimer() + delay, priority, true,
                 thisArg, argsArray);
             _processor.delayedCallbackCollection.add(loopCallback);
-            _callbackHash.add(loopCallback, _processor.delayedCallbackCollection);
+            _callbackHash[loopCallback] = _processor.delayedCallbackCollection;
             return loopCallback;
         }
 
@@ -147,7 +149,7 @@ package org.dzyga.eventloop {
          * @return this
          */
         public function callbackRemove (loopCallback:ILoopCallback):Loop {
-            var collection:ICollection = _callbackHash.itemFor(loopCallback);
+            var collection:ISequence = _callbackHash[loopCallback];
             if (collection) {
                 loopCallback.cancel();
                 collection.remove(loopCallback);
@@ -188,9 +190,9 @@ package org.dzyga.eventloop {
          * @return this
          */
         public function clear ():Loop {
-            var iterator:ICollectionIterator = _callbackHash.keyIterator() as ICollectionIterator;
+            var iterator:ObjectIterator = new ObjectIterator(_callbackHash);
             while (iterator.hasNext()) {
-                var callback:ILoopCallback = iterator.next();
+                var callback:ILoopCallback = iterator.nextKey();
                 callback.cancel();
                 iterator.remove();
             }

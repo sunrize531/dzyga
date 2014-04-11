@@ -158,7 +158,7 @@ package org.dzyga.events {
             var targetIterator:ObjectIterator = new ObjectIterator(_listenerMap);
             while (targetIterator.hasNext()) {
                 var targetListenerMap:TargetListenerSet = targetIterator.next() as TargetListenerSet;
-                if (!targetListenerMap.size) {
+                if (!targetListenerMap.size()) {
                     targetListenerMap.target.removeEventListener(targetListenerMap.event, eventListenerRun);
                     targetIterator.remove();
                 }

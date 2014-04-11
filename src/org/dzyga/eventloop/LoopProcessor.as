@@ -7,11 +7,12 @@ package org.dzyga.eventloop {
     import flash.events.IEventDispatcher;
     import flash.utils.getTimer;
 
-    import org.as3commons.collections.LinkedList;
-    import org.as3commons.collections.SortedSet;
+    import org.dzyga.collections.List;
+    import org.dzyga.collections.SetSorted;
     import org.dzyga.events.DispatcherProxy;
 
     import org.dzyga.events.IDispatcherProxy;
+    import org.dzyga.utils.FunctionUtils;
 
     public class LoopProcessor {
         public static const FRAME_ENTER_STATE:String = 'frame:enter';
@@ -51,10 +52,10 @@ package org.dzyga.eventloop {
             return _fps || _stage.frameRate;
         }
 
-        private var _frameEnterCallbackCollection:SortedSet = new SortedSet(new LoopCallbackComparator());
-        private var _delayedCallbackCollection:SortedSet = new SortedSet(new LoopCallbackDelayedComparator());
-        private var _immediateCallbackCollection:LinkedList = new LinkedList();
-        private var _frameExitCallbackCollection:SortedSet = new SortedSet(new LoopCallbackComparator());
+        private var _frameEnterCallbackCollection:SetSorted = new SetSorted(_loopCallbackComparator);
+        private var _delayedCallbackCollection:SetSorted = new SetSorted(_loopCallbackDelayedComparator);
+        private var _immediateCallbackCollection:List = new List();
+        private var _frameExitCallbackCollection:SetSorted = new SetSorted(_loopCallbackComparator);
         private var _callbackIterator:LoopCallbackIterator = new LoopCallbackIterator();
 
         public function get frameTime ():Number {
@@ -108,24 +109,34 @@ package org.dzyga.eventloop {
             frameExitProcess(1000 / fps * FRAME_EXIT_THRESHOLD);
         }
 
-        public function get frameEnterCallbackCollection ():SortedSet {
+        public function get frameEnterCallbackCollection ():SetSorted {
             return _frameEnterCallbackCollection;
         }
 
-        public function get delayedCallbackCollection ():SortedSet {
+        public function get delayedCallbackCollection ():SetSorted {
             return _delayedCallbackCollection;
         }
 
-        public function get immediateCallbackCollection ():LinkedList {
+        public function get immediateCallbackCollection ():List {
             return _immediateCallbackCollection;
         }
 
-        public function get frameExitCallbackCollection ():SortedSet {
+        public function get frameExitCallbackCollection ():SetSorted {
             return _frameExitCallbackCollection;
         }
 
         public function get callbackIterator ():LoopCallbackIterator {
             return _callbackIterator;
+        }
+
+        private static function _loopCallbackComparator (item1:ILoopCallback, item2:ILoopCallback):Number {
+            return FunctionUtils.compare(item1.priority, item2.priority);
+        }
+
+        private static function _loopCallbackDelayedComparator (item1:ILoopCallback, item2:ILoopCallback):Number {
+            return FunctionUtils.compare(item1.timeout, item2.timeout) ||
+                    FunctionUtils.compare(item1.priority, item2.priority);
+
         }
     }
 }
